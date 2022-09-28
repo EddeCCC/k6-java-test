@@ -14,34 +14,39 @@ export const options = {
    }
 }
 
-var payload = {
-    "name": "eddy",
-    "job": "trainee"
+var postPayload = {
+    "id": "4",
+    "name": "Smart Stories",
+    "author": "Julia",
+    "releaseDate": "2005-10-10"
 }
 
 var putPayload = {
-    "name": "Jim",
-    "job": "Manager"
+    "id": "3",
+    "name": "Mediocore Stories",
+    "author": "Nils",
+    "releaseDate": "2015-11-10"
 }
 
+const baseURL = "http://localhost:8080/books"
+
 export default function() {
-    let getResponse = http.get("https://reqres.in/api/users/2");
-    let postResponse = http.post("https://reqres.in/api/users", JSON.stringify(payload), { 
-        // Kann auch ohne headers ausgeführt werden
+    let getResponse = http.get(baseURL + "/all");
+    let postResponse = http.post(baseURL + "/new", JSON.stringify(postPayload), { 
         headers: {
             "Content-Type": "application/json"
         }
     });
-    let putResponse = http.put("https://reqres.in/api/users/2", JSON.stringify(putPayload), { 
+    let putResponse = http.put(baseURL + "/3", JSON.stringify(putPayload), { 
         headers: {
             "Content-Type": "application/json"
         }
     })
-    let deleteResponse = http.del("https://reqres.in/api/users/2");
+    let deleteResponse = http.del(baseURL + "/1");
 
     check(getResponse, {
         "GET status was 200": x => x.status == 200,
-        "GET has data": x => (JSON.parse(x.body)).data.id != undefined,
+        //"GET has data": x => (JSON.parse(x.body)).data.id != undefined,
         "GET body size > 100": x => x.body.length > 100,
         "GET content check": x => x.body.includes("id")
     });
@@ -50,7 +55,6 @@ export default function() {
         "POST status was 201": x => x.status == 201,
         "POST Body not empty": x => x.body.length > 0
     });
-    console.log("POST BODY: " + postResponse.body);
 
     check(putResponse, {
         "PUT status was 200/201": x => x.status == 200 || x.status == 201,

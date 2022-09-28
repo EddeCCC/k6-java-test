@@ -12,8 +12,10 @@ public class CLRunner {
     @EventListener(ApplicationReadyEvent.class)
     public void afterPropertiesSet() throws Exception {
         System.out.println("### LOAD TEST STARTED ###");
-        String url = "src\\main\\resources\\scripts\\lightTest.js";
-        String output = "src\\main\\resources\\output\\output.csv";
+        String resources = "src/main/resources";
+        String url = resources + "/scripts/lightTest.js";
+        String output = resources + "/output/output.csv";
+
         executeTest(url, output);
     }
 

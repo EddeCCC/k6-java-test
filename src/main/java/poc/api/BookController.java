@@ -32,7 +32,6 @@ public class BookController {
         boolean response = bookShelf.addBook(book);
         if(response) return new ResponseEntity<>(book, HttpStatus.CREATED);
         else return new ResponseEntity<>(book, HttpStatus.CONFLICT);
-
     }
 
     @PutMapping(path = "/{id}", produces = "application/json")
@@ -45,6 +44,6 @@ public class BookController {
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Book> deleteBook(@PathVariable(value = "id") Long id) {
         Book deletedBook = bookShelf.deleteBook(id);
-        return new ResponseEntity<>(deletedBook, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(deletedBook, HttpStatus.NO_CONTENT);
     }
 }
