@@ -18,10 +18,4 @@ public class Book {
     private String author;
 
     private LocalDate releaseDate;
-
-    public Book(String name, String author, LocalDate releaseDate) {
-        this.name = name;
-        this.author = author;
-        this.releaseDate = releaseDate;
-    }
 }

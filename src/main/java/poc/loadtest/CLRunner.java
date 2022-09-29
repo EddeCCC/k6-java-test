@@ -10,7 +10,7 @@ import java.io.IOException;
 public class CLRunner {
 
     @EventListener(ApplicationReadyEvent.class)
-    public void afterPropertiesSet() throws Exception {
+    public void executeLoadTest() throws Exception {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
         String url = resources + "/scripts/configTest.js";
