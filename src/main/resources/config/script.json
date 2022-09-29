@@ -1,0 +1,22 @@
+{
+    "params": [
+        "import http from 'k6/http';\nimport {check, sleep} from 'k6';",
+        "\nlet config = JSON.parse(open('../config/config.json'));\nexport let options = config.options;",
+
+        "\nexport default function() {\nlet baseUrl = config.baseURL;\nlet user1 = config.payload[0];\nlet user2 = config.payload[1];",
+
+        "\nlet getResponse = http.get(baseUrl + '/all');",
+        "\nlet postResponse = http.post(baseUrl + '/new', JSON.stringify(user1), {\nheaders: {'Content-Type': 'application/json'}\n});",
+        "\nlet putResponse = http.put(baseUrl + '/3', JSON.stringify(user2), {\n headers: {'Content-Type': 'application/json'}\n});",
+        "\nlet deleteResponse = http.del(baseUrl + '/1');",
+
+        "\ncheck(getResponse, {\n'GET status was 200': x => x.status == 200,\n'GET body size > 100': x => x.body.length > 100,\n'GET content check': x => x.body.includes('id')\n});",
+
+        "\ncheck(postResponse, {\n'POST status was 201/409': x => x.status && (x.status == 201 || x.status == 409),\n'POST Body not empty': x => x.body.length > 0\n});",
+
+        "\ncheck(putResponse, {\n'PUT status was 200/201': x => x.status == 200 || x.status == 201,\n'PUT Body not empty': x => x.body.length > 0\n});",
+
+        "\ncheck(deleteResponse, {\n'DEL status was 204': x => x.status == 204\n});",
+        "\nsleep(1);\n}"
+    ]
+}

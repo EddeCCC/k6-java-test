@@ -13,15 +13,18 @@ public class CLRunner {
     public void executeLoadTest() throws Exception {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
-        String url = resources + "/scripts/configTest.js";
+
+        String config = resources + "/config/script.json";
+        String script = resources + "/scripts/createdScript.js";
         String output = resources + "/output/output.csv";
 
-        executeTest(url, output);
+        ConfigParser.convert(config, script);
+        executeTest(script, output);
     }
 
-    private void executeTest(String url, String output) throws IOException, InterruptedException {
+    private void executeTest(String script, String output) throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
-        Process process = runtime.exec("k6 run " + url + " --out csv=" + output);
+        Process process = runtime.exec("k6 run " + script + " --out csv=" + output);
         checkIfProcessFinished(process);
     }
 
@@ -36,6 +39,7 @@ public class CLRunner {
                 System.out.println("...");
             }
         }
-        System.out.println("Load test finished with value " + process.exitValue());
+
+        System.out.println("Load test finished with value ");
     }
 }
