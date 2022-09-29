@@ -43,7 +43,11 @@ public class BookController {
 
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Book> deleteBook(@PathVariable(value = "id") Long id) {
-        Book deletedBook = bookShelf.deleteBook(id);
-        return new ResponseEntity<>(deletedBook, HttpStatus.NO_CONTENT);
+        try {
+            Book deletedBook = bookShelf.deleteBook(id);
+            return new ResponseEntity<>(deletedBook, HttpStatus.NO_CONTENT);
+        } catch (NullPointerException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

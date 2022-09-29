@@ -27,9 +27,14 @@ public class BookService {
     }
 
     public boolean addBook(Book book) {
-        Long newKey = book.getId();
-        if(books.get(newKey) != null) return false;
-        books.put(newKey, book);
+        Long currentID = book.getId();
+        if(currentID == null) {
+            currentID = createNewKey();
+            book.setId(currentID);
+        }
+        else if(books.get(currentID) != null) return false;
+
+        books.put(currentID, book);
         return true;
     }
 
@@ -44,5 +49,13 @@ public class BookService {
 
     public Book deleteBook(Long id) {
         return books.remove(id);
+    }
+
+    private Long createNewKey() {
+        long key = 0L;
+        while(books.get(key) != null) {
+            key++;
+        }
+        return key;
     }
 }

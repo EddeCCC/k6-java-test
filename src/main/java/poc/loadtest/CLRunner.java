@@ -13,7 +13,7 @@ public class CLRunner {
     public void afterPropertiesSet() throws Exception {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
-        String url = resources + "/scripts/lightTest.js";
+        String url = resources + "/scripts/configTest.js";
         String output = resources + "/output/output.csv";
 
         executeTest(url, output);
