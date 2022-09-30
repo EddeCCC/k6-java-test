@@ -1,0 +1,10 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - "-t k6_test"
+    container_name: k6_test
+    ports:
+      - "8080:8080"
