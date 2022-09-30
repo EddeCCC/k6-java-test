@@ -14,13 +14,11 @@ public class CLRunner {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
 
-        String config = resources + "/config/script.json";
         String script = resources + "/scripts/createdScript.js";
         String output = resources + "/output/output.csv";
-        String map = resources + "/config/map.json";
+        String config = resources + "/config/config.json";
 
-        //ConfigParser.parse(config, script);
-        ConfigParser.newParse(map, script);
+        ConfigParser.newParse(config, script);
         runTest(script, output);
     }
 

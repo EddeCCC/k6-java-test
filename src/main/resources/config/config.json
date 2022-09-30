@@ -1,26 +1,33 @@
 {
-  "baseURL": "http://127.0.0.1:8080/books",
-  "payload": [
+  "name": "FirstScript",
+  "requests": [
     {
-      "name": "Smart Stories",
-      "author": "Julia",
-      "releaseDate": "2005-10-10"
+      "type": "GET",
+      "path": "/all",
+      "headers": {
+        "content-type": ""
+      },
+      "payload": "0",
+      "checks": {
+        "status": "200",
+        "body": {
+          "min-length": "0"
+        }
+      }
     },
     {
-      "id": "3",
-      "name": "Mediocre Stories",
-      "author": "Nils",
-      "releaseDate": "2015-11-10"
-    }
-  ],
-  "options": {
-    "vus": 5,
-    "duration": "5s",
-    "tags": {
-      "api_name": "MyAPI"
+      "type": "GET",
+      "path": "/1",
+      "checks": {
+        "status": "200"
+      }
     },
-    "thresholds": {
-      "http_req_failed": ["rate < 0.05"]
+    {
+      "type": "GET",
+      "path": "/3",
+      "checks": {
+        "status": "200"
+      }
     }
-  }
+  ]
 }
