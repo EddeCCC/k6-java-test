@@ -10,8 +10,8 @@ import java.util.List;
 public class JSONScriptMapper {
 
     private final List<String> script;
-
     private final String newLine = System.lineSeparator();
+    private final String res = "response";
 
     public JSONScriptMapper(String optionsURL) {
         script = new LinkedList<>();
@@ -24,12 +24,12 @@ public class JSONScriptMapper {
                 
                 export let options = config.options;
                                 
-                export default function() {      
+                export default function() {
                 """.formatted(optionsURL);
         script.add(start);
     }
 
-    public List<String> mapConfig(JSONArray requests) {
+    public List<String> createScript(JSONArray requests) {
         for(int i = 0; i < requests.length(); i++) {
             JSONObject currentRequest = requests.getJSONObject(i);
 
@@ -47,38 +47,105 @@ public class JSONScriptMapper {
                 default -> throw new UnknownRequestTypeException(type);
             }
         }
-        script.add(endScript());
+        script.add("}");
         return this.script;
     }
 
     private void mapGetRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String response = "response" + requestIndex;
+        String response = res + requestIndex;
 
-        String pathScript = String.format("%slet %s = http.get(baseUrl + '%s');%s",
+        String httpScript = String.format("%slet %s = http.get(baseUrl + '%s');%s",
                 newLine, response, path, newLine);
-        String checksScript = "";
+        String checkScript = "";
 
-        if(request.has("checks")) checksScript = mapCheck(request, response);
+        if(request.has("checks")) checkScript = mapCheck(request, response);
 
-        script.add(pathScript);
-        script.add(checksScript);
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(1));
     }
 
     private void mapPostRequest(JSONObject request, int requestIndex) {
+        String path = request.getString("path");
+        String response = res + requestIndex;
+        String headerScript = "";
 
+        if(request.has("headers")) {
+            JSONObject header = request.getJSONObject("headers");
+            headerScript = mapHeader(header);
+        }
+
+        String payload = request.getJSONObject("payload").toString();
+        String payloadScript = String.format("%svar payload%d = %s%s",
+                newLine,requestIndex, payload, newLine);
+
+        String httpScript = String.format("%slet %s = http.post(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
+                newLine, response, path, requestIndex, newLine, headerScript, newLine);
+        String checkScript = "";
+
+        if(request.has("checks")) checkScript = mapCheck(request, response);
+
+        script.add(payloadScript);
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(2));
     }
 
     private void mapPutRequest(JSONObject request, int requestIndex) {
+        String path = request.getString("path");
+        String response = res + requestIndex;
+        String headerScript = "";
 
+        if(request.has("headers")) {
+            JSONObject header = request.getJSONObject("headers");
+            headerScript = mapHeader(header);
+        }
+
+        String payload = request.getJSONObject("payload").toString();
+        String payloadScript = String.format("%svar payload%d = %s%s",
+                newLine,requestIndex, payload, newLine);
+
+        String httpScript = String.format("%slet %s = http.put(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
+                newLine, response, path, requestIndex, newLine, headerScript, newLine);
+        String checkScript = "";
+
+        if(request.has("checks")) checkScript = mapCheck(request, response);
+
+        script.add(payloadScript);
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(2));
     }
 
     private void mapDeleteRequest(JSONObject request, int requestIndex) {
+        String path = request.getString("path");
+        String response = res + requestIndex;
 
+        String httpScript = String.format("%slet %s = http.del(baseUrl + '%s');%s",
+                newLine, response, path, newLine);
+        String checkScript = "";
+
+        if(request.has("checks")) checkScript = mapCheck(request, response);
+
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(1));
     }
 
-    private String endScript() {
-        return String.format("sleep(1);%s}", newLine);
+    private String mapHeader(JSONObject header) {
+        StringBuilder headBuilder = new StringBuilder();
+
+        if(header.has("content-type")) {
+            String contentType = header.getString("content-type");
+            String contentTypeScript = String.format("'Content-Type': '%s',%s",
+                    contentType, newLine);
+            headBuilder.append(contentTypeScript);
+        }
+        // More header options
+
+        return String.format("headers: {%s%s}%s",
+                newLine, headBuilder, newLine);
     }
 
     private String mapCheck(JSONObject request, String response) {
@@ -88,8 +155,17 @@ public class JSONScriptMapper {
 
         if(checks.has("status")) {
             Integer status = Integer.parseInt( checks.getString("status") );
-            String statusScript = String.format("\t'%s status was %s': x => x.status && x.status == %s,%s",
-                    type, status, status, newLine);
+            String statusScript;
+            if(checks.has("OR-status")) {
+                Integer orStatus = Integer.parseInt( checks.getString("OR-status") );
+                statusScript = String.format("\t'%s status was %s/%s': x => x.status && (x.status == %s || x.status == %s),%s",
+                        type, status, orStatus, status, orStatus, newLine);
+            }
+            else {
+                statusScript = String.format("\t'%s status was %s': x => x.status && x.status == %s,%s",
+                        type, status, status, newLine);
+            }
+
             checkBuilder.append(statusScript);
         }
         if(checks.has("body")) {
@@ -97,17 +173,23 @@ public class JSONScriptMapper {
 
             if(body.has("min-length")) {
                 Integer minLength = Integer.parseInt( body.getString("min-length") );
-                String minLengthScript = String.format("\t'%s body size > %d': x => x.body.length > %d,%s",
+                String minLengthScript = String.format("\t'%s body size > %d': x => x.body && x.body.length > %d,%s",
                         type, minLength, minLength, newLine);
                 checkBuilder.append(minLengthScript);
             }
             //More checks with body...
         }
 
-        return String.format("check(%s, {%s%s});%s", response, newLine, checkBuilder, newLine);
+        return String.format("check(%s, {%s%s});%s",
+                response, newLine, checkBuilder, newLine);
     }
 
     private boolean isConfigValid(JSONObject request) {
         return request.has("type") && request.has("path");
+    }
+
+    private String sleep(int amount) {
+        return String.format("sleep(%d);%s",
+                amount, newLine);
     }
 }

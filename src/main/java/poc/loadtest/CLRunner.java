@@ -10,7 +10,7 @@ import java.io.IOException;
 public class CLRunner {
 
     @EventListener(ApplicationReadyEvent.class)
-    public void executeLoadTest(){
+    public void startLoadTest() throws IOException, InterruptedException {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
 
@@ -43,7 +43,6 @@ public class CLRunner {
                 System.out.println("...");
             }
         }
-
         System.out.println("Load test finished with value " + process.exitValue());
     }
 }
