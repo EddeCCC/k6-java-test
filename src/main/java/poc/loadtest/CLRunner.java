@@ -10,7 +10,7 @@ import java.io.IOException;
 public class CLRunner {
 
     @EventListener(ApplicationReadyEvent.class)
-    public void executeLoadTest() throws Exception {
+    public void executeLoadTest(){
         System.out.println("### LOAD TEST STARTED ###");
         String resources = "src/main/resources";
 
@@ -18,8 +18,12 @@ public class CLRunner {
         String output = resources + "/output/output.csv";
         String config = resources + "/config/config.json";
 
-        ConfigParser.newParse(config, script);
-        runTest(script, output);
+        try {
+            ConfigParser.newParse(config, script);
+            runTest(script, output);
+        } catch (IOException | InterruptedException e){
+            e.printStackTrace();
+        }
     }
 
     private void runTest(String script, String output) throws IOException, InterruptedException {
