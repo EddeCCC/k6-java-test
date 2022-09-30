@@ -78,8 +78,8 @@ public class JSONScriptMapper {
         }
 
         String payload = request.getJSONObject("payload").toString();
-        String payloadScript = String.format("var payload%d = %s%s",
-                requestIndex, payload, newLine);
+        String payloadScript = String.format("%svar payload%d = %s%s",
+                newLine,requestIndex, payload, newLine);
 
         String httpScript = String.format("%slet %s = http.post(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
                 newLine, response, path, requestIndex, newLine, headerScript, newLine);
@@ -94,11 +94,44 @@ public class JSONScriptMapper {
     }
 
     private void mapPutRequest(JSONObject request, int requestIndex) {
+        String path = request.getString("path");
+        String response = res + requestIndex;
+        String headerScript = "";
 
+        if(request.has("headers")) {
+            JSONObject header = request.getJSONObject("headers");
+            headerScript = mapHeader(header);
+        }
+
+        String payload = request.getJSONObject("payload").toString();
+        String payloadScript = String.format("%svar payload%d = %s%s",
+                newLine,requestIndex, payload, newLine);
+
+        String httpScript = String.format("%slet %s = http.put(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
+                newLine, response, path, requestIndex, newLine, headerScript, newLine);
+        String checkScript = "";
+
+        if(request.has("checks")) checkScript = mapCheck(request, response);
+
+        script.add(payloadScript);
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(2));
     }
 
     private void mapDeleteRequest(JSONObject request, int requestIndex) {
+        String path = request.getString("path");
+        String response = res + requestIndex;
 
+        String httpScript = String.format("%slet %s = http.del(baseUrl + '%s');%s",
+                newLine, response, path, newLine);
+        String checkScript = "";
+
+        if(request.has("checks")) checkScript = mapCheck(request, response);
+
+        script.add(httpScript);
+        script.add(checkScript);
+        script.add(sleep(1));
     }
 
     private String mapHeader(JSONObject header) {

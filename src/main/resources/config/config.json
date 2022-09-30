@@ -36,7 +36,7 @@
     },
     {
       "type": "PUT",
-      "path": "/2",
+      "path": "/1",
       "payload": {
         "name": "Mediocre Stories",
         "author": "Nils",
@@ -46,8 +46,15 @@
         "content-type": "application/json"
       },
       "checks": {
-        "status": "201",
-        "OR-status": "409"
+        "status": "200",
+        "OR-status": "201"
+      }
+    },
+    {
+      "type": "DELETE",
+      "path": "/2",
+      "checks": {
+        "status": "204"
       }
     }
   ] 
