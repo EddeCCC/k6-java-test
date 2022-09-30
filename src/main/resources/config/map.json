@@ -1,0 +1,17 @@
+{
+  "name": "FirstScript",
+  "request": {
+    "type": "GET",
+    "path": "/all",
+    "headers": {
+      "content-type": ""
+    },
+    "payload": "0",
+    "checks": {
+      "status": "200",
+      "body": {
+        "min-length": "0"
+      }
+    }
+  }
+}

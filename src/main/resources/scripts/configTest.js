@@ -2,11 +2,11 @@ import http from "k6/http";
 import {check, sleep} from "k6";
 
 let config = JSON.parse(open("../config/config.json"));
+let baseUrl = config.baseURL;
 
 export let options = config.options;
 
 export default function() {
-    let baseUrl = config.baseURL;
     let user1 = config.payload[0];
     let user2 = config.payload[1];
 

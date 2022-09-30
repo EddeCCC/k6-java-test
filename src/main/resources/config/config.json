@@ -22,6 +22,5 @@
     "thresholds": {
       "http_req_failed": ["rate < 0.05"]
     }
-  },
-  "function": "### TBD ###"
+  }
 }

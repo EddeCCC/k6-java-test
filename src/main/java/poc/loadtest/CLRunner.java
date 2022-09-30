@@ -17,12 +17,14 @@ public class CLRunner {
         String config = resources + "/config/script.json";
         String script = resources + "/scripts/createdScript.js";
         String output = resources + "/output/output.csv";
+        String map = resources + "/config/map.json";
 
-        ConfigParser.convert(config, script);
-        executeTest(script, output);
+        //ConfigParser.parse(config, script);
+        ConfigParser.newParse(map, script);
+        runTest(script, output);
     }
 
-    private void executeTest(String script, String output) throws IOException, InterruptedException {
+    private void runTest(String script, String output) throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec("k6 run " + script + " --out csv=" + output);
         checkIfProcessFinished(process);
@@ -40,6 +42,6 @@ public class CLRunner {
             }
         }
 
-        System.out.println("Load test finished with value ");
+        System.out.println("Load test finished with value " + process.exitValue());
     }
 }
