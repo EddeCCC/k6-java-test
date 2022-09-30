@@ -4,10 +4,6 @@
     {
       "type": "GET",
       "path": "/all",
-      "headers": {
-        "content-type": ""
-      },
-      "payload": "0",
       "checks": {
         "status": "200",
         "body": {
@@ -23,11 +19,36 @@
       }
     },
     {
-      "type": "GET",
-      "path": "/3",
+      "type": "POST",
+      "path": "/new",
+      "payload": {
+        "name": "Smart Stories",
+        "author": "Julia",
+        "releaseDate": "2005-10-10"
+      },
+      "headers": {
+        "content-type": "application/json"
+      },
       "checks": {
-        "status": "200"
+        "status": "201",
+        "OR-status": "409"
+      }
+    },
+    {
+      "type": "PUT",
+      "path": "/2",
+      "payload": {
+        "name": "Mediocre Stories",
+        "author": "Nils",
+        "releaseDate": "2015-11-10"
+      },
+      "headers": {
+        "content-type": "application/json"
+      },
+      "checks": {
+        "status": "201",
+        "OR-status": "409"
       }
     }
-  ]
+  ] 
 }

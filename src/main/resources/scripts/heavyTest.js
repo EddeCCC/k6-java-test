@@ -15,14 +15,12 @@ export const options = {
 }
 
 var postPayload = {
-    "id": "4",
     "name": "Smart Stories",
     "author": "Julia",
     "releaseDate": "2005-10-10"
 }
 
 var putPayload = {
-    "id": "3",
     "name": "Mediocore Stories",
     "author": "Nils",
     "releaseDate": "2015-11-10"
@@ -41,7 +39,7 @@ export default function() {
         headers: {
             "Content-Type": "application/json"
         }
-    })
+    });
     let deleteResponse = http.del(baseURL + "/1");
 
     check(getResponse, {

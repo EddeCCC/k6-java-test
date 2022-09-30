@@ -15,25 +15,11 @@ public class ConfigParser {
 
     private static final JSONScriptMapper mapper = new JSONScriptMapper("/config/options.json");
 
-    public static void parse(String configUrl, String targetScript) throws IOException {
-        String configText = Files.readString(Paths.get(configUrl));
-
-        JSONObject json = new JSONObject(configText);
-        JSONArray array = json.getJSONArray("params");
-
-        FileWriter writer = new FileWriter(targetScript);
-
-        for(Object line: array) {
-            writer.write(line.toString());
-        }
-        writer.close();
-    }
-
     public static void newParse(String configURL, String targetScript) throws IOException {
         String configText = Files.readString(Paths.get(configURL));
         JSONObject json = new JSONObject(configText);
         JSONArray requests = json.getJSONArray("requests");
-        List<String> scriptText = mapper.mapConfig(requests);
+        List<String> scriptText = mapper.createScript(requests);
 
         FileWriter writer = new FileWriter(targetScript);
 

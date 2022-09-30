@@ -39,7 +39,6 @@ public class CLRunner {
                 System.out.println("...");
             }
         }
-
         System.out.println("Load test finished with value " + process.exitValue());
     }
 }
