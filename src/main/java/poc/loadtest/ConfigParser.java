@@ -17,6 +17,8 @@ public class ConfigParser {
 
     public static void newParse(String configURL, String targetScript) throws IOException {
         String configText = Files.readString(Paths.get(configURL));
+        //String configText = Files.read
+
         JSONObject json = new JSONObject(configText);
         JSONArray requests = json.getJSONArray("requests");
         List<String> scriptText = mapper.createScript(requests);

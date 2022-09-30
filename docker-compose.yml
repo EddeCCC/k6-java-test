@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  api:
+    command: java -jar target/java-k6-0.0.1-SNAPSHOT.jar
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app/app
+    ports:
+      - "8080:8080"
+  k6:
+    image: loadimpact/k6:latest
+    volumes:
+      - ./samples:/scripts
