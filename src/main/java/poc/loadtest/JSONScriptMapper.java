@@ -10,7 +10,6 @@ import java.util.List;
 public class JSONScriptMapper {
 
     private final List<String> script;
-
     private final String newLine = System.lineSeparator();
     private final String res = "response";
 
@@ -25,7 +24,7 @@ public class JSONScriptMapper {
                 
                 export let options = config.options;
                                 
-                export default function() {      
+                export default function() {
                 """.formatted(optionsURL);
         script.add(start);
     }
@@ -156,7 +155,7 @@ public class JSONScriptMapper {
 
         if(checks.has("status")) {
             Integer status = Integer.parseInt( checks.getString("status") );
-            String statusScript = "";
+            String statusScript;
             if(checks.has("OR-status")) {
                 Integer orStatus = Integer.parseInt( checks.getString("OR-status") );
                 statusScript = String.format("\t'%s status was %s/%s': x => x.status && (x.status == %s || x.status == %s),%s",
