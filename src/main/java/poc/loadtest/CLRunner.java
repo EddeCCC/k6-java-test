@@ -11,7 +11,7 @@ import java.net.URISyntaxException;
 public class CLRunner {
 
     @EventListener(ApplicationReadyEvent.class)
-    public void startLoadTest() throws IOException, InterruptedException {
+    public void startLoadTest() {
         System.out.println("### LOAD TEST STARTED ###");
         String resources = this.getResourcePath();
 
@@ -19,8 +19,12 @@ public class CLRunner {
         String output = resources + "output/output.csv";
         String config = resources + "config/config.json";
 
-        ConfigParser.newParse(config, script);
-        this.runTest(script, output);
+        try {
+            ConfigParser.newParse(config, script);
+            this.runTest(script, output);
+        } catch (IOException | InterruptedException e){
+            System.out.println("### LOAD TEST FAILED ###");
+        }
     }
 
     private void runTest(String script, String output) throws IOException, InterruptedException {
