@@ -53,13 +53,13 @@ public class JSONScriptMapper {
 
     private void mapGetRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String response = res + requestIndex;
+        String responseVariable = res + requestIndex;
 
         String httpScript = String.format("%slet %s = http.get(baseURL + '%s');%s",
-                newLine, response, path, newLine);
+                newLine, responseVariable, path, newLine);
         String checkScript = "";
 
-        if(request.has("checks")) checkScript = mapCheck(request, response);
+        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
 
         script.add(httpScript);
         script.add(checkScript);
@@ -68,7 +68,7 @@ public class JSONScriptMapper {
 
     private void mapPostRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String response = res + requestIndex;
+        String responseVariable = res + requestIndex;
         String headerScript = "";
 
         if(request.has("headers")) {
@@ -81,10 +81,10 @@ public class JSONScriptMapper {
                 newLine,requestIndex, payload, newLine);
 
         String httpScript = String.format("%slet %s = http.post(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, response, path, requestIndex, newLine, headerScript, newLine);
+                newLine, responseVariable, path, requestIndex, newLine, headerScript, newLine);
         String checkScript = "";
 
-        if(request.has("checks")) checkScript = mapCheck(request, response);
+        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
 
         script.add(payloadScript);
         script.add(httpScript);
@@ -94,7 +94,7 @@ public class JSONScriptMapper {
 
     private void mapPutRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String response = res + requestIndex;
+        String responseVariable = res + requestIndex;
         String headerScript = "";
 
         if(request.has("headers")) {
@@ -107,10 +107,10 @@ public class JSONScriptMapper {
                 newLine,requestIndex, payload, newLine);
 
         String httpScript = String.format("%slet %s = http.put(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, response, path, requestIndex, newLine, headerScript, newLine);
+                newLine, responseVariable, path, requestIndex, newLine, headerScript, newLine);
         String checkScript = "";
 
-        if(request.has("checks")) checkScript = mapCheck(request, response);
+        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
 
         script.add(payloadScript);
         script.add(httpScript);
@@ -120,13 +120,13 @@ public class JSONScriptMapper {
 
     private void mapDeleteRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String response = res + requestIndex;
+        String responseVariable = res + requestIndex;
 
         String httpScript = String.format("%slet %s = http.del(baseURL + '%s');%s",
-                newLine, response, path, newLine);
+                newLine, responseVariable, path, newLine);
         String checkScript = "";
 
-        if(request.has("checks")) checkScript = mapCheck(request, response);
+        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
 
         script.add(httpScript);
         script.add(checkScript);
