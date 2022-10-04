@@ -13,19 +13,19 @@ public class JSONScriptMapper {
     private final String newLine = System.lineSeparator();
     private final String res = "response";
 
-    public JSONScriptMapper(String optionsURL) {
+    public JSONScriptMapper(String configURL) {
         script = new LinkedList<>();
         String start = """
                 import http from 'k6/http';
                 import {check, sleep} from 'k6';
                                 
-                let config = JSON.parse(open('..%s'));
-                let baseUrl = config.baseURL;
+                let config = JSON.parse(open('%s'));
+                let baseURL = config.baseURL;
                 
                 export let options = config.options;
                                 
                 export default function() {
-                """.formatted(optionsURL);
+                """.formatted(configURL);
         script.add(start);
     }
 
@@ -33,7 +33,7 @@ public class JSONScriptMapper {
         for(int i = 0; i < requests.length(); i++) {
             JSONObject currentRequest = requests.getJSONObject(i);
 
-            if(!isConfigValid(currentRequest)) {
+            if(!isRequestValid(currentRequest)) {
                 System.out.println("Invalid request: " + i);
                 continue;
             }
@@ -55,7 +55,7 @@ public class JSONScriptMapper {
         String path = request.getString("path");
         String response = res + requestIndex;
 
-        String httpScript = String.format("%slet %s = http.get(baseUrl + '%s');%s",
+        String httpScript = String.format("%slet %s = http.get(baseURL + '%s');%s",
                 newLine, response, path, newLine);
         String checkScript = "";
 
@@ -122,7 +122,7 @@ public class JSONScriptMapper {
         String path = request.getString("path");
         String response = res + requestIndex;
 
-        String httpScript = String.format("%slet %s = http.del(baseUrl + '%s');%s",
+        String httpScript = String.format("%slet %s = http.del(baseURL + '%s');%s",
                 newLine, response, path, newLine);
         String checkScript = "";
 
@@ -184,7 +184,7 @@ public class JSONScriptMapper {
                 response, newLine, checkBuilder, newLine);
     }
 
-    private boolean isConfigValid(JSONObject request) {
+    private Boolean isRequestValid(JSONObject request) {
         return request.has("type") && request.has("path");
     }
 
