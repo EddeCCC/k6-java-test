@@ -22,7 +22,7 @@ public class CLRunner {
         String config = resources + "config/config.json";
 
         try {
-            ConfigParser.newParse(config, script);
+            ConfigParser.parse(config, script);
             this.runTest(script, output);
         } catch (IOException | InterruptedException e){
             System.out.println("### LOAD TEST FAILED ###");
@@ -34,6 +34,8 @@ public class CLRunner {
         Runtime runtime = Runtime.getRuntime();
         String command = "k6 run " + script + " --out csv=" + output;
         Process process = runtime.exec(command);
+        System.out.println("##### PROCESS EXECUTED #####");
+        System.out.println("COMMAND: " + command);
 
         this.logTest(process);
         this.checkIfProcessFinished(process);

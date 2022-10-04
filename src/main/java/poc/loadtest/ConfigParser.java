@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 public class ConfigParser {
 
-    public static void newParse(String configURL, String targetScript) throws IOException {
+    public static void parse(String configURL, String targetScript) throws IOException {
         JSONScriptMapper mapper = new JSONScriptMapper(configURL);
 
         String configText = Files.readString(Paths.get(configURL));
