@@ -4,6 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import poc.exception.UnknownRequestTypeException;
 
+import javax.print.attribute.standard.JobName;
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,10 +56,15 @@ public class JSONScriptMapper {
     private void mapGetRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
         String responseVariable = res + requestIndex;
-
-        String httpScript = String.format("%slet %s = http.get(baseURL + '%s');%s",
-                newLine, responseVariable, path, newLine);
+        String paramsScript = "";
         String checkScript = "";
+
+        if(request.has("params")) {
+            JSONObject params = request.getJSONObject("params");
+            paramsScript = mapParams(params);
+        }
+        String httpScript = String.format("%slet %s = http.get(baseURL + '%s', {%s%s});%s",
+                newLine, responseVariable, path, newLine, paramsScript, newLine);
 
         if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
 
@@ -69,11 +76,11 @@ public class JSONScriptMapper {
     private void mapPostRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
         String responseVariable = res + requestIndex;
-        String headerScript = "";
+        String paramsScript = "";
 
-        if(request.has("headers")) {
-            JSONObject header = request.getJSONObject("headers");
-            headerScript = mapHeader(header);
+        if(request.has("params")) {
+            JSONObject params = request.getJSONObject("params");
+            paramsScript = mapParams(params);
         }
 
         String payload = request.getJSONObject("payload").toString();
@@ -81,7 +88,7 @@ public class JSONScriptMapper {
                 newLine,requestIndex, payload, newLine);
 
         String httpScript = String.format("%slet %s = http.post(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, responseVariable, path, requestIndex, newLine, headerScript, newLine);
+                newLine, responseVariable, path, requestIndex, newLine, paramsScript, newLine);
         String checkScript = "";
 
         if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
@@ -95,11 +102,11 @@ public class JSONScriptMapper {
     private void mapPutRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
         String responseVariable = res + requestIndex;
-        String headerScript = "";
+        String paramsScript = "";
 
-        if(request.has("headers")) {
-            JSONObject header = request.getJSONObject("headers");
-            headerScript = mapHeader(header);
+        if(request.has("params")) {
+            JSONObject params = request.getJSONObject("params");
+            paramsScript = mapParams(params);
         }
 
         String payload = request.getJSONObject("payload").toString();
@@ -107,7 +114,7 @@ public class JSONScriptMapper {
                 newLine,requestIndex, payload, newLine);
 
         String httpScript = String.format("%slet %s = http.put(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, responseVariable, path, requestIndex, newLine, headerScript, newLine);
+                newLine, responseVariable, path, requestIndex, newLine, paramsScript, newLine);
         String checkScript = "";
 
         if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
@@ -133,6 +140,29 @@ public class JSONScriptMapper {
         script.add(sleep(1));
     }
 
+    private String mapParams(JSONObject params) {
+        StringBuilder paramsBuilder = new StringBuilder();
+
+        if(params.has("headers")) {
+            JSONObject header = params.getJSONObject("headers");
+            String headerScript = mapHeader(header);
+            paramsBuilder.append(headerScript);
+        }
+
+        if(params.has("tags")) {
+            JSONObject tags = params.getJSONObject("tags");
+            String tagScript = mapTags(tags);
+            paramsBuilder.append(tagScript);
+        }
+        return paramsBuilder.toString();
+    }
+
+    private String mapTags(JSONObject tags) {
+        String tagsString = tags.toString();
+        return String.format("tags: %s%s,%s",
+                newLine, tagsString, newLine);
+    }
+
     private String mapHeader(JSONObject header) {
         StringBuilder headBuilder = new StringBuilder();
 
@@ -144,7 +174,7 @@ public class JSONScriptMapper {
         }
         // More header options
 
-        return String.format("headers: {%s%s}%s",
+        return String.format("headers: {%s%s},%s",
                 newLine, headBuilder, newLine);
     }
 
@@ -172,7 +202,7 @@ public class JSONScriptMapper {
             JSONObject body = checks.getJSONObject("body");
 
             if(body.has("min-length")) {
-                Integer minLength = Integer.parseInt( body.getString("min-length") );
+                Integer minLength = Integer.parseInt( body.getString("min-length") ) - 1;
                 String minLengthScript = String.format("\t'%s body size > %d': x => x.body && x.body.length > %d,%s",
                         type, minLength, minLength, newLine);
                 checkBuilder.append(minLengthScript);
