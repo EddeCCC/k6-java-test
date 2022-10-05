@@ -20,8 +20,6 @@ export const options = {
     }
 }
 
-
-
 export default function() {
 
     let res = http.get("https://k6.io");

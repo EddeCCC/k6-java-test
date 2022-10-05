@@ -15,7 +15,7 @@ public class JSONScriptMapper {
     private final String newLine = System.lineSeparator();
     private final String res = "response";
 
-    public JSONScriptMapper(String configURL) {
+    public JSONScriptMapper(String localConfigURL) {
         script = new LinkedList<>();
         String start = """
                 import http from 'k6/http';
@@ -27,7 +27,7 @@ public class JSONScriptMapper {
                 export let options = config.options;
                                 
                 export default function() {
-                """.formatted(configURL);
+                """.formatted(localConfigURL);
         script.add(start);
     }
 

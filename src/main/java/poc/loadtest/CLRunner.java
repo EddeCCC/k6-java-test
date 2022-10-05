@@ -19,10 +19,12 @@ public class CLRunner {
 
         String script = resources + "scripts/createdScript.js";
         String output = resources + "output/output.csv";
-        String config = resources + "config/config.json";
+        String config = "config/config.json";
+        String localConfig = "../" + config;
+        String globalConfig = resources + config;
 
         try {
-            ConfigParser.parse(config, script);
+            ConfigParser.parse(localConfig, globalConfig, script);
             this.runTest(script, output);
         } catch (IOException | InterruptedException e){
             System.out.println("### LOAD TEST FAILED ###");
@@ -34,8 +36,6 @@ public class CLRunner {
         Runtime runtime = Runtime.getRuntime();
         String command = "k6 run " + script + " --out csv=" + output;
         Process process = runtime.exec(command);
-        System.out.println("##### PROCESS EXECUTED #####");
-        System.out.println("COMMAND: " + command);
 
         this.logTest(process);
         this.checkIfProcessFinished(process);

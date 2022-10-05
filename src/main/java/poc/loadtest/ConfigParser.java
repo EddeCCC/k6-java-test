@@ -13,10 +13,10 @@ import java.util.List;
 @Component
 public class ConfigParser {
 
-    public static void parse(String configURL, String targetScript) throws IOException {
-        JSONScriptMapper mapper = new JSONScriptMapper(configURL);
+    public static void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
+        JSONScriptMapper mapper = new JSONScriptMapper(localConfig);
 
-        String configText = Files.readString(Paths.get(configURL));
+        String configText = Files.readString(Paths.get(globalConfig));
 
         JSONObject configJSON = new JSONObject(configText);
         if(!isConfigValid(configJSON)) {
