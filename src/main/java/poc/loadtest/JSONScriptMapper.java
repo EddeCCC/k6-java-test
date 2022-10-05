@@ -2,36 +2,21 @@ package poc.loadtest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import poc.exception.UnknownRequestTypeException;
+import org.springframework.stereotype.Component;
+import poc.loadtest.exception.UnknownRequestTypeException;
 
-import javax.print.attribute.standard.JobName;
-import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 
+@Component
 public class JSONScriptMapper {
 
-    private final List<String> script;
     private final String newLine = System.lineSeparator();
-    private final String res = "response";
 
-    public JSONScriptMapper(String localConfigURL) {
-        script = new LinkedList<>();
-        String start = """
-                import http from 'k6/http';
-                import {check, sleep} from 'k6';
-                                
-                let config = JSON.parse(open('%s'));
-                let baseURL = config.baseURL;
-                
-                export let options = config.options;
-                                
-                export default function() {
-                """.formatted(localConfigURL);
-        script.add(start);
-    }
+    public List<String> createScript(JSONArray requests, String localConfigURL) {
+        List<String> script = new LinkedList<>();
+        script.add( startScript(localConfigURL) );
 
-    public List<String> createScript(JSONArray requests) {
         for(int i = 0; i < requests.length(); i++) {
             JSONObject currentRequest = requests.getJSONObject(i);
 
@@ -39,108 +24,65 @@ public class JSONScriptMapper {
                 System.out.println("Invalid request: " + i);
                 continue;
             }
-            String type = currentRequest.getString("type");
-
-            switch (type) {
-                case "GET" -> mapGetRequest(currentRequest, i);
-                case "POST" -> mapPostRequest(currentRequest, i);
-                case "PUT" -> mapPutRequest(currentRequest, i);
-                case "DELETE" -> mapDeleteRequest(currentRequest, i);
-                default -> throw new UnknownRequestTypeException(type);
-            }
+            String requestScript = mapRequest(currentRequest, i);
+            script.add(requestScript);
         }
         script.add("}");
-        return this.script;
+        return script;
     }
 
-    private void mapGetRequest(JSONObject request, int requestIndex) {
-        String path = request.getString("path");
-        String responseVariable = res + requestIndex;
-        String paramsScript = "";
-        String checkScript = "";
+    private String mapRequest(JSONObject request, int requestIndex) {
+        StringBuilder requestBuilder = new StringBuilder();
 
         if(request.has("params")) {
             JSONObject params = request.getJSONObject("params");
-            paramsScript = mapParams(params);
+            String paramsScript = mapParams(params, requestIndex);
+            requestBuilder.append(paramsScript);
         }
-        String httpScript = String.format("%slet %s = http.get(baseURL + '%s', {%s%s});%s",
-                newLine, responseVariable, path, newLine, paramsScript, newLine);
-
-        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
-
-        script.add(httpScript);
-        script.add(checkScript);
-        script.add(sleep(1));
-    }
-
-    private void mapPostRequest(JSONObject request, int requestIndex) {
-        String path = request.getString("path");
-        String responseVariable = res + requestIndex;
-        String paramsScript = "";
-
-        if(request.has("params")) {
-            JSONObject params = request.getJSONObject("params");
-            paramsScript = mapParams(params);
+        if(request.has("payload")) {
+            JSONObject payload = request.getJSONObject("payload");
+            String payloadScript = mapPayload(payload, requestIndex);
+            requestBuilder.append(payloadScript);
         }
 
-        String payload = request.getJSONObject("payload").toString();
-        String payloadScript = String.format("%svar payload%d = %s%s",
-                newLine,requestIndex, payload, newLine);
+        String httpScript = mapHttpRequest(request, requestIndex);
+        requestBuilder.append(httpScript);
 
-        String httpScript = String.format("%slet %s = http.post(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, responseVariable, path, requestIndex, newLine, paramsScript, newLine);
-        String checkScript = "";
-
-        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
-
-        script.add(payloadScript);
-        script.add(httpScript);
-        script.add(checkScript);
-        script.add(sleep(2));
-    }
-
-    private void mapPutRequest(JSONObject request, int requestIndex) {
-        String path = request.getString("path");
-        String responseVariable = res + requestIndex;
-        String paramsScript = "";
-
-        if(request.has("params")) {
-            JSONObject params = request.getJSONObject("params");
-            paramsScript = mapParams(params);
+        if(request.has("checks")) {
+            JSONObject checks = request.getJSONObject("checks");
+            String type = request.getString("type");
+            String checksScript = mapCheck(checks, requestIndex, type);
+            requestBuilder.append(checksScript);
         }
+        requestBuilder.append(sleep());
 
-        String payload = request.getJSONObject("payload").toString();
-        String payloadScript = String.format("%svar payload%d = %s%s",
-                newLine,requestIndex, payload, newLine);
-
-        String httpScript = String.format("%slet %s = http.put(baseURL + '%s', JSON.stringify(payload%d), {%s%s});%s",
-                newLine, responseVariable, path, requestIndex, newLine, paramsScript, newLine);
-        String checkScript = "";
-
-        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
-
-        script.add(payloadScript);
-        script.add(httpScript);
-        script.add(checkScript);
-        script.add(sleep(2));
+        return requestBuilder.toString();
     }
 
-    private void mapDeleteRequest(JSONObject request, int requestIndex) {
+    private String mapHttpRequest(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String responseVariable = res + requestIndex;
+        String type = request.getString("type");
+        String method = switch (type) {
+            case "GET" -> "get";
+            case "POST" -> "post";
+            case "PUT" -> "put";
+            case "DELETE" -> "del";
+            default -> throw new UnknownRequestTypeException(type);
+        };
 
-        String httpScript = String.format("%slet %s = http.del(baseURL + '%s');%s",
-                newLine, responseVariable, path, newLine);
-        String checkScript = "";
-
-        if(request.has("checks")) checkScript = mapCheck(request, responseVariable);
-
-        script.add(httpScript);
-        script.add(checkScript);
-        script.add(sleep(1));
+        if(request.has("payload")) {
+            if(request.has("params")) {
+                return String.format("%slet response%d = http.%s(baseURL + '%s', JSON.stringify(payload%d), params%d);%s",
+                        newLine, requestIndex, method, path, requestIndex, requestIndex, newLine);
+            }
+            return String.format("%slet response%d = http.%s(baseURL + '%s', JSON.stringify(payload%d));%s",
+                    newLine, requestIndex, method, path, requestIndex, newLine);
+        }
+        return String.format("%slet response%d = http.%s(baseURL + '%s');%s",
+                newLine, requestIndex, method, path, newLine);
     }
 
-    private String mapParams(JSONObject params) {
+    private String mapParams(JSONObject params, int requestIndex) {
         StringBuilder paramsBuilder = new StringBuilder();
 
         if(params.has("headers")) {
@@ -154,7 +96,8 @@ public class JSONScriptMapper {
             String tagScript = mapTags(tags);
             paramsBuilder.append(tagScript);
         }
-        return paramsBuilder.toString();
+        return String.format("%svar params%d = {%s%s%s};",
+                newLine, requestIndex, newLine, paramsBuilder, newLine);
     }
 
     private String mapTags(JSONObject tags) {
@@ -178,9 +121,13 @@ public class JSONScriptMapper {
                 newLine, headBuilder, newLine);
     }
 
-    private String mapCheck(JSONObject request, String response) {
-        JSONObject checks = request.getJSONObject("checks");
-        String type = request.getString("type");
+    private String mapPayload(JSONObject payload, int requestIndex) {
+        String payloadString = payload.toString();
+        return String.format("%svar payload%d = %s%s",
+                newLine, requestIndex, payloadString, newLine);
+    }
+
+    private String mapCheck(JSONObject checks, int requestIndex, String type) {
         StringBuilder checkBuilder = new StringBuilder();
 
         if(checks.has("status")) {
@@ -210,16 +157,31 @@ public class JSONScriptMapper {
             //More checks with body...
         }
 
-        return String.format("check(%s, {%s%s});%s",
-                response, newLine, checkBuilder, newLine);
+        return String.format("check(response%d, {%s%s});%s",
+                requestIndex, newLine, checkBuilder, newLine);
+    }
+
+    private String startScript(String localConfigURL) {
+        return """
+                import http from 'k6/http';
+                import {check, sleep} from 'k6';
+                                
+                let config = JSON.parse(open('%s'));
+                let baseURL = config.baseURL;
+                
+                export let options = config.options;
+                                
+                export default function() {
+                """.formatted(localConfigURL);
     }
 
     private Boolean isRequestValid(JSONObject request) {
         return request.has("type") && request.has("path");
     }
 
-    private String sleep(int amount) {
+    private String sleep() {
+        int duration = (int)(Math.random()*2) + 1; //1-3
         return String.format("sleep(%d);%s",
-                amount, newLine);
+                duration, newLine);
     }
 }
