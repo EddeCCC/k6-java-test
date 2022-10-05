@@ -1,4 +1,4 @@
-package poc.exception;
+package poc.loadtest.exception;
 
 public class UnknownRequestTypeException extends RuntimeException{
 

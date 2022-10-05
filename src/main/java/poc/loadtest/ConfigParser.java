@@ -13,9 +13,10 @@ import java.util.List;
 @Component
 public class ConfigParser {
 
-    public static void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
-        JSONScriptMapper mapper = new JSONScriptMapper(localConfig);
+    @Autowired
+    private JSONScriptMapper mapper;
 
+    public void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
         String configText = Files.readString(Paths.get(globalConfig));
 
         JSONObject configJSON = new JSONObject(configText);
@@ -25,7 +26,7 @@ public class ConfigParser {
         }
 
         JSONArray requests = configJSON.getJSONArray("requests");
-        List<String> scriptCode = mapper.createScript(requests);
+        List<String> scriptCode = mapper.createScript(requests, localConfig);
 
         FileWriter writer = new FileWriter(targetScript);
 
