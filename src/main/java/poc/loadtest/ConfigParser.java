@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import poc.loadtest.mapper.RequestMapper;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,7 +15,7 @@ import java.util.List;
 public class ConfigParser {
 
     @Autowired
-    private JSONScriptMapper mapper;
+    private RequestMapper mapper;
 
     public void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
         String configText = Files.readString(Paths.get(globalConfig));
