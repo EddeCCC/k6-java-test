@@ -13,7 +13,7 @@ import java.util.Map;
 @ToString
 public class BookService {
 
-    private Map<Long,Book> books = new HashMap<>();
+    private final Map<Long,Book> books = new HashMap<>();
 
     public BookService() {
         Book book1 = new Book(1L, "Fancy Stories", "Martin",LocalDate.of(2020,5,22));

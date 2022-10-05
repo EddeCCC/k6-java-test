@@ -28,17 +28,19 @@
         }
       },
       "checks": {
-        "status": "200",
+        "status": 200,
         "body": {
-          "min-length": "1"
-        }
+          "min-length": 1,
+          "includes": "id"
+        },
+        "error_code": 0
       }
     },
     {
       "type": "GET",
       "path": "/1",
       "checks": {
-        "status": "200"
+        "status": 200
       }
     },
     {
@@ -51,12 +53,13 @@
       },
       "params": {
         "headers": {
-          "content-type": "application/json"
+          "content_type": "application/json",
+          "timeout": "10s"
         }
       },
       "checks": {
-        "status": "201",
-        "OR-status": "409"
+        "status": 201,
+        "OR-status": 409
       }
     },
     {
@@ -69,19 +72,19 @@
       },
       "params": {
         "headers": {
-          "content-type": "application/json"
+          "content_type": "application/json"
         }
       },
       "checks": {
-        "status": "200",
-        "OR-status": "201"
+        "status": 200,
+        "OR-status": 201
       }
     },
     {
       "type": "DELETE",
       "path": "/2",
       "checks": {
-        "status": "204"
+        "status": 204
       }
     }
   ]

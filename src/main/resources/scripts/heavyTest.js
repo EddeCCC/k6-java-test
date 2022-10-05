@@ -44,7 +44,6 @@ export default function() {
 
     check(getResponse, {
         "GET status was 200": x => x.status == 200,
-        //"GET has data": x => (JSON.parse(x.body)).data.id != undefined,
         "GET body size > 100": x => x.body.length > 100,
         "GET content check": x => x.body.includes("id")
     });

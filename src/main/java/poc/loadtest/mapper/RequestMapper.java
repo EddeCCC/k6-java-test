@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class RequestMapper implements k6Mapper {
@@ -78,7 +79,8 @@ public class RequestMapper implements k6Mapper {
     }
 
     private String sleepScript() {
-        int duration = (int)(Math.random()*2) + 1; //1-3
+        Random random = new Random();
+        int duration = random.nextInt(5) + 1;
         return String.format("sleep(%d);%s",
                 duration, newLine);
     }

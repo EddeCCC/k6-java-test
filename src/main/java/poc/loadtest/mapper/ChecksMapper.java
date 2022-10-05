@@ -13,10 +13,10 @@ public class ChecksMapper implements k6Mapper {
         StringBuilder checkBuilder = new StringBuilder();
 
         if(checks.has("status")) {
-            Integer status = Integer.parseInt( checks.getString("status") );
+            Integer status = checks.getInt("status");
             String statusScript;
             if(checks.has("OR-status")) {
-                Integer orStatus = Integer.parseInt( checks.getString("OR-status") );
+                Integer orStatus = checks.getInt("OR-status");
                 statusScript = String.format("\t'%s status was %s/%s': x => x.status && (x.status == %s || x.status == %s),%s",
                         type, status, orStatus, status, orStatus, newLine);
             }
@@ -31,12 +31,23 @@ public class ChecksMapper implements k6Mapper {
             JSONObject body = checks.getJSONObject("body");
 
             if(body.has("min-length")) {
-                Integer minLength = Integer.parseInt( body.getString("min-length") ) - 1;
+                Integer minLength = body.getInt("min-length") - 1;
                 String minLengthScript = String.format("\t'%s body size > %d': x => x.body && x.body.length > %d,%s",
                         type, minLength, minLength, newLine);
                 checkBuilder.append(minLengthScript);
             }
-            //More checks with body...
+            if(body.has("includes")) {
+                String includes = body.getString("includes");
+                String includesScript = String.format("\t'body includes %s': x => x.body && x.body.includes('%s'),%s",
+                        includes, includes, newLine);
+                checkBuilder.append(includesScript);
+            }
+        }
+        if(checks.has("error_code")) {
+            Integer errorCode= checks.getInt("error_code");
+            String errorCodeScript = String.format("\t'error_code was %d': x => x.error_code == %d,%s",
+                    errorCode, errorCode, newLine);
+            checkBuilder.append(errorCodeScript);
         }
 
         return String.format("check(response%d, {%s%s});%s",
