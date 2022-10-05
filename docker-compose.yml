@@ -1,10 +1,10 @@
+version: "3.9"
 services:
   api:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        - "-t k6_test"
-    container_name: k6_test
+    volumes:
+      - ./:/app/app
     ports:
       - "8080:8080"

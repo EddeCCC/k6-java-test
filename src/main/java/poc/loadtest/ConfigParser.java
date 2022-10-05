@@ -13,19 +13,29 @@ import java.util.List;
 @Component
 public class ConfigParser {
 
-    private static final JSONScriptMapper mapper = new JSONScriptMapper("/config/options.json");
+    public static void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
+        JSONScriptMapper mapper = new JSONScriptMapper(localConfig);
 
-    public static void newParse(String configURL, String targetScript) throws IOException {
-        String configText = Files.readString(Paths.get(configURL));
-        JSONObject json = new JSONObject(configText);
-        JSONArray requests = json.getJSONArray("requests");
-        List<String> scriptText = mapper.createScript(requests);
+        String configText = Files.readString(Paths.get(globalConfig));
+
+        JSONObject configJSON = new JSONObject(configText);
+        if(!isConfigValid(configJSON)) {
+            System.out.println("### Invalid configuration file ###");
+            return;
+        }
+
+        JSONArray requests = configJSON.getJSONArray("requests");
+        List<String> scriptCode = mapper.createScript(requests);
 
         FileWriter writer = new FileWriter(targetScript);
 
-        for(String line: scriptText) {
+        for(String line: scriptCode) {
             writer.write(line);
         }
         writer.close();
+    }
+
+    private static Boolean isConfigValid(JSONObject configJSON) {
+        return configJSON.has("baseURL") && configJSON.has("options") && configJSON.has("requests");
     }
 }

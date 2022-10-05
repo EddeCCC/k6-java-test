@@ -1,13 +1,36 @@
 {
   "name": "FirstScript",
+  "baseURL": "http://127.0.0.1:8080/books",
+  "options": {
+    "vus": 1,
+    "duration": "5s",
+    "tags": {
+      "api_name": "MyAPI"
+    },
+    "thresholds": {
+      "http_req_failed": ["rate < 0.05"],
+      "http_req_duration": ["p(90)<150", "p(95)<200"],
+      "http_req_duration{group:home}": [{
+        "threshold": "p(95)<300",
+        "abortOnFail": false
+      }]
+    }
+  },
   "requests": [
     {
       "type": "GET",
       "path": "/all",
+      "params": {
+        "headers": {},
+        "tags": {
+          "group": "home",
+          "test": "text"
+        }
+      },
       "checks": {
         "status": "200",
         "body": {
-          "min-length": "0"
+          "min-length": "1"
         }
       }
     },
@@ -26,8 +49,10 @@
         "author": "Julia",
         "releaseDate": "2005-10-10"
       },
-      "headers": {
-        "content-type": "application/json"
+      "params": {
+        "headers": {
+          "content-type": "application/json"
+        }
       },
       "checks": {
         "status": "201",
@@ -42,8 +67,10 @@
         "author": "Nils",
         "releaseDate": "2015-11-10"
       },
-      "headers": {
-        "content-type": "application/json"
+      "params": {
+        "headers": {
+          "content-type": "application/json"
+        }
       },
       "checks": {
         "status": "200",
@@ -57,5 +84,5 @@
         "status": "204"
       }
     }
-  ] 
+  ]
 }
