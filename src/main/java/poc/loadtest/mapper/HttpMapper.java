@@ -10,7 +10,8 @@ public class HttpMapper implements k6Mapper {
     @Override
     public String map(JSONObject request, int requestIndex) {
         String path = request.getString("path");
-        String type = request.getString("type");
+        String type = request.getString("type").toUpperCase();
+
         String method = switch (type) {
             case "GET" -> "get";
             case "POST" -> "post";

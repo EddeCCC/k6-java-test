@@ -22,6 +22,10 @@
       "path": "/all",
       "params": {
         "headers": {},
+        "cookies": {
+          "admin": "example.admin",
+          "user": "example.user"
+        },
         "tags": {
           "group": "home",
           "test": "text"
@@ -53,9 +57,9 @@
       },
       "params": {
         "headers": {
-          "content_type": "application/json",
-          "timeout": "10s"
-        }
+          "content_type": "application/json"
+        },
+        "timeout": "10s"
       },
       "checks": {
         "status": 201,

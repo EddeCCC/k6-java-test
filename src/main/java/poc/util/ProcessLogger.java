@@ -14,9 +14,9 @@ public class ProcessLogger {
         InputStream inputStream = process.getInputStream();
 
         File logFile = new File(file);
-
         OutputStream outputStream = new FileOutputStream(logFile);
         IOUtils.copy(inputStream, outputStream);
+
         System.out.println("### LOGGER FINISHED ###");
         this.waitForProcess(process);
         System.out.println("Load test finished with value " + process.exitValue());

@@ -23,10 +23,10 @@ public class CLRunner {
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
 
-        String script = paths.script;
-        String output = paths.output;
-        String localConfig = paths.localConfig;
-        String globalConfig = paths.globalConfig;
+        String script = paths.getScript();
+        String output = paths.getOutput();
+        String localConfig = paths.getLocalConfig();
+        String globalConfig = paths.getGlobalConfig();
 
         try {
             parser.parse(localConfig, globalConfig, script);
@@ -42,7 +42,7 @@ public class CLRunner {
         String command = "k6 run " + script + " --out csv=" + output;
         Process process = runtime.exec(command);
 
-        String logging = paths.logging;
+        String logging = paths.getLogging();
         logger.log(process, logging);
     }
 }
