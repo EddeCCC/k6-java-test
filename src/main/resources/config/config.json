@@ -43,6 +43,16 @@
     {
       "type": "GET",
       "path": "/1",
+      "payload": {
+        "name": "Test Book",
+        "author": "Julia",
+        "releaseDate": "2000-01-01"
+      },
+      "params": {
+        "headers": {
+          "content_type": "application/json"
+        }
+      },
       "checks": {
         "status": 200
       }

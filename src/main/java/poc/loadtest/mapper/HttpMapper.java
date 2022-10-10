@@ -20,22 +20,21 @@ public class HttpMapper implements k6Mapper {
             default -> throw new UnknownRequestTypeException(type);
         };
 
+        String extraParams = "";
         if(request.has("payload") || request.has("params")) {
             if(request.has("payload") && request.has("params")) {
-                return String.format("%slet response%d = http.%s(baseURL + '%s', JSON.stringify(payload%d), params%d);%s",
-                        newLine, requestIndex, method, path, requestIndex, requestIndex, newLine);
+                extraParams = String.format(", JSON.stringify(payload%d), params%d",
+                        requestIndex, requestIndex);
             }
             else if (request.has("payload")) {
-                return String.format("%slet response%d = http.%s(baseURL + '%s', JSON.stringify(payload%d));%s",
-                        newLine, requestIndex, method, path, requestIndex, newLine);
+                extraParams = String.format(", JSON.stringify(payload%d)", requestIndex);
             }
             else {
-                return String.format("%slet response%d = http.%s(baseURL + '%s', params%d);%s",
-                        newLine, requestIndex, method, path, requestIndex, newLine);
+                extraParams = String.format(", params%d", requestIndex);
             }
         }
 
-        return String.format("%slet response%d = http.%s(baseURL + '%s');%s",
-                newLine, requestIndex, method, path, newLine);
+        return String.format("%slet response%d = http.%s(baseURL + '%s'%s);%s",
+                newLine, requestIndex, method, path, extraParams, newLine);
     }
 }
