@@ -33,7 +33,7 @@ public class ConfigParser {
         writer.close();
     }
 
-    private static Boolean isConfigValid(JSONObject configJSON) {
+    private Boolean isConfigValid(JSONObject configJSON) {
         return configJSON.has("baseURL") && configJSON.has("options") && configJSON.has("requests");
     }
 }

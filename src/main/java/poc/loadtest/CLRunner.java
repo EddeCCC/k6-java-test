@@ -5,6 +5,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.loadtest.path.PathConfig;
+import poc.rabbit.ConfigConsumer;
 import poc.util.ProcessLogger;
 
 import java.io.*;
@@ -16,25 +17,20 @@ public class CLRunner {
     @Autowired
     private ConfigParser parser;
     @Autowired
-    private ConfigLoader loader;
-    @Autowired
     private PathConfig paths;
     @Autowired
     private ProcessLogger logger;
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void start() {
+    public void start(String config) {
         System.out.println("### LOAD TEST STARTED ###");
 
         String script = paths.getScript();
         String output = paths.getOutput();
-        String server = paths.getServer();
 
         try {
-            String config = loader.loadConfig(server);
             parser.parse(config, script);
             this.runLoadTest(script, output);
-        } catch (IOException | InterruptedException | URISyntaxException e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println("### LOAD TEST FAILED ###");
             System.out.println(e.getMessage());
         }
