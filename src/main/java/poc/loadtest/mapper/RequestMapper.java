@@ -21,9 +21,10 @@ public class RequestMapper implements k6Mapper {
     @Autowired
     private ChecksMapper checksMapper;
 
-    public List<String> createScript(JSONArray requests, String localConfigURL) {
+    public List<String> createScript(JSONObject config) {
+        JSONArray requests = config.getJSONArray("requests");
         List<String> createdScript = new LinkedList<>();
-        createdScript.add( startScript(localConfigURL) );
+        createdScript.add( startScript(config) );
 
         for(int i = 0; i < requests.length(); i++) {
             JSONObject currentRequest = requests.getJSONObject(i);
@@ -64,18 +65,19 @@ public class RequestMapper implements k6Mapper {
         return requestBuilder.toString();
     }
 
-    private String startScript(String localConfigURL) {
+    private String startScript(JSONObject config) {
+        String baseURL = config.getString("baseURL");
+        String options = config.getJSONObject("options").toString();
         return """
                 import http from 'k6/http';
                 import {check, sleep} from 'k6';
-                                
-                let config = JSON.parse(open('%s'));
-                let baseURL = config.baseURL;
-                
-                export let options = config.options;
+
+                let baseURL = '%s';
+
+                export let options = %s;
                                 
                 export default function() {
-                """.formatted(localConfigURL);
+                """.formatted(baseURL, options);
     }
 
     private String sleepScript() {

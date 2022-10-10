@@ -1,6 +1,5 @@
 package poc.loadtest;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,8 @@ public class ConfigParser {
     @Autowired
     private RequestMapper mapper;
 
-    public void parse(String localConfig, String globalConfig, String targetScript) throws IOException {
-        String configText = Files.readString(Paths.get(globalConfig));
+    public void parse(String config, String targetScript) throws IOException {
+        String configText = Files.readString(Paths.get(config));
 
         JSONObject configJSON = new JSONObject(configText);
         if(!isConfigValid(configJSON)) {
@@ -26,8 +25,7 @@ public class ConfigParser {
             return;
         }
 
-        JSONArray requests = configJSON.getJSONArray("requests");
-        List<String> scriptCode = mapper.createScript(requests, localConfig);
+        List<String> scriptCode = mapper.createScript(configJSON);
 
         FileWriter writer = new FileWriter(targetScript);
 

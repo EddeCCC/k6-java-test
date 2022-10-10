@@ -21,10 +21,7 @@ public class PathConfig {
 
     public String getOutput() { return resources + output; }
 
-    //Path of config file in relation to script
-    public String getLocalConfig() { return "../" + config; }
-
-    public String getGlobalConfig() { return resources + config; }
+    public String getConfig() { return resources + config; }
 
     public String getLogging() { return resources + logging; }
 

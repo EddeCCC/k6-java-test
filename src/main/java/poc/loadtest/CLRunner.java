@@ -25,11 +25,10 @@ public class CLRunner {
 
         String script = paths.getScript();
         String output = paths.getOutput();
-        String localConfig = paths.getLocalConfig();
-        String globalConfig = paths.getGlobalConfig();
+        String config = paths.getConfig();
 
         try {
-            parser.parse(localConfig, globalConfig, script);
+            parser.parse(config, script);
             this.runLoadTest(script, output);
         } catch (IOException | InterruptedException e){
             System.out.println("### LOAD TEST FAILED ###");
