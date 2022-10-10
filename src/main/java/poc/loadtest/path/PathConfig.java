@@ -14,6 +14,8 @@ public class PathConfig {
     private String config;
     @Value("${path.logging}")
     private String logging;
+    @Value("${path.server}")
+    private String server;
     private final String resources = getResourcePath();
 
 
@@ -24,6 +26,8 @@ public class PathConfig {
     public String getConfig() { return resources + config; }
 
     public String getLogging() { return resources + logging; }
+
+    public String getServer() { return server; }
 
     private String getResourcePath() {
         return this.getClass().getClassLoader()

@@ -8,12 +8,15 @@ import poc.loadtest.path.PathConfig;
 import poc.util.ProcessLogger;
 
 import java.io.*;
+import java.net.URISyntaxException;
 
 @Component
 public class CLRunner {
 
     @Autowired
     private ConfigParser parser;
+    @Autowired
+    private ConfigLoader loader;
     @Autowired
     private PathConfig paths;
     @Autowired
@@ -25,12 +28,13 @@ public class CLRunner {
 
         String script = paths.getScript();
         String output = paths.getOutput();
-        String config = paths.getConfig();
+        String server = paths.getServer();
 
         try {
+            String config = loader.loadConfig(server);
             parser.parse(config, script);
             this.runLoadTest(script, output);
-        } catch (IOException | InterruptedException e){
+        } catch (IOException | InterruptedException | URISyntaxException e) {
             System.out.println("### LOAD TEST FAILED ###");
             System.out.println(e.getMessage());
         }

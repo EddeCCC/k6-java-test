@@ -17,9 +17,7 @@ public class ConfigParser {
     private RequestMapper mapper;
 
     public void parse(String config, String targetScript) throws IOException {
-        String configText = Files.readString(Paths.get(config));
-
-        JSONObject configJSON = new JSONObject(configText);
+        JSONObject configJSON = new JSONObject(config);
         if(!isConfigValid(configJSON)) {
             System.out.println("### Invalid configuration file ###");
             return;

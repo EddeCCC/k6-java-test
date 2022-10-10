@@ -21,8 +21,8 @@ public class ConfigController {
 
     @GetMapping
     public ResponseEntity<String> getConfig() throws IOException {
-        String config = pathConfig.getConfig();
-        String configText = Files.readString(Paths.get(config));
+        String configPath = pathConfig.getConfig();
+        String configText = Files.readString(Paths.get(configPath));
 
         return new ResponseEntity<>(configText, HttpStatus.OK);
     }
