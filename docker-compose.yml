@@ -8,3 +8,15 @@ services:
       - ./:/app/app
     ports:
       - "8080:8080"
+    restart: always
+    environment:
+      - SPRING_RABBITMQ_HOST=rabbit
+    depends_on:
+      - rabbit
+
+  rabbit:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "15672:15672"
+      - "5672:5672"

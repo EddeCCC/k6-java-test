@@ -23,7 +23,7 @@ public class ConfigProducer {
     private RabbitTemplate template;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void produce() throws URISyntaxException, IOException, InterruptedException {
+    public String produce() throws URISyntaxException, IOException, InterruptedException {
         String server = pathConfig.getServer();
         String config = loader.loadConfig(server);
 
@@ -32,5 +32,7 @@ public class ConfigProducer {
                 Constant.CONFIG_KEY,
                 config
         );
+
+        return "CONFIG WAS PUBLISHED";
     }
 }
