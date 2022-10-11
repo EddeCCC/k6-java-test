@@ -26,26 +26,26 @@ public class CLRunner {
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
 
-        String script = paths.getScript();
-        String output = paths.getOutput();
-        String server = paths.getServer();
+        String scriptPath = paths.getScript();
+        String outputPath = paths.getOutput();
+        String serverAddress = paths.getServer();
 
         try {
-            String config = loader.loadConfig(server);
-            parser.parse(config, script);
-            this.runLoadTest(script, output);
+            String config = loader.loadConfig(serverAddress);
+            parser.parse(config, scriptPath);
+            this.runLoadTest(scriptPath, outputPath);
         } catch (IOException | InterruptedException | URISyntaxException e) {
             System.out.println("### LOAD TEST FAILED ###");
             System.out.println(e.getMessage());
         }
     }
 
-    private void runLoadTest(String script, String output) throws IOException, InterruptedException {
+    private void runLoadTest(String scriptPath, String outputPath) throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
-        String command = "k6 run " + script + " --out csv=" + output;
+        String command = "k6 run " + scriptPath + " --out csv=" + outputPath;
         Process process = runtime.exec(command);
 
-        String logging = paths.getLogging();
-        logger.log(process, logging);
+        String loggingPath = paths.getLogging();
+        logger.log(process, loggingPath);
     }
 }

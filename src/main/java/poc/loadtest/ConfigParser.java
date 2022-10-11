@@ -6,8 +6,6 @@ import org.springframework.stereotype.Component;
 import poc.loadtest.mapper.RequestMapper;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 @Component
@@ -16,7 +14,7 @@ public class ConfigParser {
     @Autowired
     private RequestMapper mapper;
 
-    public void parse(String config, String targetScript) throws IOException {
+    public void parse(String config, String scriptPath) throws IOException {
         JSONObject configJSON = new JSONObject(config);
         if(!isConfigValid(configJSON)) {
             System.out.println("### Invalid configuration file ###");
@@ -24,8 +22,7 @@ public class ConfigParser {
         }
 
         List<String> scriptCode = mapper.createScript(configJSON);
-
-        FileWriter writer = new FileWriter(targetScript);
+        FileWriter writer = new FileWriter(scriptPath);
 
         for(String line: scriptCode) {
             writer.write(line);
@@ -33,7 +30,7 @@ public class ConfigParser {
         writer.close();
     }
 
-    private static Boolean isConfigValid(JSONObject configJSON) {
-        return configJSON.has("baseURL") && configJSON.has("options") && configJSON.has("requests");
+    private Boolean isConfigValid(JSONObject config) {
+        return config.has("baseURL") && config.has("options") && config.has("requests");
     }
 }
