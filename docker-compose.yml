@@ -12,7 +12,8 @@ services:
     environment:
       - SPRING_RABBITMQ_HOST=rabbit
     depends_on:
-      - rabbit
+      rabbit:
+        condition: service_started
 
   rabbit:
     image: rabbitmq:3-management
