@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import poc.loadtest.path.PathConfig;
+import poc.config.PathConfig;
 import poc.util.ProcessLogger;
 
 import java.io.*;

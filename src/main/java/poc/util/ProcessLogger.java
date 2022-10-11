@@ -1,9 +1,7 @@
 package poc.util;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.loadtest.path.PathConfig;
 
 import java.io.*;
 
