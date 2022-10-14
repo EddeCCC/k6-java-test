@@ -22,7 +22,7 @@ public class CLRunner {
     @Autowired
     private ProcessLogger logger;
 
-    @EventListener(ApplicationReadyEvent.class)
+    //@EventListener(ApplicationReadyEvent.class)
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
 
