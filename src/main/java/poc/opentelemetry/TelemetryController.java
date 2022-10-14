@@ -20,43 +20,16 @@ import java.util.Random;
 @RestController
 public class TelemetryController {
 
-    private static final Logger LOGGER = LogManager.getLogger(JavaK6Application.class);
-    private final AttributeKey<String> ATTR_METHOD = AttributeKey.stringKey("method");
-
-    private final Tracer tracer;
-    private final Random random = new Random();
-    private final LongHistogram doWorkHistogram;
-
-     // it is important to initialize your SDK as early as possible in your application's lifecycle
-     private final OpenTelemetry openTelemetry = MyConfig.initOpenTelemetry();
+    private final OpenTelemetry openTelemetry = MyConfig.initOpenTelemetry();
 
     @Autowired
     private MyMetric metric;
 
     @Autowired
     public TelemetryController() {
-        tracer = openTelemetry.getTracer(JavaK6Application.class.getName());
-        Meter meter = openTelemetry.getMeter(JavaK6Application.class.getName());
-        doWorkHistogram = meter.histogramBuilder("do-work").ofLongs().build();
+        Meter meter = openTelemetry.getMeter("MY_METER_k6");
     }
 
-    @GetMapping("/ping")
-    public String ping() throws InterruptedException {
-        int sleepTime = random.nextInt(200);
-        doWork(sleepTime);
-        doWorkHistogram.record(sleepTime, Attributes.of(ATTR_METHOD, "ping"));
-        return "pong";
-    }
-
-    private void doWork(int sleepTime) throws InterruptedException {
-        Span span = tracer.spanBuilder("doWork").startSpan();
-        try (Scope ignored = span.makeCurrent()) {
-            Thread.sleep(sleepTime);
-            LOGGER.info("A sample log message!");
-        } finally {
-            span.end();
-        }
-    }
 
     @GetMapping("/test")
     public String test()  {

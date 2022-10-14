@@ -2,11 +2,8 @@ package poc.opentelemetry;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.LongCounter;
-import io.opentelemetry.api.metrics.LongHistogram;
 import io.opentelemetry.api.metrics.Meter;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.context.Scope;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,23 +18,12 @@ public final class MyExample {
 
     public void doExample(OpenTelemetry openTelemetry) throws InterruptedException {
 
-        Tracer tracer = openTelemetry.getTracer("io.opentelemetry.example");
         Meter meter = openTelemetry.getMeter("io.opentelemetry.example");
         LongCounter counter = meter.counterBuilder("example_counter").build();
-        LongHistogram histogram = meter.histogramBuilder("super_timer").ofLongs().setUnit("ms").build();
 
         for (int i = 0; i < 100; i++) {
-            long startTime = System.currentTimeMillis();
-            Span exampleSpan = tracer.spanBuilder("exampleSpan").startSpan();
-            try (Scope scope = exampleSpan.makeCurrent()) {
-                counter.add(1);
-                exampleSpan.setAttribute("good", "true");
-                exampleSpan.setAttribute("exampleNumber", i);
-                Thread.sleep(100);
-            } finally {
-                histogram.record(System.currentTimeMillis() - startTime);
-                exampleSpan.end();
-            }
+            counter.add(7);
+            Thread.sleep(100);
         }
 
         // sleep for a bit to let everything settle
