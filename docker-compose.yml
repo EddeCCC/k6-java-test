@@ -1,19 +1,19 @@
 version: "3.9"
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app/app
-    ports:
-      - "8080:8080"
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ./:/app/app
+#    ports:
+#      - "8080:8080"
 
   otel-collector:
     image: otel/opentelemetry-collector
-    command: [ "--config=/etc/otel-collector-config-demo.yml" ]
+    command: [ "--config=/etc/otel-config.yml" ]
     volumes:
-      - ./otel-collector-config-demo.yml:/etc/otel-collector-config-demo.yml
+      - ./otel-config.yml:/etc/otel-config.yml
     ports:
       - "1888:1888"   # pprof extension
       - "13133:13133" # health_check extension

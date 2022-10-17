@@ -5,6 +5,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
+import poc.opentelemetry.OTRecorder;
 import poc.util.ProcessLogger;
 
 import java.io.*;
@@ -21,8 +22,10 @@ public class CLRunner {
     private PathConfig paths;
     @Autowired
     private ProcessLogger logger;
+    @Autowired
+    private OTRecorder recorder;
 
-    //@EventListener(ApplicationReadyEvent.class)
+    @EventListener(ApplicationReadyEvent.class)
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
 
@@ -38,6 +41,9 @@ public class CLRunner {
             System.out.println("### LOAD TEST FAILED ###");
             System.out.println(e.getMessage());
         }
+
+        recorder.record(outputPath);
+        //recorder.close();
     }
 
     private void runLoadTest(String scriptPath, String outputPath) throws IOException, InterruptedException {

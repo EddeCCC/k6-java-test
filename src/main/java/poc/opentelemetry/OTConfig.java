@@ -10,8 +10,7 @@ import io.opentelemetry.sdk.resources.Resource;
 
 import java.time.Duration;
 
-
-public class MyConfig {
+public class OTConfig {
 
     static OpenTelemetry initOpenTelemetry() {
         Resource resource = Resource.getDefault();
