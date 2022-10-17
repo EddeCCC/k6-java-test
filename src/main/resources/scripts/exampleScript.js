@@ -6,12 +6,6 @@ export const options = {
    vus: 2,
    duration: "3s",
    iterations: 2,
-   ext: {
-    loadimpact: {
-        projectID: 3602786,
-        name: "Sample API Test"
-    }
-   }
 }
 
 var postPayload = {
