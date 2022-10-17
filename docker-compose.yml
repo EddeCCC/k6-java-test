@@ -10,6 +10,7 @@ services:
       - "8080:8080"
     environment:
       - OTEL_HOST=otel-collector
+      - OTEL_INIT=true
     depends_on:
       otel-collector:
         condition: service_started

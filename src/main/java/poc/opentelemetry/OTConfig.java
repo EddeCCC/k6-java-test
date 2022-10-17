@@ -17,10 +17,13 @@ public class OTConfig {
 
     @Value("${otel.host}")
     private String host;
+    @Value("${otel.init}")
+    private boolean shouldOtelInit;
 
     public OpenTelemetry initOpenTelemetry() {
-        Resource resource = Resource.getDefault();
+        if (!shouldOtelInit) return null;
 
+        Resource resource = Resource.getDefault();
         OpenTelemetrySdk openTelemetrySdk = OpenTelemetrySdk.builder()
                         .setMeterProvider(
                                 SdkMeterProvider.builder()

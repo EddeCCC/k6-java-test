@@ -17,8 +17,10 @@ public final class OTRecorder {
     private ObservableDoubleGauge doubleGauge;
 
     public void record(String csvPath) {
-        System.out.println("### START RECORDING OUTPUT ###");
         OpenTelemetry openTelemetry = otConfig.initOpenTelemetry();
+        if(openTelemetry == null) return;
+
+        System.out.println("### START RECORDING OUTPUT ###");
         Meter meter = openTelemetry.getMeter("k6.output");
         DoubleGaugeBuilder gaugeBuilder = meter.gaugeBuilder("CSV_RESULTS");
 
