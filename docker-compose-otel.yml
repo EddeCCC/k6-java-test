@@ -1,19 +1,5 @@
 version: "3.9"
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app/app
-    ports:
-      - "8080:8080"
-    environment:
-      - OTEL_HOST=otel-collector
-    depends_on:
-      otel-collector:
-        condition: service_started
-
   otel-collector:
     image: otel/opentelemetry-collector
     command: [ "--config=/etc/otel-config.yml" ]
