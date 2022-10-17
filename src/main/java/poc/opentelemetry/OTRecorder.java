@@ -1,31 +1,33 @@
 package poc.opentelemetry;
 
-import com.opencsv.exceptions.CsvValidationException;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.metrics.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.config.PathConfig;
-
-import java.io.IOException;
 
 @Component
 public final class OTRecorder {
 
     @Autowired
     private CSVImporter csvReader;
+    @Autowired
+    private OTConfig otConfig;
 
     private ObservableDoubleGauge doubleGauge;
-    private final OpenTelemetry openTelemetry = OTConfig.initOpenTelemetry();
 
     public void record(String csvPath) {
         System.out.println("### START RECORDING OUTPUT ###");
-        Meter meter = openTelemetry.getMeter("k6.csv.ouput");
-        DoubleGaugeBuilder dgb = meter.gaugeBuilder("csv_results");
+        OpenTelemetry openTelemetry = otConfig.initOpenTelemetry();
+        Meter meter = openTelemetry.getMeter("k6.output");
+        DoubleGaugeBuilder gaugeBuilder = meter.gaugeBuilder("CSV_RESULTS");
 
-        this.doubleGauge = dgb.buildWithCallback(measurement ->
-            csvReader.importOutput(measurement, csvPath)
+        //How does this work??? //The collector receives nothing...
+        //ObservableDoubleMeasurement odm = gaugeBuilder.buildObserver();
+        //csvReader.importFile(odm, csvPath);
+
+        this.doubleGauge = gaugeBuilder.buildWithCallback(measurement ->
+            csvReader.importFile(measurement, csvPath)
         );
     }
 

@@ -6,13 +6,19 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 
 import java.time.Duration;
 
+@Component
 public class OTConfig {
 
-    static OpenTelemetry initOpenTelemetry() {
+    @Value("${otel.host}")
+    private String host;
+
+    public OpenTelemetry initOpenTelemetry() {
         Resource resource = Resource.getDefault();
 
         OpenTelemetrySdk openTelemetrySdk = OpenTelemetrySdk.builder()
@@ -20,14 +26,15 @@ public class OTConfig {
                                 SdkMeterProvider.builder()
                                         .setResource(resource)
                                         .registerMetricReader(
-                                                PeriodicMetricReader.builder(OtlpHttpMetricExporter.getDefault())
+                                                PeriodicMetricReader.builder(OtlpHttpMetricExporter
+                                                                .builder()
+                                                                .setEndpoint("http://" + host +  ":4318/v1/metrics")
+                                                                .build())
                                                         .setInterval(Duration.ofMillis(1000))
                                                         .build())
                                         .build())
                         .buildAndRegisterGlobal();
 
-        Runtime.getRuntime()
-                .addShutdownHook(new Thread(openTelemetrySdk.getSdkTracerProvider()::shutdown));
         Runtime.getRuntime()
                 .addShutdownHook(new Thread(openTelemetrySdk.getSdkMeterProvider()::shutdown));
 

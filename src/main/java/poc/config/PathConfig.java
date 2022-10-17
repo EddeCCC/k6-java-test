@@ -16,6 +16,7 @@ public class PathConfig {
     private String logging;
     @Value("${path.server}")
     private String server;
+
     private final String resources = getResourcePath();
 
 

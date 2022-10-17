@@ -1,13 +1,20 @@
 version: "3.9"
 services:
-#  api:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    volumes:
-#      - ./:/app/app
-#    ports:
-#      - "8080:8080"
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app/app
+    ports:
+      - "8080:8080"
+    environment:
+      - OTEL_HOST=otel-collector
+    depends_on:
+      otel-collector:
+        condition: service_started
+
+# Not working if api also runs in Docker, I guess the api uses the wrong host to export metrics
 
   otel-collector:
     image: otel/opentelemetry-collector
@@ -19,4 +26,4 @@ services:
       - "13133:13133" # health_check extension
       - "55679:55679" # zpages extension
       - "4317:4317"   # otlp receiver
-      - "4318:4318"   # added manually otlp http
+      - "4318:4318"   # otlp http
