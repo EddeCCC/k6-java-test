@@ -28,10 +28,9 @@ public class CLRunner {
 
         String scriptPath = paths.getScript();
         String outputPath = paths.getOutput();
-        String serverAddress = paths.getServer();
 
         try {
-            String config = loader.loadConfig(serverAddress);
+            String config = loader.loadConfig();
             parser.parse(config, scriptPath);
             this.runLoadTest(scriptPath, outputPath);
         } catch (IOException | InterruptedException | URISyntaxException e) {
