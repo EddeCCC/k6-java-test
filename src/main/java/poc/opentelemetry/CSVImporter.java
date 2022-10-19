@@ -5,37 +5,38 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
-import io.opentelemetry.api.common.Attributes;
-import io.opentelemetry.api.metrics.ObservableDoubleMeasurement;
+import io.opentelemetry.sdk.metrics.data.MetricData;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 
-
-import static io.opentelemetry.api.common.AttributeKey.stringKey;
 
 @Component
 public class CSVImporter {
 
+    @Autowired
+    private OTDataCreater dataCreater;
+
     @SneakyThrows
-    public void importFile(ObservableDoubleMeasurement obm, String filePath) {
+    public List<MetricData> importMetricData(String filePath) {
         CSVReader reader = this.createCSVReader(filePath);
+        List<MetricData> data = new LinkedList<>();
         String[] line;
+
         while( (line = reader.readNext() ) != null) {
-            //Several lines in the CSV are identical, so there are sometimes multiple values for one key currently
-            //metric_name + check + method + url
             String key = line[0] + " || " + line[3] + " || " + line[8] + " || " + line[16];
             String value = "metric_value";
             double metric = Double.parseDouble(line[2]);
 
-            this.record(obm, metric, key, value);
+            MetricData singleMetric = dataCreater.createMetricData(key, value, metric);
+            data.add(singleMetric);
         }
         reader.close();
-    }
-
-    private void record(ObservableDoubleMeasurement obm, double metric, String key, String value) {
-        obm.record(metric, Attributes.of(stringKey(key), value));
+        return data;
     }
 
     private CSVReader createCSVReader(String path) throws FileNotFoundException {

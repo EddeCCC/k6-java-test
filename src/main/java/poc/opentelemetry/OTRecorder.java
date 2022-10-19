@@ -1,40 +1,29 @@
 package poc.opentelemetry;
 
-import io.opentelemetry.api.OpenTelemetry;
-import io.opentelemetry.api.metrics.*;
-
+import io.opentelemetry.exporter.otlp.http.metrics.OtlpHttpMetricExporter;
+import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
-public final class OTRecorder {
+public class OTRecorder {
 
     @Autowired
     private CSVImporter csvReader;
-    @Autowired
-    private OTConfig otConfig;
 
-    private ObservableDoubleGauge doubleGauge;
+    @Value("${otel.host}")
+    private String host;
 
     public void record(String csvPath) {
-        OpenTelemetry openTelemetry = otConfig.initOpenTelemetry();
-        if(openTelemetry == null) return;
+        OtlpHttpMetricExporter exporter = OtlpHttpMetricExporter
+                .builder()
+                .setEndpoint("http://" + host +  ":4318/v1/metrics")
+                .build();
 
-        System.out.println("### START RECORDING OUTPUT ###");
-        Meter meter = openTelemetry.getMeter("k6.output");
-        DoubleGaugeBuilder gaugeBuilder = meter.gaugeBuilder("CSV_RESULTS");
-
-        //How does this work??? //The collector receives nothing...
-        //ObservableDoubleMeasurement odm = gaugeBuilder.buildObserver();
-        //csvReader.importFile(odm, csvPath);
-
-        this.doubleGauge = gaugeBuilder.buildWithCallback(measurement ->
-            csvReader.importFile(measurement, csvPath)
-        );
-    }
-
-    public void close() {
-        doubleGauge.close();
-        System.out.println("### RECORDER CLOSED ###");
+        List<MetricData> data = csvReader.importMetricData(csvPath);
+        exporter.export(data);
     }
 }
