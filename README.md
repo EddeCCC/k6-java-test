@@ -34,16 +34,15 @@ The configuration will be loaded from a fake server (by default: `localhost:8080
 before writing your own configuration.
 
 
-Furthermore, all environmental variables in `application.properties` have to be defined. The paths
-should be relative to `./src/main/resources`
+Furthermore, all environmental variables in `application.properties` have to be defined.
 
+- `path.config`: Location of the test configuration (relative to `./src/main/resources`)
 - `path.script`: Location where the javascript file will be created 
 - `path.output`: Location where the test results will be saved (as CSV)
-- `path.config`: Location of the test configuration
 - `path.logging`: Location where the console output of k6 will be logged
-- `otel.host`: Host for running the OpenTelemetry collector on
+- `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be found in `./target/classes`
+All created files will be located relative to `./target/classes`
 
 ---
 ## Implemented Features
