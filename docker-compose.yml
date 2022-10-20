@@ -8,6 +8,7 @@ services:
       - ./:/app/app
     ports:
       - "8080:8080"
+    restart: on-failure
     environment:
       - OTEL_HOST=otel-collector
     depends_on:
