@@ -5,6 +5,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
+import poc.loadtest.exception.RunnerFailedException;
 import poc.opentelemetry.OTRecorder;
 import poc.util.ProcessLogger;
 
@@ -38,7 +39,7 @@ public class CLRunner {
             this.runLoadTest(scriptPath, outputPath);
         } catch (IOException | InterruptedException | URISyntaxException e) {
             System.out.println("### LOAD TEST FAILED ###");
-            System.out.println(e.getMessage());
+            throw new RunnerFailedException(e.getMessage());
         }
 
         recorder.record(outputPath);

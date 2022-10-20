@@ -23,7 +23,7 @@ public class ConfigLoader {
         HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
 
-        if(response.statusCode() != 200) throw new RuntimeException("Loading config faild - Status not 200");
+        if(response.statusCode() != 200) throw new RuntimeException("Loading config failed - Status not 200");
         String config = response.body();
         return config;
     }
