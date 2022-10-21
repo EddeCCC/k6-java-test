@@ -13,10 +13,16 @@ services:
       - SPRING_RABBITMQ_HOST=rabbit
     depends_on:
       rabbit:
-        condition: service_started
+        condition: service_healthy
 
   rabbit:
     image: rabbitmq:3-management
     ports:
       - "15672:15672"
       - "5672:5672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 3s
+      timeout: 10s
+      retries: 5
+      start_period: 3s
