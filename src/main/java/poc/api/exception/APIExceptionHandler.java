@@ -14,4 +14,9 @@ public class APIExceptionHandler {
      public ResponseEntity<String> handleIOException(IOException exception) {
           return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
      }
+
+     @ExceptionHandler
+     public ResponseEntity<String> handleNullPointerException(NullPointerException exception) {
+          return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+     }
 }
