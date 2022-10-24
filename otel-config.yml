@@ -22,8 +22,6 @@ processors:
 exporters:
   otlp:
     endpoint: "prometheus:9090"
-    tls:
-      insecure: true
 
   logging:
     loglevel: debug
