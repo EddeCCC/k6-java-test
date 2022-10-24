@@ -20,6 +20,9 @@ processors:
     check_interval: 5s
 
 exporters:
+  otlp:
+    endpoint: "prometheus:9090"
+
   logging:
     loglevel: debug
 
@@ -32,6 +35,6 @@ service:
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [logging]
+      exporters: [logging, otlp]
 
   extensions: [memory_ballast, zpages]
