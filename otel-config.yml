@@ -22,16 +22,14 @@ processors:
 exporters:
   otlp:
     endpoint: "prometheus:9090"
+    tls:
+      insecure: true
 
   logging:
     loglevel: debug
 
 service:
   pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [logging]
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch]
