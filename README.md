@@ -1,16 +1,28 @@
 # k6 load testing  - Java example
 
 The repository provides 
-- a small API for load testing
+- API for load testing
 - k6 mappers
 - CommandLine Runner
+- Export to OpenTelemetry Collector
 
 The application will parse a JSON configuration into a javascript 
 file, which will be executed by k6. The `k6 run` command will be executed by
-the `CLRunner` automatically after Spring is initialized and the API has started.
-By default, the API runs locally at `localhost:8080/books`.
+the `CLRunner` class automatically after Spring is initialized and the API has started.
+By default, the API runs at `localhost:8080/books`.
 
-You can run the application also in Docker with: `docker-compose up --build`
+---
+### OpenTelemetry
+
+The result of the k6 test will be saved in a CSV file. Those metrics will be exported via OTLP
+to an OpenTelemetry Collector after the test finished.
+
+---
+### Docker
+
+You can run the whole application with: `docker-compose up --build`
+
+You can run just the OpenTelemetry Collector with `docker-compose -f docker-compose-otel.yml up`
 
 ---
 ## Preparation
@@ -22,15 +34,15 @@ The configuration will be loaded from a fake server (by default: `localhost:8080
 before writing your own configuration.
 
 
-Furthermore, you need to define all paths in `application.properties`. The locations
-should be relative to `./src/main/resources`
+Furthermore, all environmental variables in `application.properties` have to be defined.
 
-- `path.script`: Location where the javascript file should be created 
-- `path.output`: Location where the test results should be saved (as CSV)
-- `path.config`: Location of the test configuration
-- `path.logging`: Location where the console output of k6 should be logged
+- `path.config`: Location of the test configuration (relative to `./src/main/resources`)
+- `path.script`: Location where the javascript file will be created 
+- `path.output`: Location where the test results will be saved (as CSV)
+- `path.logging`: Location where the console output of k6 will be logged
+- `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be found in `./target/classes`
+All created files will be located relative to `./target/classes`
 
 ---
 ## Implemented Features
@@ -86,5 +98,3 @@ Find more information about k6 options here: https://k6.io/docs/using-k6/k6-opti
 | Check ocsp                   | &#9744;     |
 | ######                       | ######      |
 | ...                          | &#9744;     |
-
-
