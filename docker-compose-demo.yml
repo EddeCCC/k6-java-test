@@ -19,7 +19,7 @@ services:
     container_name: "demo-otel-collector"
     command: [ "--config=/etc/otel-config.yml" ]
     volumes:
-      - ./otel-config.yml:/etc/otel-config.yml
+      - ./docker/opentelemetry/otel-config.yml:/etc/otel-config.yml
     ports:
       - "1888:1888"   # pprof extension
       - "13133:13133" # health_check extension
@@ -35,7 +35,7 @@ services:
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
 
@@ -48,7 +48,7 @@ services:
       - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
       - GF_INSTALL_PLUGINS=https://github.com/NovatecConsulting/novatec-service-dependency-graph-panel/releases/download/v4.0.2/novatec-sdg-panel.zip;novatec-sdg-panel
     volumes:
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     ports:
       - "3030:3000"
     depends_on:
