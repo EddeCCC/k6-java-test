@@ -28,7 +28,7 @@ public class CSVImporter {
         String[] line;
 
         while( (line = reader.readNext() ) != null) {
-            String key = line[0] + " || " + line[3] + " || " + line[8] + " || " + line[16];
+            String key = line[0] + " | " + line[3] + " | " + line[8] + " | " + line[16];
             String value = "metric_value";
             double metric = Double.parseDouble(line[2]);
 

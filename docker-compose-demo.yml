@@ -26,6 +26,8 @@ services:
       - "55679:55679" # zpages extension
       - "4317:4317"   # otlp receiver
       - "4318:4318"   # otlp http
+    depends_on:
+      - prometheus
 
   prometheus:
     image: prom/prometheus:v2.36.2
