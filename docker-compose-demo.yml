@@ -1,20 +1,5 @@
 version: '3.9'
 services:
-  otel-collector:
-    image: otel/opentelemetry-collector
-    container_name: "demo-otel-collector"
-    command: [ "--config=/etc/otel-config.yml" ]
-    volumes:
-      - ./otel-config.yml:/etc/otel-config.yml
-    ports:
-      - "1888:1888"   # pprof extension
-      - "13133:13133" # health_check extension
-      - "55679:55679" # zpages extension
-      - "4317:4317"   # otlp receiver
-      - "4318:4318"   # otlp http
-    depends_on:
-      - prometheus
-
   api:
     build:
       context: .
@@ -28,6 +13,19 @@ services:
       - OTEL_HOST=otel-collector
     depends_on:
       - otel-collector
+
+  otel-collector:
+    image: otel/opentelemetry-collector
+    container_name: "demo-otel-collector"
+    command: [ "--config=/etc/otel-config.yml" ]
+    volumes:
+      - ./otel-config.yml:/etc/otel-config.yml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "13133:13133" # health_check extension
+      - "55679:55679" # zpages extension
+      - "4317:4317"   # otlp receiver
+      - "4318:4318"   # otlp http
 
   prometheus:
     image: prom/prometheus:v2.36.2
