@@ -22,7 +22,7 @@ services:
     volumes:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/otel-config.yml
     ports:
-      - "4318:4318" # OTLP HTTP
+      - "4318:4318"   # OTLP HTTP
     depends_on:
       - prometheus
 
