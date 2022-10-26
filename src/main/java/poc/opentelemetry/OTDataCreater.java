@@ -19,30 +19,30 @@ import static io.opentelemetry.api.common.AttributeKey.stringKey;
 @Component
 public class OTDataCreater {
 
-    public List<MetricData> createMetricData(List<String[]> rows, String key, String unit) {
+    public List<MetricData> createMetricData(List<String[]> rows, String name, String unit) {
         List<MetricData> data = new LinkedList<>();
         for (String[] row : rows) {
-            String value = row[0] + "_" + row[3] + "_" + row[8];
+            String key = row[0] + "_" + row[3] + "_" + row[8];
+            String url = row[9];
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
 
-            MetricData singleMetric = this.createSingleMetricData(key, value, metric, timestamp, unit);
+            MetricData singleMetric = this.createSingleMetricData(name, unit, key, url, metric, timestamp);
             data.add(singleMetric);
         }
         return data;
     }
 
-    private MetricData createSingleMetricData(String key, String value, double metric, long timestamp, String unit) {
-        //long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
-        long endNs = timestamp + TimeUnit.MILLISECONDS.toNanos(900);
+    private MetricData createSingleMetricData(
+            String name,String unit, String key, String value, double metric, long timestamp) {
 
         return ImmutableMetricData.createDoubleGauge(Resource.empty(),
                 InstrumentationScopeInfo.empty(),
-                "k6_csv_output",
-                "Result metrics after load test",
+                name,
+                "k6-result-metric",
                 unit,
                 ImmutableGaugeData.create(Collections.singletonList(
                         ImmutableDoublePointData.create(
-                                timestamp, endNs, Attributes.of(stringKey(key), value), metric))));
+                                timestamp, timestamp, Attributes.of(stringKey(key), value), metric))));
     }
 }

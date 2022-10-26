@@ -1,0 +1,98 @@
+{
+  "name": "Config for Grafana dashboards",
+  "baseURL": "http://127.0.0.1:8080/books",
+  "options": {
+    "scenarios":{
+      "warmUp": {
+        "executor": "ramping-vus",
+        "startTime": "1s",
+        "gracefulStop": "4s",
+        "startVUs": 5,
+        "stages": [
+          { "duration": "15s", "target": 30 },
+          { "duration": "5s", "target": 15 },
+          { "duration": "10s", "target": 40 }
+        ]
+      },
+      "coolDown": {
+        "executor": "constant-vus",
+        "startTime": "2s",
+        "gracefulStop": "5s",
+        "vus": 15,
+        "duration": "10s"
+      }
+    },
+    "thresholds": {
+      "http_req_failed": ["rate < 0.05"],
+      "http_req_duration": ["p(90)<150", "p(95)<200"],
+      "http_req_duration{group:home}": [{
+        "threshold": "p(95)<300",
+        "abortOnFail": false
+      }]
+    }
+  },
+  "requests": [
+    {
+      "type": "GET",
+      "path": "/all",
+      "params": {
+        "tags": {
+          "group": "home",
+          "test": "text"
+        }
+      },
+      "checks": {
+        "status": 200,
+        "body": {
+          "min-length": 1,
+          "includes": "id"
+        },
+        "error_code": 0
+      }
+    },
+    {
+      "type": "POST",
+      "path": "/new",
+      "payload": {
+        "name": "Smart Stories",
+        "author": "Julia",
+        "releaseDate": "2005-10-10"
+      },
+      "params": {
+        "headers": {
+          "content_type": "application/json"
+        },
+        "timeout": "10s"
+      },
+      "checks": {
+        "status": 201,
+        "OR-status": 409
+      }
+    },
+    {
+      "type": "PUT",
+      "path": "/1",
+      "payload": {
+        "name": "Mediocre Stories",
+        "author": "Nils",
+        "releaseDate": "2015-11-10"
+      },
+      "params": {
+        "headers": {
+          "content_type": "application/json"
+        }
+      },
+      "checks": {
+        "status": 200,
+        "OR-status": 201
+      }
+    },
+    {
+      "type": "DELETE",
+      "path": "/2",
+      "checks": {
+        "status": 204
+      }
+    }
+  ]
+}

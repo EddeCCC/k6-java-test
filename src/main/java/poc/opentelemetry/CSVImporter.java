@@ -29,7 +29,7 @@ public class CSVImporter {
         List<MetricData> data = new LinkedList<>();
 
         List<String[]> durations = csv.stream()
-                .filter(row -> row[0].startsWith("http_") || row[0].equals("iteration_duration"))
+                .filter(row -> row[0].startsWith("http_req_") || row[0].equals("iteration_duration"))
                 .toList();
         List<String[]> checks = csv.stream()
                 .filter(row -> row[0].equals("checks"))
@@ -41,10 +41,10 @@ public class CSVImporter {
                 .filter(row -> row[0].startsWith("data_"))
                 .toList();
 
-        List<MetricData> durationData = dataCreater.createMetricData(durations, "durations", "ms");
-        List<MetricData> checkData = dataCreater.createMetricData(checks, "checks", "boolean");
-        List<MetricData> amountData = dataCreater.createMetricData(amounts, "amounts", "");
-        List<MetricData> byteData = dataCreater.createMetricData(bytes, "bytes", "bytes");
+        List<MetricData> durationData = dataCreater.createMetricData(durations, "k6-duration", "ms");
+        List<MetricData> checkData = dataCreater.createMetricData(checks, "k6-check", "boolean");
+        List<MetricData> amountData = dataCreater.createMetricData(amounts, "k6-amount", "");
+        List<MetricData> byteData = dataCreater.createMetricData(bytes, "k6-dataSize", "bytes");
 
         Stream.of(durationData, checkData, amountData, byteData).forEach(data::addAll);
 
