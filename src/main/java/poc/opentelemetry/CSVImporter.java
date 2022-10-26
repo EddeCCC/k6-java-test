@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class CSVImporter {
@@ -23,17 +25,29 @@ public class CSVImporter {
     @SneakyThrows
     public List<MetricData> importMetricData(String filePath) {
         CSVReader reader = this.createCSVReader(filePath);
+        List<String[]> csv = reader.readAll();
         List<MetricData> data = new LinkedList<>();
-        String[] line;
 
-        while( (line = reader.readNext() ) != null) {
-            String key = line[0] + " | " + line[3] + " | " + line[8] + " | " + line[16];
-            String value = "metric_value";
-            double metric = Double.parseDouble(line[2]);
+        List<String[]> durations = csv.stream()
+                .filter(row -> row[0].startsWith("http_") || row[0].equals("iteration_duration"))
+                .toList();
+        List<String[]> checks = csv.stream()
+                .filter(row -> row[0].equals("checks"))
+                .toList();
+        List<String[]> amounts = csv.stream()
+                .filter(row -> row[0].startsWith("vus") || row[0].equals("iterations"))
+                .toList();
+        List<String[]> bytes = csv.stream()
+                .filter(row -> row[0].startsWith("data_"))
+                .toList();
 
-            MetricData singleMetric = dataCreater.createMetricData(key, value, metric);
-            data.add(singleMetric);
-        }
+        List<MetricData> durationData = dataCreater.createMetricData(durations, "durations", "ms");
+        List<MetricData> checkData = dataCreater.createMetricData(checks, "checks", "boolean");
+        List<MetricData> amountData = dataCreater.createMetricData(amounts, "amounts", "");
+        List<MetricData> byteData = dataCreater.createMetricData(bytes, "bytes", "bytes");
+
+        Stream.of(durationData, checkData, amountData, byteData).forEach(data::addAll);
+
         reader.close();
         return data;
     }
