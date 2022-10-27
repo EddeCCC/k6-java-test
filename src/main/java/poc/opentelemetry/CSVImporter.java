@@ -5,8 +5,8 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
+import com.opencsv.exceptions.CsvException;
 import io.opentelemetry.sdk.metrics.data.MetricData;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +21,7 @@ public class CSVImporter {
     @Autowired
     private OTDataCreater dataCreater;
 
-    @SneakyThrows
-    public List<MetricData> importMetricData(String filePath) {
+    public List<MetricData> importMetricData(String filePath) throws IOException, CsvException {
         CSVReader reader = this.createCSVReader(filePath);
         List<String[]> csv = reader.readAll();
         List<MetricData> data = new LinkedList<>();
@@ -40,10 +39,10 @@ public class CSVImporter {
                 .filter(row -> row[0].startsWith("data_"))
                 .toList();
 
-        List<MetricData> durationData = dataCreater.createMetricData(durations, "k6-duration", "ms");
-        List<MetricData> checkData = dataCreater.createMetricData(checks, "k6-check", "boolean");
-        List<MetricData> amountData = dataCreater.createMetricData(amounts, "k6-amount", "");
-        List<MetricData> byteData = dataCreater.createMetricData(bytes, "k6-dataSize", "bytes");
+        List<MetricData> durationData = dataCreater.createMetricData(durations,  "ms");
+        List<MetricData> checkData = dataCreater.createMetricData(checks,  "boolean");
+        List<MetricData> amountData = dataCreater.createMetricData(amounts,  "");
+        List<MetricData> byteData = dataCreater.createMetricData(bytes,  "bytes");
 
         Stream.of(durationData, checkData, amountData, byteData).forEach(data::addAll);
 

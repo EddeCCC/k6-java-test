@@ -1,5 +1,6 @@
 package poc.loadtest;
 
+import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -37,12 +38,11 @@ public class CLRunner {
             String config = loader.loadConfig();
             parser.parse(config, scriptPath);
             this.runLoadTest(scriptPath, outputPath);
-        } catch (IOException | InterruptedException | URISyntaxException e) {
+            recorder.record(outputPath);
+        } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
             System.out.println("### LOAD TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
-
-        recorder.record(outputPath);
     }
 
     private void runLoadTest(String scriptPath, String outputPath) throws IOException, InterruptedException {

@@ -2,8 +2,8 @@
   "name": "FirstScript",
   "baseURL": "http://127.0.0.1:8080/books",
   "options": {
-    "vus": 1,
-    "duration": "5s",
+    "vus": 3,
+    "duration": "10s",
     "tags": {
       "api_name": "MyAPI"
     },
