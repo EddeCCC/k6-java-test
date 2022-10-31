@@ -64,6 +64,7 @@ Find more information about k6 options here: https://k6.io/docs/using-k6/k6-opti
 | Payload                      | &#9745;     |
 | CSV Output                   | &#9745;     |
 | JSON Output                  | &#9744;     |
+| Custom metrics               | &#9744;     |
 | k6 Cloud                     | &#9744;     |
 | ######                       | ######      |
 | Http GET                     | &#9745;     |

@@ -12,6 +12,7 @@ import poc.util.ProcessLogger;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class CLRunner {
@@ -30,7 +31,6 @@ public class CLRunner {
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
-
         String scriptPath = paths.getScript();
         String outputPath = paths.getOutput();
 

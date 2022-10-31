@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import poc.loadtest.exception.UnknownRequestTypeException;
 
 @Component
-public class HttpMapper implements k6Mapper {
+class HttpMapper implements k6Mapper {
 
     @Override
     public String map(JSONObject request, int requestIndex) {

@@ -14,12 +14,18 @@
           { "duration": "20s", "target": 50 }
         ]
       },
-      "coolDown": {
+      "work": {
         "executor": "constant-vus",
         "startTime": "2s",
         "gracefulStop": "5s",
         "vus": 25,
         "duration": "20s"
+      },
+      "coolDown": {
+        "executor": "per-vu-iterations",
+        "vus": 5,
+        "iterations": 10,
+        "maxDuration": "30s"
       }
     },
     "thresholds": {
@@ -37,8 +43,7 @@
       "path": "/all",
       "params": {
         "tags": {
-          "group": "home",
-          "test": "text"
+          "group": "home"
         }
       },
       "checks": {

@@ -24,27 +24,23 @@ public class CSVImporter {
     public List<MetricData> importMetricData(String filePath) throws IOException, CsvException {
         CSVReader reader = this.createCSVReader(filePath);
         List<String[]> csv = reader.readAll();
-        List<MetricData> data = new LinkedList<>();
 
-        List<String[]> durations = csv.stream()
-                .filter(row -> row[0].startsWith("http_req_") || row[0].equals("iteration_duration"))
-                .toList();
+        List<String[]> http_durations = csv.stream()
+                .filter(row -> row[0].startsWith("http_req_")).toList();
         List<String[]> checks = csv.stream()
-                .filter(row -> row[0].equals("checks"))
-                .toList();
-        List<String[]> amounts = csv.stream()
-                .filter(row -> row[0].startsWith("vus") || row[0].equals("iterations"))
-                .toList();
-        List<String[]> bytes = csv.stream()
-                .filter(row -> row[0].startsWith("data_"))
-                .toList();
+                .filter(row -> row[0].equals("checks")).toList();
+        List<String[]> vusMax = csv.stream()
+                .filter(row -> row[0].startsWith("vus_max")).toList();
+        List<String[]> vusTrend = csv.stream()
+                .filter(row -> row[0].equals("vus")).toList();
 
-        List<MetricData> durationData = dataCreater.createMetricData(durations,  "ms");
-        List<MetricData> checkData = dataCreater.createMetricData(checks,  "boolean");
-        List<MetricData> amountData = dataCreater.createMetricData(amounts,  "");
-        List<MetricData> byteData = dataCreater.createMetricData(bytes,  "bytes");
+        List<MetricData> durationData = dataCreater.createHTTPRequestData(http_durations);
+        List<MetricData> checkData = dataCreater.createAccuracyData(checks);
+        List<MetricData> vusMaxData = dataCreater.createDoubleGaugeData(vusMax);
+        List<MetricData> vusTrendData = dataCreater.createHistogramData(vusTrend);
 
-        Stream.of(durationData, checkData, amountData, byteData).forEach(data::addAll);
+        List<MetricData> data = new LinkedList<>();
+        Stream.of(durationData, checkData, vusMaxData, vusTrendData).forEach(data::addAll);
 
         reader.close();
         return data;
