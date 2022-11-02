@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector
+    command: [ "--config=/etc/otel-config.yml" ]
+    restart: on-failure
+    volumes:
+      - ./docker-config/opentelemetry/otel-config.yml:/etc/otel-config.yml
+    ports:
+      - "4318:4318" # OTLP HTTP
+
+  influxdb:
+    image: influxdb:latest
+    container_name: "k6-influx"
+    ports:
+      - "8086:8086"
+    environment:
+      - INFLUXDB_HTTP_FLUX_ENABLED=true
+      - INFLUXDB_HTTP_LOG_ENABLED=true
+      - INFLUXDB_DATA_QUERY_LOG_ENABLED=true
+      - INFLUXDB_DB=telegraf
+      - INFLUXDB_ADMIN_USER=telegraf
+      - INFLUX_ADMIN_PASSWORD=telegraf
+
+  telegraf:
+    image: telegraf:1.20-alpine
+    container_name: "k6-telegraf"
+    volumes:
+      - ./docker-config/influx/telegraf.toml:/etc/telegraf/telegraf.conf:ro
+    ports:
+      - "8125:8125"
+      - "4317:4317"
+    restart: on-failure
+    depends_on:
+      - otel-collector
+      - influxdb

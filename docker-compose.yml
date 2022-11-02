@@ -23,7 +23,6 @@ services:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
     ports:
       - "4318:4318"   # OTLP HTTP
-      - "8889:8889"
     depends_on:
       - prometheus
 
@@ -43,7 +42,6 @@ services:
     environment:
       - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
       - GF_SECURITY_ADMIN_PASSWORD=admin
-#      - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
       - GF_INSTALL_PLUGINS=https://github.com/NovatecConsulting/novatec-service-dependency-graph-panel/releases/download/v4.0.2/novatec-sdg-panel.zip;novatec-sdg-panel
     volumes:
       - ./docker-config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources

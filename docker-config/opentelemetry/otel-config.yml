@@ -15,6 +15,10 @@ processors:
 exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
+  otlp:
+    endpoint: "k6-telegraf:4317"
+    tls:
+      insecure: true
   logging:
     loglevel: debug
 
@@ -23,4 +27,4 @@ service:
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [logging, prometheus]
+      exporters: [logging, prometheus, otlp]

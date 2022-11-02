@@ -47,12 +47,30 @@ public class OTDataCreater {
                 String method = row[8];
                 String url = row[16];
                 String id = Integer.toString(idCounter);
-                MetricData metricData = this.createRequestHistogram(name, method, url, id, metric, timestamp);
+                MetricData metricData = this.createRequestGauge(name, url, method, id, metric, timestamp); //this.createRequestHistogram(name, method, url, id, metric, timestamp);
                 data.add(metricData);
                 idCounter++;
             }
         }
         return data;
+    }
+
+    private MetricData createRequestGauge(String name, String url, String method, String id, double metric, long timestamp) {
+        Attributes attributes = Attributes.builder()
+                .put(stringKey("endpoint"), url)
+                .put(stringKey("http_method"), method)
+                .put(stringKey("vu_ID"), id)
+                .build();
+
+        return ImmutableMetricData.createDoubleGauge(
+                Resource.empty(),
+                InstrumentationScopeInfo.empty(),
+                name,
+                "description test k6",
+                "ms",
+                ImmutableGaugeData.create(Collections.singletonList(
+                        ImmutableDoublePointData.create(
+                                timestamp, timestamp, attributes, metric))));
     }
 
     public List<MetricData> createAccuracyData(List<String[]> csv) {
