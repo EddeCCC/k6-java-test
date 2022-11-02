@@ -25,23 +25,22 @@ public class CSVImporter {
         CSVReader reader = this.createCSVReader(filePath);
         List<String[]> csv = reader.readAll();
 
-        List<String[]> http_durations = csv.stream()
+        List<String[]> http_req_durations = csv.stream()
                 .filter(row -> row[0].startsWith("http_req_")).toList();
         List<String[]> checks = csv.stream()
                 .filter(row -> row[0].equals("checks")).toList();
-        List<String[]> vusMax = csv.stream()
+        List<String[]> vus_max = csv.stream()
                 .filter(row -> row[0].startsWith("vus_max")).toList();
-        List<String[]> vusTrend = csv.stream()
+        List<String[]> vus_trend = csv.stream()
                 .filter(row -> row[0].equals("vus")).toList();
 
-        List<MetricData> durationData = dataCreater.createHTTPRequestData(http_durations);
+        List<MetricData> durationData = dataCreater.createHTTPRequestData(http_req_durations);
         List<MetricData> checkData = dataCreater.createAccuracyData(checks);
-        List<MetricData> vusMaxData = dataCreater.createDoubleGaugeData(vusMax);
-        List<MetricData> vusTrendData = dataCreater.createHistogramData(vusTrend);
+        List<MetricData> vusMaxData = dataCreater.createDoubleGaugeData(vus_max, "vus_max");
+        List<MetricData> vusTrendData = dataCreater.createHistogramData(vus_trend, "vus");
 
         List<MetricData> data = new LinkedList<>();
         Stream.of(durationData, checkData, vusMaxData, vusTrendData).forEach(data::addAll);
-
         reader.close();
         return data;
     }

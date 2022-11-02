@@ -1,11 +1,14 @@
+apiVersion: 1
+
 datasources:
-  - name: InfluxDB
+  - name: InfluxDB_v2_Flux
+    access: proxy
     type: influxdb
     url: http://influxdb:8086
     isDefault: true
-#    secureJsonData:
-#      token: "b8cVNwJf16kmSR_gKR-og891kiZ1lvLIpmJCszJSh5G6mrSB7dQusSKSVTAikvn5tGl3IUhkgpAj3RdjmLqZDQ=="
-#    jsonData:
-#      version: Flux
-#      organization: "ORDIX_AG"
-#      defaultBucket: "TestBucket"
+    secureJsonData:
+      token: specialToken000
+    jsonData:
+      version: Flux
+      organization: my-org
+      defaultBucket: my-bucket

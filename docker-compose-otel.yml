@@ -1,9 +1,0 @@
-version: "3.9"
-services:
-  otel-collector:
-    image: otel/opentelemetry-collector
-    command: [ "--config=/etc/otel-config.yml" ]
-    volumes:
-      - ./docker-config/opentelemetry/otel-config.yml:/etc/otel-config.yml
-    ports:
-      - "4318:4318" # OTLP HTTP

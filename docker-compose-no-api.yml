@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib
+    command: [ "--config=/etc/otel-config.yml" ]
+    restart: on-failure
+    volumes:
+      - ./docker-config/opentelemetry/otel-config.yml:/etc/otel-config.yml
+    ports:
+      - "4318:4318" # OTLP HTTP
+
+  influxdb:
+    image: influxdb:latest
+    container_name: "k6-influx"
+    ports:
+      - "8086:8086"
+    env_file:
+      - ./env/.env
+
+  grafana:
+    image: grafana/grafana:9.1.8
+    container_name: "k6-grafana"
+    environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./docker-config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+    ports:
+      - "3030:3000"
+    depends_on:
+      - influxdb

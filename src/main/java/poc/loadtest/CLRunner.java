@@ -7,12 +7,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
 import poc.loadtest.exception.RunnerFailedException;
-import poc.opentelemetry.OTRecorder;
+import poc.opentelemetry.OTExporter;
 import poc.util.ProcessLogger;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class CLRunner {
@@ -26,7 +25,7 @@ public class CLRunner {
     @Autowired
     private ProcessLogger logger;
     @Autowired
-    private OTRecorder recorder;
+    private OTExporter exporter;
 
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
@@ -38,7 +37,7 @@ public class CLRunner {
             String config = loader.loadConfig();
             parser.parse(config, scriptPath);
             this.runLoadTest(scriptPath, outputPath);
-            recorder.record(outputPath);
+            exporter.export(outputPath);
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
             System.out.println("### LOAD TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());

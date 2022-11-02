@@ -22,6 +22,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.sql.Time;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -43,34 +44,17 @@ public class OTDataCreater {
             for (String [] row : rows) {
                 String name = row[0];
                 long timestamp = Long.parseLong(row[1]);
+                long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
                 double metric = Double.parseDouble(row[2]);
                 String method = row[8];
                 String url = row[16];
                 String id = Integer.toString(idCounter);
-                MetricData metricData = this.createRequestGauge(name, url, method, id, metric, timestamp); //this.createRequestHistogram(name, method, url, id, metric, timestamp);
+                MetricData metricData = this.createRequestGauge(name, url, method, id, metric, epochNanos);
                 data.add(metricData);
                 idCounter++;
             }
         }
         return data;
-    }
-
-    private MetricData createRequestGauge(String name, String url, String method, String id, double metric, long timestamp) {
-        Attributes attributes = Attributes.builder()
-                .put(stringKey("endpoint"), url)
-                .put(stringKey("http_method"), method)
-                .put(stringKey("vu_ID"), id)
-                .build();
-
-        return ImmutableMetricData.createDoubleGauge(
-                Resource.empty(),
-                InstrumentationScopeInfo.empty(),
-                name,
-                "description test k6",
-                "ms",
-                ImmutableGaugeData.create(Collections.singletonList(
-                        ImmutableDoublePointData.create(
-                                timestamp, timestamp, attributes, metric))));
     }
 
     public List<MetricData> createAccuracyData(List<String[]> csv) {
@@ -84,41 +68,59 @@ public class OTDataCreater {
         int count = csv.size();
         double accuracy =  sum / count;
 
-        MetricData metricData = this.createDoubleGauge(name, timestamp, attributes, accuracy);
+        MetricData metricData = this.createDoubleGauge(name, attributes, accuracy, timestamp);
 
         return Collections.singletonList(metricData);
     }
 
-    public List<MetricData> createDoubleGaugeData(List<String[]> csv) {
-        String name = "vus_max";
+    public List<MetricData> createDoubleGaugeData(List<String[]> csv, String name) {
         long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
         Attributes attributes = Attributes.of(stringKey("amount"), "value");
 
         String[] vus_max = csv.get(0);
         double metric = Double.parseDouble(vus_max[2]);
-
-        MetricData metricData = this.createDoubleGauge(name, timestamp, attributes, metric);
+        MetricData metricData = this.createDoubleGauge(name, attributes, metric, timestamp);
 
         return Collections.singletonList(metricData);
     }
 
-    public List<MetricData> createHistogramData(List<String[]> csv) {
+    public List<MetricData> createHistogramData(List<String[]> csv, String name) {
         List<MetricData> data = new LinkedList<>();
-        String name = "vus";
-        int idCounter = 1;
+        int idCounter = 0;
 
         for(String[] row : csv) {
             long timestamp = Long.parseLong(row[1]);
+            long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
             double metric = Double.parseDouble(row[2]);
             String id = Integer.toString(idCounter);
-            MetricData metricData = this.createDoubleHistogram(name, id, metric, timestamp);
+            MetricData metricData = this.createDoubleHistogram(name, id, metric, epochNanos);
             data.add(metricData);
+            idCounter++;
         }
         return data;
     }
 
+    private MetricData createRequestGauge(String name, String url, String method, String id, double metric, long epochNanos) {
+        Attributes attributes = Attributes.builder()
+                .put(stringKey("endpoint"), url)
+                .put(stringKey("http_method"), method)
+                .put(stringKey("vu_ID"), id)
+                .build();
+
+        return ImmutableMetricData.createDoubleGauge(
+                Resource.empty(),
+                InstrumentationScopeInfo.empty(),
+                name,
+                "k6-result-metric",
+                "ms",
+                ImmutableGaugeData.create(Collections.singletonList(
+                        ImmutableDoublePointData.create(
+                                epochNanos, epochNanos, attributes, metric))));
+    }
+
+    @Deprecated
     private MetricData createRequestHistogram(
-            String name, String method, String url,  String id, double metric, long timestamp) {
+            String name, String method, String url,  String id, double metric, long epochNanos) {
 
         Attributes attributes = Attributes.builder()
                 .put(stringKey("endpoint"), url)
@@ -130,8 +132,8 @@ public class OTDataCreater {
         List<Long> counts = Collections.singletonList(1L);
 
         ImmutableHistogramPointData pointData = ImmutableHistogramPointData.create(
-                timestamp,
-                timestamp,
+                epochNanos,
+                epochNanos,
                 attributes,
                 metric, null, null,
                 boundaries,
@@ -148,15 +150,15 @@ public class OTDataCreater {
         );
     }
 
-    private MetricData createDoubleHistogram(String name, String id, double metric, long timestamp) {
+    private MetricData createDoubleHistogram(String name, String id, double metric, long epochNanos) {
         Attributes attributes = Attributes.of(stringKey("counter"), id);
         //Requirement: counts.size = boundaries.size + 1
         List<Double> boundaries = Collections.emptyList();
         List<Long> counts = Collections.singletonList(1L);
 
         ImmutableHistogramPointData pointData = ImmutableHistogramPointData.create(
-                timestamp,
-                timestamp,
+                epochNanos,
+                epochNanos,
                 attributes,
                 metric, null, null,
                 boundaries,
@@ -173,7 +175,7 @@ public class OTDataCreater {
         );
     }
 
-    private MetricData createDoubleGauge(String name, long timestamp, Attributes attributes, double metric) {
+    private MetricData createDoubleGauge(String name, Attributes attributes, double metric, long epochNanos) {
         return ImmutableMetricData.createDoubleGauge(
                 Resource.empty(),
                 InstrumentationScopeInfo.empty(),
@@ -182,7 +184,7 @@ public class OTDataCreater {
                 "1",
                 ImmutableGaugeData.create(Collections.singletonList(
                         ImmutableDoublePointData.create(
-                                timestamp, timestamp, attributes, metric)))
+                                epochNanos, epochNanos, attributes, metric)))
         );
     }
 }
