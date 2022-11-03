@@ -7,12 +7,12 @@
         "executor": "shared-iterations",
         "startTime": "1s",
         "gracefulStop": "4s",
-        "vus": 4,
-        "iterations": 4
+        "vus": 6,
+        "iterations": 8
       },
       "scenario_2": {
         "executor": "constant-vus",
-        "vus": 2,
+        "vus": 3,
         "duration": "5s"
       }
     },

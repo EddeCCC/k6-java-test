@@ -6,6 +6,7 @@ import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poc.opentelemetry.csv.CSVImporter;
 
 import java.io.IOException;
 import java.util.List;
