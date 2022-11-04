@@ -4,6 +4,7 @@ The repository provides
 - API for load testing
 - k6 mappers
 - OTLP exporter
+- InfluxDB
 - Grafana visualization
 
 The application will parse a JSON configuration into a javascript 
@@ -15,13 +16,13 @@ By default, the API runs at `localhost:8080/books`.
 ## SetUp
 
 The application needs a JSON configuration to create a k6 script.
-The configuration will be loaded from a fake server (by default: `localhost:8080/config`)
+The configuration will be loaded from a fake server (by default: `localhost:8080/config`).
 
 >Please take a look at the example configuration at `./src/main/resources/config/exampleConfig.json`
 before writing your own configuration.
 
 
-Furthermore, all environmental variables in `application.properties` have to be defined.
+Furthermore, all values in `application.properties` have to be defined.
 
 - `path.config`: Location of the test configuration (relative to `./src/main/resources`)
 - `path.script`: Location where the javascript file will be created
@@ -29,21 +30,24 @@ Furthermore, all environmental variables in `application.properties` have to be 
 - `path.logging`: Location where the console output of k6 will be logged
 - `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be located relative to `./target/classes`
+All created files will be located relative to `./target/classes`.
 
 ---
 ### Docker
 
 You can run the whole application with: `docker-compose up --build`
 
-You can run just the OpenTelemetry Collector with `docker-compose -f docker-compose-otel.yml up`
+You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
+
+Generated output will be stored in `/docker-output`. 
+You can configure all the docker containers in `/docker-config` and `/env`.
 
 ---
 ### OpenTelemetry
 
 The result of the k6 test will be saved in a CSV file. Those metrics will be exported via OTLP
 to an OpenTelemetry Collector after the test finished. 
-The Collector further exports those metrics to Prometheus (`localhost:9090`)
+The Collector further exports those metrics to InfluxDB.
 
 ---
 ### Grafana
@@ -108,4 +112,4 @@ Find more information about k6 options here: https://k6.io/docs/using-k6/k6-opti
 | Check remote_port            | &#9744;     |
 | Check ocsp                   | &#9744;     |
 | ######                       | ######      |
-| ...                          | &#9744;     |
+| ... more?                    | &#9744;     |
