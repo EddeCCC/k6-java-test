@@ -1,4 +1,4 @@
-package poc.opentelemetry;
+package poc.opentelemetry.metric;
 
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
@@ -16,12 +16,12 @@ import java.util.stream.Collectors;
 import static io.opentelemetry.api.common.AttributeKey.stringKey;
 
 @Component
-public class OTDataCreater {
+public class OTMetricCreater {
 
     @Autowired
-    private OTDataCreaterHelper helper;
+    private OTMetricCreaterHelper helper;
 
-    public List<MetricData> createRequestData(List<String[]> csv, String unit) {
+    public List<MetricData> createRequestMetric(List<String[]> csv, String unit) {
         List<MetricData> data = new LinkedList<>();
         Map<String, List<String[]>> groupedRequests = csv.stream().collect(Collectors.groupingBy(row -> row[0]));
 
@@ -37,7 +37,7 @@ public class OTDataCreater {
                 Attributes attributes = Attributes.builder()
                         .put(stringKey("endpoint"), url)
                         .put(stringKey("http_method"), method)
-                        .put(stringKey("vu_ID"), id)
+                        .put(stringKey("ID"), id)
                         .build();
 
                 double metric = Double.parseDouble(row[2]);
@@ -52,13 +52,13 @@ public class OTDataCreater {
         return data;
     }
 
-    public List<MetricData> createGaugeDataList(List<String[]> csv, String name, String unit) {
+    public List<MetricData> createGaugeMetricList(List<String[]> csv, String name, String unit) {
         List<MetricData> data = new LinkedList<>();
-        int idCounter = 0;
+        int idCounter = 1;
 
         for(String[] row : csv) {
             String id = Integer.toString(idCounter);
-            Attributes attributes = Attributes.of(stringKey("id"), id);
+            Attributes attributes = Attributes.of(stringKey("ID"), id);
 
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
@@ -70,7 +70,7 @@ public class OTDataCreater {
         return data;
     }
 
-    public List<MetricData> createSingleGaugeData(List<String[]> csv, CSVResponseType type) {
+    public List<MetricData> createSingleGaugeMetric(List<String[]> csv, CSVResponseType type) {
         long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
         String name = type.toString().toLowerCase();
         Attributes attributes = Attributes.empty();
@@ -79,8 +79,11 @@ public class OTDataCreater {
 
         switch (type) {
             case VUS_MAX -> metric = helper.getVusMax(csv);
-            case CHECKS -> metric = helper.getCheckAccuracy(csv);
-            case ITERATIONS -> metric = helper.getIterations(csv);
+            case CHECKS -> {
+                metric = helper.getCheckAccuracy(csv);
+                unit = "%";
+            }
+            case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
         }
 
         MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, timestamp);

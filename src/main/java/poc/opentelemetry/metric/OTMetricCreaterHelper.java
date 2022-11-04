@@ -1,11 +1,11 @@
-package poc.opentelemetry;
+package poc.opentelemetry.metric;
 
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class OTDataCreaterHelper {
+public class OTMetricCreaterHelper {
 
     public double getCheckAccuracy(List<String[]> csv) {
         double sum = csv.stream()
@@ -20,7 +20,7 @@ public class OTDataCreaterHelper {
         return Double.parseDouble(vus_max[2]);
     }
 
-    public double getIterations(List<String[]> csv) {
+    public double getAmount(List<String[]> csv) {
         double sum = csv.stream()
                 .map(row -> Double.parseDouble(row[2]))
                 .reduce(0.0, Double::sum);
