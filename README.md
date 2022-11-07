@@ -5,7 +5,7 @@ The repository provides
 - k6 mappers
 - OTLP exporter
 - InfluxDB
-- Grafana visualization
+- Grafana
 
 The application will parse a JSON configuration into a javascript 
 file, which will be executed by k6. The `k6 run` command will be executed
@@ -46,11 +46,26 @@ You can configure all the docker containers in `/docker-config` and `/env`.
 ### OpenTelemetry
 
 The result of the k6 test will be saved in a CSV file. Those metrics will be exported via OTLP
-to an OpenTelemetry Collector after the test finished. 
+to an OpenTelemetry Collector after the test has finished. 
 The Collector further exports those metrics to InfluxDB.
 
 ---
+### InfluxDB (v2)
+
+URL: `localhost:8086`
+
+Default login: username > user,  password > telegraf
+
+
+You can change it in `/env/.env`.
+The organization, bucket and token is configured here, too.
+
+---
 ### Grafana
+
+URL: `localhost:3030`
+
+Default login: username > admin, password >admin
 
 TBD
 

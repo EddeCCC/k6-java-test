@@ -7,7 +7,7 @@ import java.util.List;
 @Component
 public class OTMetricCreaterHelper {
 
-    public double getCheckAccuracy(List<String[]> csv) {
+    public double getAverage(List<String[]> csv) {
         double sum = csv.stream()
                 .map(row -> Double.parseDouble(row[2]))
                 .reduce(0.0, Double::sum);
@@ -25,5 +25,10 @@ public class OTMetricCreaterHelper {
                 .map(row -> Double.parseDouble(row[2]))
                 .reduce(0.0, Double::sum);
         return sum;
+    }
+
+    public synchronized int increaseCounter(int counter) {
+        System.out.println("COUNTER: " + counter+1);
+        return counter + 1;
     }
 }

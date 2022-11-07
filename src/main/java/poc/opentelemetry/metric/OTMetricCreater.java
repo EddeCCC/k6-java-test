@@ -27,17 +27,14 @@ public class OTMetricCreater {
 
         for(Map.Entry<String, List<String[]>> entry : groupedRequests.entrySet()) {
             List<String[]> rows = entry.getValue();
-            int idCounter = 1;
 
             for (String [] row : rows) {
                 String name = row[0];
                 String url = row[16];
                 String method = row[8];
-                String id = Integer.toString(idCounter);
                 Attributes attributes = Attributes.builder()
                         .put(stringKey("endpoint"), url)
                         .put(stringKey("http_method"), method)
-                        .put(stringKey("ID"), id)
                         .build();
 
                 double metric = Double.parseDouble(row[2]);
@@ -46,7 +43,6 @@ public class OTMetricCreater {
 
                 MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
                 data.add(metricData);
-                idCounter++;
             }
         }
         return data;
@@ -54,18 +50,15 @@ public class OTMetricCreater {
 
     public List<MetricData> createGaugeMetricList(List<String[]> csv, String name, String unit) {
         List<MetricData> data = new LinkedList<>();
-        int idCounter = 1;
 
         for(String[] row : csv) {
-            String id = Integer.toString(idCounter);
-            Attributes attributes = Attributes.of(stringKey("ID"), id);
+            Attributes attributes = Attributes.empty();
 
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
             long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
             MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
             data.add(metricData);
-            idCounter++;
         }
         return data;
     }
@@ -80,8 +73,12 @@ public class OTMetricCreater {
         switch (type) {
             case VUS_MAX -> metric = helper.getVusMax(csv);
             case CHECKS -> {
-                metric = helper.getCheckAccuracy(csv);
+                metric = helper.getAverage(csv);
                 unit = "%";
+            }
+            case ITERATION_DURATION -> {
+                metric = helper.getAverage(csv);
+                unit = "ms";
             }
             case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
         }

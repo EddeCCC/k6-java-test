@@ -16,16 +16,15 @@ services:
       - otel-collector
 
   otel-collector:
-    image: otel/opentelemetry-collector
+    image: otel/opentelemetry-collector-contrib
     container_name: "k6-otel-collector"
     command: [ "--config=/etc/opentelemetry/otel-config.yml" ]
     volumes:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
     ports:
       - "4318:4318"   # OTLP HTTP
-    depends_on:
-      - prometheus
 
+  # Not in use
   prometheus:
     image: prom/prometheus:v2.36.2
     container_name: "k6-prometheus"
@@ -36,14 +35,26 @@ services:
     ports:
       - "9090:9090"
 
+  influxdb:
+    image: influxdb:latest
+    container_name: "k6-influx"
+    ports:
+      - "8086:8086"
+    env_file:
+      - ./env/.env
+
   grafana:
     image: grafana/grafana:9.1.8
     container_name: "k6-grafana"
     environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
     volumes:
-      - ./docker-config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./docker-config/grafana/provisioning:/usr/share/grafana/custom/
+      - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
     ports:
       - "3030:3000"
     depends_on:
+      - influxdb
       - prometheus

@@ -16,7 +16,7 @@ metrics_schema = "prometheus-v1"
 
 [[outputs.influxdb_v2]]
 urls = ["http://influxdb:8086"]
-token = "qQr9g0ZicCZhZI2vfkKyJwCOq7uVES9wwiJPDuCVBdUVRa34LHNfyxoc7Ctl-1zyeY1eEDt38Jyia4hZ8JyoWA=="
+token = "specialToken000"
 organization = "my-org"
 bucket = "my-bucket"
 
