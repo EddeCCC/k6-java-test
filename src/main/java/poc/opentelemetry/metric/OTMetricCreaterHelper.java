@@ -26,9 +26,4 @@ public class OTMetricCreaterHelper {
                 .reduce(0.0, Double::sum);
         return sum;
     }
-
-    public synchronized int increaseCounter(int counter) {
-        System.out.println("COUNTER: " + counter+1);
-        return counter + 1;
-    }
 }

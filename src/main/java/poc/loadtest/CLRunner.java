@@ -2,6 +2,7 @@ package poc.loadtest;
 
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class CLRunner {
         try {
             String config = loader.loadConfig();
             parser.parse(config, scriptPath);
-            this.runLoadTest(scriptPath, outputPath);
+            this.runCommand(scriptPath, outputPath);
             exporter.export(outputPath);
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
             System.out.println("### LOAD TEST FAILED ###");
@@ -44,7 +45,7 @@ public class CLRunner {
         }
     }
 
-    private void runLoadTest(String scriptPath, String outputPath) throws IOException, InterruptedException {
+    private void runCommand(String scriptPath, String outputPath) throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
         String command = "k6 run " + scriptPath + " --out csv=" + outputPath;
         Process process = runtime.exec(command);
