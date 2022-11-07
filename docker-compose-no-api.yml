@@ -1,20 +1,5 @@
 version: '3.9'
 services:
-  api:
-    container_name: "k6-api"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    volumes:
-      - ./:/app/app
-      - ./docker-output:/app/output
-    ports:
-      - "8080:8080"
-    environment:
-      - OTEL_HOST=otel-collector
-    depends_on:
-      - otel-collector
-
   otel-collector:
     image: otel/opentelemetry-collector-contrib
     container_name: "k6-otel-collector"
@@ -23,17 +8,6 @@ services:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
     ports:
       - "4318:4318"   # OTLP HTTP
-
-  # Not in use
-  prometheus:
-    image: prom/prometheus:v2.36.2
-    container_name: "k6-prometheus"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    volumes:
-      - ./docker-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
 
   influxdb:
     image: influxdb:latest
@@ -57,4 +31,3 @@ services:
       - "3030:3000"
     depends_on:
       - influxdb
-      - prometheus

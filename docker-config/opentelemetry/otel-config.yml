@@ -1,13 +1,6 @@
-extensions:
-  memory_ballast:
-    size_mib: 512
-  zpages:
-    endpoint: 0.0.0.0:55679
-
 receivers:
   otlp:
     protocols:
-      grpc:
       http:
 
 processors:
@@ -20,18 +13,20 @@ processors:
     check_interval: 5s
 
 exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+  influxdb:
+    endpoint: "http://influxdb:8086"
+    org: my-org
+    bucket: my-bucket
+    token: specialToken000
+    metrics_schema: telegraf-prometheus-v1
   logging:
     loglevel: debug
 
 service:
   pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [logging]
     metrics:
       receivers: [otlp]
       processors: [memory_limiter, batch]
-      exporters: [logging]
-
-  extensions: [memory_ballast, zpages]
+      exporters: [prometheus, influxdb, logging]

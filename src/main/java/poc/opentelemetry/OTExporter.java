@@ -1,15 +1,18 @@
 package poc.opentelemetry;
 
+import com.opencsv.exceptions.CsvException;
 import io.opentelemetry.exporter.otlp.http.metrics.OtlpHttpMetricExporter;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poc.opentelemetry.csv.CSVImporter;
 
+import java.io.IOException;
 import java.util.List;
 
 @Component
-public class OTRecorder {
+public class OTExporter {
 
     @Autowired
     private CSVImporter csvReader;
@@ -17,7 +20,7 @@ public class OTRecorder {
     @Value("${otel.host}")
     private String host;
 
-    public void record(String csvPath) {
+    public void export(String csvPath) throws IOException, CsvException {
         OtlpHttpMetricExporter exporter = OtlpHttpMetricExporter
                 .builder()
                 .setEndpoint("http://" + host +  ":4318/v1/metrics")

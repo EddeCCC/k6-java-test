@@ -1,12 +1,13 @@
 package poc.loadtest;
 
+import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
 import poc.loadtest.exception.RunnerFailedException;
-import poc.opentelemetry.OTRecorder;
+import poc.opentelemetry.OTExporter;
 import poc.util.ProcessLogger;
 
 import java.io.*;
@@ -24,12 +25,11 @@ public class CLRunner {
     @Autowired
     private ProcessLogger logger;
     @Autowired
-    private OTRecorder recorder;
+    private OTExporter exporter;
 
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
         System.out.println("### LOAD TEST STARTED ###");
-
         String scriptPath = paths.getScript();
         String outputPath = paths.getOutput();
 
@@ -37,12 +37,11 @@ public class CLRunner {
             String config = loader.loadConfig();
             parser.parse(config, scriptPath);
             this.runLoadTest(scriptPath, outputPath);
-        } catch (IOException | InterruptedException | URISyntaxException e) {
+            exporter.export(outputPath);
+        } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
             System.out.println("### LOAD TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
-
-        recorder.record(outputPath);
     }
 
     private void runLoadTest(String scriptPath, String outputPath) throws IOException, InterruptedException {
