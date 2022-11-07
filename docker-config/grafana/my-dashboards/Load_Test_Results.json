@@ -473,7 +473,7 @@
               "mode": "off"
             }
           },
-          "displayName": "Test $id",
+          "displayName": "Received",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -563,7 +563,7 @@
               "mode": "off"
             }
           },
-          "displayName": "Test $id",
+          "displayName": "Sent",
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -622,7 +622,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "http_req_duration"
           ],
@@ -650,7 +650,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "http://127.0.0.1:8080/books/1"
           ],
@@ -677,7 +677,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -712,6 +712,6 @@
   "timezone": "",
   "title": "Load_Test_Results",
   "uid": "Mv6GOiv4z",
-  "version": 3,
+  "version": 2,
   "weekStart": ""
 }

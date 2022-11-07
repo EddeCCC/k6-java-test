@@ -30,7 +30,7 @@ Furthermore, all values in `application.properties` have to be defined.
 - `path.logging`: Location where the console output of k6 will be logged
 - `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be located relative to `./target/classes`.
+All created files will be located relative to `/target/classes`.
 
 ---
 ### Docker
@@ -39,8 +39,8 @@ You can run the whole application with: `docker-compose up --build`
 
 You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
 
-Generated output will be stored in `/docker-output`. 
-You can configure all the docker containers in `/docker-config` and `/env`.
+Generated output will be stored in `./docker-output`. 
+You can configure all the docker containers in `./docker-config` and `/env`.
 
 ---
 ### OpenTelemetry
@@ -57,7 +57,7 @@ URL: `localhost:8086`
 Default login: username > user,  password > telegraf
 
 
-You can change it in `/env/.env`.
+You can change it in `./env/.env`.
 The organization, bucket and token is configured here, too.
 
 ---
@@ -65,9 +65,9 @@ The organization, bucket and token is configured here, too.
 
 URL: `localhost:3030`
 
-Default login: username > admin, password >admin
+Default login: username > admin, password > admin
 
-TBD
+You can view the test results in the dashboard: Load_Test_Results
 
 ---
 ## Implemented Features

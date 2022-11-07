@@ -1,3 +1,4 @@
+# we use the opentelemetry influxDB plugin instead of telegraf, both are fine
 [global_tags]
 user = "admin"
 
