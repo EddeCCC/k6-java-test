@@ -22,7 +22,8 @@ The configuration will be loaded from a fake server (by default: `localhost:8080
 before writing your own configuration.
 
 
-Furthermore, all values in `application.properties` have to be defined.
+Furthermore, all values in `application.properties` have to be defined. 
+You can also use the default values.
 
 - `path.config`: Location of the test configuration (relative to `./src/main/resources`)
 - `path.script`: Location where the javascript file will be created
@@ -39,7 +40,7 @@ You can run the whole application with: `docker-compose up --build`
 
 You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
 
-Generated output will be stored in `./docker-output`. 
+Generated **output** will be stored in `./docker-output`. 
 You can configure all the docker containers in `./docker-config` and `/env`.
 
 ---
