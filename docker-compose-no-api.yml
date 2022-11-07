@@ -23,8 +23,10 @@ services:
     environment:
       - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
     volumes:
-      - ./docker-config/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./docker-config/grafana/provisioning:/usr/share/grafana/custom/
+      - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
     ports:
       - "3030:3000"
     depends_on:
