@@ -2,12 +2,12 @@ version: '3.9'
 services:
   otel-collector:
     image: otel/opentelemetry-collector-contrib
-    command: [ "--config=/etc/otel-config.yml" ]
-    restart: on-failure
+    container_name: "k6-otel-collector"
+    command: [ "--config=/etc/opentelemetry/otel-config.yml" ]
     volumes:
-      - ./docker-config/opentelemetry/otel-config.yml:/etc/otel-config.yml
+      - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
     ports:
-      - "4318:4318" # OTLP HTTP
+      - "4318:4318"   # OTLP HTTP
 
   influxdb:
     image: influxdb:latest
