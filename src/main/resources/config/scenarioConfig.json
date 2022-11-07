@@ -8,7 +8,8 @@
         "startTime": "1s",
         "gracefulStop": "4s",
         "vus": 6,
-        "iterations": 8
+        "iterations": 8,
+        "duration": 5
       },
       "scenario_2": {
         "executor": "constant-vus",
