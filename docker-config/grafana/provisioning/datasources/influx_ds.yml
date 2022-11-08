@@ -8,8 +8,8 @@ datasources:
     url: http://influxdb:8086
     isDefault: true
     secureJsonData:
-      token: specialToken000
+      token: $DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
     jsonData:
       version: Flux
-      organization: my-org
-      defaultBucket: my-bucket
+      organization: $DOCKER_INFLUXDB_INIT_ORG
+      defaultBucket: $DOCKER_INFLUXDB_INIT_BUCKET

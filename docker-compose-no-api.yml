@@ -8,6 +8,8 @@ services:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
     ports:
       - "4318:4318"   # OTLP HTTP
+    env_file:
+      - ./env/.env
 
   influxdb:
     image: influxdb:latest
@@ -20,14 +22,16 @@ services:
   grafana:
     image: grafana/grafana:9.1.8
     container_name: "k6-grafana"
-    environment:
-      - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
     volumes:
       - ./docker-config/grafana/provisioning:/usr/share/grafana/custom/
       - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
     ports:
       - "3030:3000"
+    env_file:
+      - ./env/.env
+    environment:
+      - GF_PANELS_DISABLE_SANITIZE_HTML=TRUE
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/usr/share/grafana/custom/
     depends_on:
       - influxdb

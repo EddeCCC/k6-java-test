@@ -17,9 +17,9 @@ exporters:
     endpoint: "0.0.0.0:8889"
   influxdb:
     endpoint: "http://influxdb:8086"
-    org: my-org
-    bucket: my-bucket
-    token: specialToken000
+    org: "${DOCKER_INFLUXDB_INIT_ORG}"
+    bucket: "${DOCKER_INFLUXDB_INIT_BUCKET}"
+    token: "${DOCKER_INFLUXDB_INIT_ADMIN_TOKEN}"
     metrics_schema: telegraf-prometheus-v1
   logging:
     loglevel: debug

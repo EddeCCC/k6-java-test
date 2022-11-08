@@ -31,7 +31,7 @@ You can also use the default values.
 - `path.logging`: Location where the console output of k6 will be logged
 - `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be located relative to `/target/classes`.
+All created files will be located relative to `./target/classes`.
 
 ---
 ### Docker
@@ -41,7 +41,7 @@ You can run the whole application with: `docker-compose up --build`
 You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
 
 Generated **output** will be stored in `./docker-output`. 
-You can configure all the docker containers in `./docker-config` and `/env`.
+You can configure all the docker containers in `./docker-config` and `./env`.
 
 ---
 ### OpenTelemetry
