@@ -18,20 +18,20 @@ By default, the API runs at `localhost:8080/books`.
 The application needs a JSON configuration to create a k6 script.
 The configuration will be loaded from a fake server (by default: `localhost:8080/config`).
 
->Please take a look at the example configuration at `./src/main/resources/config/exampleConfig.json`
+>Please take a look at the example configuration at [exampleConfig](src/main/resources/config/exampleConfig.json)
 before writing your own configuration.
 
 
-Furthermore, all values in `application.properties` have to be defined. 
+Furthermore, all values in [application.properties](src/main/resources/application.properties) have to be defined. 
 You can also use the default values.
 
-- `path.config`: Location of the test configuration (relative to `./src/main/resources`)
+- `path.config`: Location of the test configuration (relative to [resources](src/main/resources))
 - `path.script`: Location where the javascript file will be created
 - `path.output`: Location where the test results will be saved (as CSV)
 - `path.logging`: Location where the console output of k6 will be logged
 - `otel.host`: Host to run the OpenTelemetry collector on
 
-All created files will be located relative to `./target/classes`.
+All **created** files will be located relative to `./target/classes`.
 
 ---
 ### Docker
@@ -41,7 +41,7 @@ You can run the whole application with: `docker-compose up --build`
 You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
 
 Generated **output** will be stored in `./docker-output`. 
-You can configure all the docker containers in `./docker-config` and `./env`.
+You can configure all the docker containers in [docker-config](docker-config) and [env](env).
 
 ---
 ### OpenTelemetry
@@ -58,8 +58,8 @@ URL: `localhost:8086`
 Default login: username > user,  password > telegraf
 
 
-You can change it in `./env/.env`.
-The organization, bucket and token is configured here, too.
+You can change it in the [.env](env/.env) file.
+The organization, bucket and token are configured here, too.
 
 ---
 ### Grafana
@@ -68,7 +68,7 @@ URL: `localhost:3030`
 
 Default login: username > admin, password > admin
 
-You can view the test results in the dashboard: Load_Test_Results
+You can view the test results in the dashboard: [Load_Test_Results](docker-config/grafana/my-dashboards/Load_Test_Results.json)
 
 ---
 ## Implemented Features
