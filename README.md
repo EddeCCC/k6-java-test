@@ -18,8 +18,7 @@ By default, the API runs at `localhost:8080/books`.
 The application needs a JSON configuration to create a k6 script.
 The configuration will be loaded from a fake server (by default: `localhost:8080/config`).
 
->Please take a look at the example configuration at [exampleConfig](src/main/resources/config/exampleConfig.json)
-before writing your own configuration.
+> Please take a look at the [documentation](docu/TestConfiguration.md) for the configuration
 
 
 Furthermore, all values in [application.properties](src/main/resources/application.properties) have to be defined. 
