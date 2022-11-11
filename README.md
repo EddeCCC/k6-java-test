@@ -15,6 +15,9 @@ By default, the API runs at `localhost:8080/books`.
 ---
 ## SetUp
 
+If you can´t use the `k6.exe`, you can run the application in Docker or install k6 manually.
+You can find the installation instructions here: https://k6.io/docs/get-started/installation/
+
 The application needs a JSON configuration to create a k6 script.
 The configuration will be loaded from a fake server (by default: `localhost:8080/config`).
 

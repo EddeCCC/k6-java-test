@@ -24,7 +24,7 @@
       ],
       "http_req_duration": [
         {
-          "threshold": "p(90)<10",
+          "threshold": "p(90)<1",
           "abortOnFail": true,
           "delayAbortEval": "5s"
         },

@@ -60,28 +60,30 @@ public class CLRunner {
     private void startSpikeTest(String scriptPath, String outputPath, String testType) {
         System.out.println("### STRESS TEST STARTED ###");
         int maxLoop = tests.getMaxLoop();
-        int currentLoop = 0;
+        int exitCode;
 
-        while (currentLoop < maxLoop) {
+        for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
             try {
                 String config = loader.loadConfig();
                 parser.parse(config, scriptPath, testType);
-                this.runCommand(scriptPath, outputPath);
+                exitCode = this.runCommand(scriptPath, outputPath);
                 exporter.export(outputPath);
             } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
                 System.out.println("### STRESS TEST FAILED ###");
                 throw new RunnerFailedException(e.getMessage());
             }
-            currentLoop++;
+            //Not sure, if failed thresholds always return exitCode 99
+            if(exitCode == 99) break;
         }
     }
 
-    private void runCommand(String scriptPath, String outputPath) throws IOException, InterruptedException {
+    private int runCommand(String scriptPath, String outputPath) throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
         String command = "k6 run " + scriptPath + " --out csv=" + outputPath;
         Process process = runtime.exec(command);
 
         String loggingPath = paths.getLogging();
         logger.log(process, loggingPath);
+        return process.exitValue();
     }
 }
