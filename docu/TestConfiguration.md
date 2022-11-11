@@ -91,7 +91,10 @@ in `options`. You can examine the check results in the generated output.
 ![screenshot of example checks object](images/checksExample.png)
 
 ---
-## optional
+## Additional Information
 
 It is recommended to use a `name` or `description` key at the top of the file to provide quick information 
 about the configuration.
+
+With k6 you can also create other types of tests than load tests.
+View all possible test types of k6 here: https://k6.io/docs/test-types/
