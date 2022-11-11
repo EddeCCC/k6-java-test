@@ -57,7 +57,7 @@ The Collector further exports those metrics to InfluxDB.
 
 URL: `localhost:8086`
 
-Default login: username > user,  password > telegraf
+Default login: username > k6,  password > telegraf
 
 
 You can change it in the [.env](env/.env) file.
@@ -70,7 +70,7 @@ URL: `localhost:3030`
 
 Default login: username > admin, password > admin
 
-You can view the test results in the dashboard: [Load_Test_Results](docker-config/grafana/my-dashboards/Load_Test_Results.json)
+You can view the test results in the dashboard: [Load_Test_Results](docker-config/grafana/my-dashboards/home.json)
 
 ---
 ## Implemented Features

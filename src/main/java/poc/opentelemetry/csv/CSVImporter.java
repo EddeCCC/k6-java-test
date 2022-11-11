@@ -28,23 +28,22 @@ public class CSVImporter {
         reader.close();
 
         List<String[]> http_reqs = this.filterType(csv, "http_req_");
-        List<String[]> vus_progress = this.filterType(csv, "vus");
+        List<String[]> vus = this.filterType(csv, "vus");
         List<String[]> data_sent = this.filterType(csv, "data_sent");
         List<String[]> data_received = this.filterType(csv, "data_received");
 
         List<String[]> checks = this.filterType(csv, "checks");
-        List<String[]> vus_max = this.filterType(csv, "vus_max");
         List<String[]> iteration_duration = this.filterType(csv, "iteration_duration");
         List<String[]> iterations = this.filterType(csv, "iterations");
         List<String[]> http_req_count = this.filterType(csv, "http_reqs");
 
         List<MetricData> requestMetric = metricCreater.createRequestMetric(http_reqs, "ms");
-        List<MetricData> vusProgressMetric = metricCreater.createGaugeMetricList(vus_progress, "vus", "1");
+        List<MetricData> vusProgressMetric = metricCreater.createGaugeMetricList(vus, "vus", "1");
         List<MetricData> dataSentMetric = metricCreater.createGaugeMetricList(data_sent, "data_sent", "B");
         List<MetricData> dataReceivedMetric = metricCreater.createGaugeMetricList(data_received, "data_received", "B");
 
         List<MetricData> checksMetric = metricCreater.createSingleGaugeMetric(checks, CSVResponseType.CHECKS);
-        List<MetricData> vusMaxMetric = metricCreater.createSingleGaugeMetric(vus_max, CSVResponseType.VUS_MAX);
+        List<MetricData> vusMaxMetric = metricCreater.createSingleGaugeMetric(vus, CSVResponseType.MAX_LOAD);
         List<MetricData> iterationMetric = metricCreater.createSingleGaugeMetric(iteration_duration, CSVResponseType.ITERATION_DURATION);
         List<MetricData> iterationsCounterMetric = metricCreater.createSingleGaugeMetric(iterations, CSVResponseType.ITERATIONS);
         List<MetricData> requestCounterMetric = metricCreater.createSingleGaugeMetric(http_req_count, CSVResponseType.HTTP_REQS);

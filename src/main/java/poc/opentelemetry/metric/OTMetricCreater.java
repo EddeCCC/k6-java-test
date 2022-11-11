@@ -71,7 +71,8 @@ public class OTMetricCreater {
         String unit = "1";
 
         switch (type) {
-            case VUS_MAX -> metric = helper.getVusMax(csv);
+            case MAX_LOAD -> metric = helper.getMaxLoad(csv);
+            case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
             case CHECKS -> {
                 metric = helper.getAverage(csv);
                 unit = "%";
@@ -80,7 +81,6 @@ public class OTMetricCreater {
                 metric = helper.getAverage(csv);
                 unit = "ms";
             }
-            case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
         }
 
         MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
