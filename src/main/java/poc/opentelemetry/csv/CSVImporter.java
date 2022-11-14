@@ -28,7 +28,7 @@ public class CSVImporter {
         List<String[]> csv = reader.readAll();
         reader.close();
 
-        List<String[]> http_reqs = this.filterType(csv, "http_req_");
+        List<String[]> http_reqs = csv.stream().filter(row -> row[0].startsWith("http_req_")).toList();
         List<String[]> vus = this.filterType(csv, "vus");
         List<String[]> data_sent = this.filterType(csv, "data_sent");
         List<String[]> data_received = this.filterType(csv, "data_received");
@@ -66,9 +66,10 @@ public class CSVImporter {
     }
 
     private List<String[]> filterType(List<String[]> csv, String filter) {
-        return csv.stream().filter(row -> row[0].startsWith(filter)).toList();
+        return csv.stream().filter(row -> row[0].equals(filter)).toList();
     }
 
+    @SafeVarargs
     private List<MetricData> combineData(List<MetricData>... createdData) {
         List<MetricData> combinedData = new LinkedList<>();
         Stream.of(createdData).forEach(combinedData::addAll);

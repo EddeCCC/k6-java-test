@@ -64,7 +64,8 @@ public class CLRunner {
         System.out.println("### BREAKPOINT TEST STARTED ###");
         int maxLoop = tests.getMaxLoop();
         String config = loader.loadConfig();
-        int thresholdHaveFailedErrorCode = 99; //Not sure, if failed thresholds always return exitCode 99
+        //Not sure, if all failed thresholds return 99, that´s their generic errorCode
+        int thresholdHaveFailedErrorCode = 99;
 
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
             if(currentLoop != 0) config = increaser.increase(config);
