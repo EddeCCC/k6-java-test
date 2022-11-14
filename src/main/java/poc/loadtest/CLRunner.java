@@ -22,6 +22,8 @@ public class CLRunner {
     @Autowired
     private ConfigLoader loader;
     @Autowired
+    private LoadIncreaser increaser;
+    @Autowired
     private PathConfig paths;
     @Autowired
     private TestConfig tests;
@@ -30,60 +32,64 @@ public class CLRunner {
     @Autowired
     private OTExporter exporter;
 
+
+    private String testType;
+    private String scriptPath;
+    private String outputPath;
+    private String loggingPath;
+
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
-        String testType = tests.getType();
-        String scriptPath = paths.getScript();
-        String outputPath = paths.getOutput();
-
-        switch (testType) {
-            case "load" -> this.startLoadTest(scriptPath, outputPath, testType);
-            case "spike" -> this.startSpikeTest(scriptPath, outputPath, testType);
-            default -> throw new IllegalArgumentException("### UNKNOWN TEST TYPE ###");
-        }
-    }
-
-    private void startLoadTest(String scriptPath, String outputPath, String testType) {
-        System.out.println("### LOAD TEST STARTED ###");
-
+        this.getApplicationConfig();
         try {
-            String config = loader.loadConfig();
-            parser.parse(config, scriptPath, testType);
-            this.runCommand(scriptPath, outputPath);
-            exporter.export(outputPath);
+            switch (testType) {
+                case "load" -> this.startLoadTest();
+                case "capacity" -> this.startCapacityTest();
+                default -> throw new IllegalArgumentException("### UNKNOWN TEST TYPE ###");
+            }
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
-            System.out.println("### LOAD TEST FAILED ###");
+            System.out.println("### TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
     }
 
-    private void startSpikeTest(String scriptPath, String outputPath, String testType) {
-        System.out.println("### STRESS TEST STARTED ###");
+    private void startLoadTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
+        System.out.println("### LOAD TEST STARTED ###");
+        String config = loader.loadConfig();
+        parser.parse(config, scriptPath, testType);
+        this.runCommand();
+        exporter.export(outputPath);
+    }
+
+    private void startCapacityTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
+        System.out.println("### CAPACITY TEST STARTED ###");
         int maxLoop = tests.getMaxLoop();
-        int exitCode;
+        String config = loader.loadConfig();
 
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
-            try {
-                String config = loader.loadConfig();
-                parser.parse(config, scriptPath, testType);
-                exitCode = this.runCommand(scriptPath, outputPath);
-                exporter.export(outputPath);
-            } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
-                System.out.println("### STRESS TEST FAILED ###");
-                throw new RunnerFailedException(e.getMessage());
-            }
+            if(currentLoop != 0) config = increaser.increase(config);
+            parser.parse(config, scriptPath, testType);
+            int exitCode = this.runCommand();
+            exporter.export(outputPath);
+
             //Not sure, if failed thresholds always return exitCode 99
             if(exitCode == 99) break;
         }
     }
 
-    private int runCommand(String scriptPath, String outputPath) throws IOException, InterruptedException {
+    private int runCommand() throws IOException, InterruptedException {
         Runtime runtime = Runtime.getRuntime();
         String command = "k6 run " + scriptPath + " --out csv=" + outputPath;
         Process process = runtime.exec(command);
 
-        String loggingPath = paths.getLogging();
         logger.log(process, loggingPath);
         return process.exitValue();
+    }
+
+    private void getApplicationConfig() {
+        this.testType = tests.getType();
+        this.scriptPath = paths.getScript();
+        this.outputPath = paths.getOutput();
+        this.loggingPath = paths.getLogging();
     }
 }

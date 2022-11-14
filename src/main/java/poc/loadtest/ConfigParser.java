@@ -21,8 +21,6 @@ public class ConfigParser {
         JSONObject configJSON = new JSONObject(config);
         if(!isConfigValid(configJSON)) throw new InvalidConfigurationException();
 
-        if(testType.equals("spike")) configJSON = increaser.increase(configJSON);
-
         List<String> scriptCode = mapper.createScript(configJSON);
         FileWriter writer = new FileWriter(scriptPath);
 

@@ -3,9 +3,9 @@
   "baseURL": "http://127.0.0.1:8080/books",
   "options": {
     "stages": [
-      { "duration": "10s", "target": 50 },
-      { "duration": "10s", "target": 50 },
-      { "duration": "10s", "target": 20 }
+      { "duration": "5s", "target": 50 },
+      { "duration": "10s", "target": 60 },
+      { "duration": "5s", "target": 20 }
     ],
     "thresholds": {
       "http_req_failed": [
@@ -24,12 +24,12 @@
       ],
       "http_req_duration": [
         {
-          "threshold": "p(90)<5",
+          "threshold": "p(90)<5.8",
           "abortOnFail": true,
           "delayAbortEval": "5s"
         },
         {
-          "threshold": "avg<10",
+          "threshold": "avg<3.2",
           "abortOnFail": true,
           "delayAbortEval": "5s"
         }

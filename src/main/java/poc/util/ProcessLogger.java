@@ -31,10 +31,8 @@ public class ProcessLogger {
     }
 
     private void waitForProcess(Process process) throws InterruptedException {
-        while(true) {
-            boolean isFinished = !process.isAlive();
-            if (isFinished) break;
-            Thread.sleep(3000);
+        while(process.isAlive()) {
+            Thread.sleep(2000);
             System.out.println("...");
         }
     }

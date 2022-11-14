@@ -7,18 +7,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoadIncreaser {
 
-    public JSONObject increase(JSONObject config) {
-        JSONObject options = config.getJSONObject("options");
+    public String increase(String config) {
+        JSONObject configJSON = new JSONObject(config);
+        JSONObject options = configJSON.getJSONObject("options");
         JSONArray stages = options.getJSONArray("stages");
         JSONObject spikeLoad = stages.getJSONObject(1);
         int currentLoad = spikeLoad.getInt("target");
         int increasedLoad = currentLoad * 2;
-        System.out.println("### CURRENT LOAD: " + increasedLoad + " ###");
+        System.out.println("### INCREASED LOAD: " + increasedLoad + " ###");
 
-        JSONObject newSpikeLoad = spikeLoad.put("target", increasedLoad);
-        JSONArray newStages = stages.put(1, newSpikeLoad);
+        JSONObject newCapacityLoad = spikeLoad.put("target", increasedLoad);
+        JSONArray newStages = stages.put(1, newCapacityLoad);
         JSONObject newOptions = options.put("stages", newStages);
-        JSONObject newConfig = config.put("options", newOptions);
-        return newConfig;
+        JSONObject newConfig = configJSON.put("options", newOptions);
+        return newConfig.toString();
     }
 }
