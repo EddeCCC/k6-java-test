@@ -2,36 +2,51 @@
   "name": "Stress test to determine the maximum load possible",
   "baseURL": "http://127.0.0.1:8080/books",
   "options": {
-    "stages": [
-      { "duration": "5s", "target": 50 },
-      { "duration": "10s", "target": 60 },
-      { "duration": "5s", "target": 20 }
-    ],
+    "scenarios": {
+      "warmUp": {
+        "executor": "constant-vus",
+        "vus": 10,
+        "duration": "5s"
+      },
+      "breakpoint": {
+        "executor": "ramping-vus",
+        "gracefulRampDown": "20s",
+        "startTime": "5s",
+        "startVUs": 40,
+        "stages": [
+          { "duration": "10s", "target": 50 },
+          { "duration": "10s", "target": 60 },
+          { "duration": "10s", "target": 70 },
+          { "duration": "10s", "target": 80 },
+          { "duration": "20s", "target": 10 }
+        ]
+      }
+    },
     "thresholds": {
       "http_req_failed": [
         {
           "threshold": "rate<0.05",
           "abortOnFail": true,
-          "delayAbortEval": "5s"
+          "delayAbortEval": "20s"
         }
       ],
       "checks": [
         {
           "threshold": "rate>0.9",
           "abortOnFail": true,
-          "delayAbortEval": "5s"
+          "delayAbortEval": "20s"
         }
       ],
       "http_req_duration": [
         {
-          "threshold": "p(90)<5.8",
-          "abortOnFail": true,
-          "delayAbortEval": "5s"
+          "threshold": "p(90)<90",
+          "abortOnFail": false,
+          "delayAbortEval": "45s"
         },
         {
-          "threshold": "avg<3.2",
-          "abortOnFail": true,
-          "delayAbortEval": "5s"
+          "threshold": "avg<50",
+          "abortOnFail": false,
+          "delayAbortEval": "45s"
         }
       ]
     }

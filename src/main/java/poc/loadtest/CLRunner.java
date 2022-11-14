@@ -32,7 +32,6 @@ public class CLRunner {
     @Autowired
     private OTExporter exporter;
 
-
     private String testType;
     private String scriptPath;
     private String outputPath;
@@ -44,7 +43,7 @@ public class CLRunner {
         try {
             switch (testType) {
                 case "load" -> this.startLoadTest();
-                case "capacity" -> this.startCapacityTest();
+                case "breakpoint" -> this.startBreakpointTest();
                 default -> throw new IllegalArgumentException("### UNKNOWN TEST TYPE ###");
             }
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
@@ -61,10 +60,11 @@ public class CLRunner {
         exporter.export(outputPath);
     }
 
-    private void startCapacityTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
-        System.out.println("### CAPACITY TEST STARTED ###");
+    private void startBreakpointTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
+        System.out.println("### BREAKPOINT TEST STARTED ###");
         int maxLoop = tests.getMaxLoop();
         String config = loader.loadConfig();
+        int thresholdHaveFailedErrorCode = 99; //Not sure, if failed thresholds always return exitCode 99
 
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
             if(currentLoop != 0) config = increaser.increase(config);
@@ -72,8 +72,7 @@ public class CLRunner {
             int exitCode = this.runCommand();
             exporter.export(outputPath);
 
-            //Not sure, if failed thresholds always return exitCode 99
-            if(exitCode == 99) break;
+            if(exitCode == thresholdHaveFailedErrorCode) break;
         }
     }
 

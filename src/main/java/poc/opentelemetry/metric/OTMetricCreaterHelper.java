@@ -21,6 +21,7 @@ public class OTMetricCreaterHelper {
                 .map(row -> Double.parseDouble(row[2]))
                 .max(Comparator.comparing(Double::valueOf))
                 .get();
+
         return maxLoad;
     }
 

@@ -64,6 +64,8 @@ public class OTMetricCreater {
     }
 
     public List<MetricData> createSingleGaugeMetric(List<String[]> csv, CSVResponseType type) {
+        if(csv.isEmpty()) return Collections.emptyList();
+
         long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
         String name = type.toString().toLowerCase();
         Attributes attributes = Attributes.empty();
