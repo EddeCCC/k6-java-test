@@ -25,8 +25,8 @@ public class ProcessLogger {
     }
 
     private void logError(Process process) throws IOException {
-        InputStream inputStream = process.getErrorStream();
-        String errorMessage = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        InputStream errorStream = process.getErrorStream();
+        String errorMessage = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
         System.err.println(errorMessage);
     }
 

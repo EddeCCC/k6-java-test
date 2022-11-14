@@ -16,7 +16,6 @@ public class OTExporter {
 
     @Autowired
     private CSVImporter csvReader;
-
     @Value("${otel.host}")
     private String host;
 

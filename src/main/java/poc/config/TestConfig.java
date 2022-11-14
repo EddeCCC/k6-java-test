@@ -8,9 +8,9 @@ public class TestConfig {
 
     @Value("${test.type}")
     private String type;
-
     @Value("${test.loop.max}")
     private int maxLoop;
+
 
     public String getType() { return this.type; }
 

@@ -55,7 +55,7 @@ public class CLRunner {
     private void startLoadTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
         System.out.println("### LOAD TEST STARTED ###");
         String config = loader.loadConfig();
-        parser.parse(config, scriptPath, testType);
+        parser.parse(config, scriptPath);
         this.runCommand();
         exporter.export(outputPath);
     }
@@ -69,7 +69,7 @@ public class CLRunner {
 
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
             if(currentLoop != 0) config = increaser.increase(config);
-            parser.parse(config, scriptPath, testType);
+            parser.parse(config, scriptPath);
             int exitCode = this.runCommand();
             exporter.export(outputPath);
 

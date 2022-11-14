@@ -14,10 +14,8 @@ public class ConfigParser {
 
     @Autowired
     private RequestMapper mapper;
-    @Autowired
-    private LoadIncreaser increaser;
 
-    public void parse(String config, String scriptPath, String testType) throws IOException {
+    public void parse(String config, String scriptPath) throws IOException {
         JSONObject configJSON = new JSONObject(config);
         if(!isConfigValid(configJSON)) throw new InvalidConfigurationException();
 
