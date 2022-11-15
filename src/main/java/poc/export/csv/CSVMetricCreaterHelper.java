@@ -1,4 +1,4 @@
-package poc.opentelemetry.metric;
+package poc.export.csv;
 
 import org.springframework.stereotype.Component;
 
@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Component
-public class OTMetricCreaterHelper {
+public class CSVMetricCreaterHelper {
 
     public double getAverage(List<String[]> csv) {
         double sum = csv.stream()

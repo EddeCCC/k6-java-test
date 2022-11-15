@@ -1,4 +1,4 @@
-package poc.opentelemetry.metric;
+package poc.export.csv;
 
 import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
@@ -7,7 +7,6 @@ import io.opentelemetry.sdk.metrics.internal.data.*;
 import io.opentelemetry.sdk.resources.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.opentelemetry.csv.CSVResponseType;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,10 +15,10 @@ import java.util.stream.Collectors;
 import static io.opentelemetry.api.common.AttributeKey.stringKey;
 
 @Component
-public class OTMetricCreater {
+public class CSVMetricCreater {
 
     @Autowired
-    private OTMetricCreaterHelper helper;
+    private CSVMetricCreaterHelper helper;
 
     public List<MetricData> createRequestMetric(List<String[]> csv, String unit) {
         List<MetricData> data = new LinkedList<>();

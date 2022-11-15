@@ -1,4 +1,4 @@
-package poc.opentelemetry.csv;
+package poc.export.csv;
 
 public enum CSVResponseType {
     CHECKS,

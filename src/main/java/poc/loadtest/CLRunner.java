@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
 import poc.config.TestConfig;
 import poc.loadtest.exception.RunnerFailedException;
-import poc.opentelemetry.OTExporter;
+import poc.export.OTExporter;
 import poc.util.ProcessLogger;
 
 import java.io.*;
@@ -57,7 +57,7 @@ public class CLRunner {
         String config = loader.loadConfig();
         parser.parse(config, scriptPath);
         this.runCommand();
-        exporter.export(outputPath);
+        exporter.export(outputPath, config);
     }
 
     private void startBreakpointTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
@@ -71,8 +71,7 @@ public class CLRunner {
             if(currentLoop != 0) config = increaser.increase(config);
             parser.parse(config, scriptPath);
             int exitCode = this.runCommand();
-            exporter.export(outputPath);
-
+            exporter.export(outputPath, config);
             if(exitCode == thresholdHaveFailedErrorCode) break;
         }
     }

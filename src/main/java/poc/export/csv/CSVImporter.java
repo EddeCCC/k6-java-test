@@ -1,4 +1,4 @@
-package poc.opentelemetry.csv;
+package poc.export.csv;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -9,10 +9,8 @@ import com.opencsv.exceptions.CsvException;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.opentelemetry.metric.OTMetricCreater;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -21,7 +19,7 @@ import java.util.stream.Stream;
 public class CSVImporter {
 
     @Autowired
-    private OTMetricCreater metricCreater;
+    private CSVMetricCreater metricCreater;
 
     public List<MetricData> importMetricData(String filePath) throws IOException, CsvException {
         CSVReader reader = this.createCSVReader(filePath);

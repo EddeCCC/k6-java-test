@@ -1,11 +1,17 @@
 {
   "name": "Stress test to determine the maximum capacity",
+  "grafana": {
+    "thresholds": [
+      { "type": "http_req_duration", "value": 50, "unit": "ms" },
+      { "type": "http_req_blocked", "value": 5, "unit": "ms" }
+    ]
+  },
   "baseURL": "http://127.0.0.1:8080/books",
   "options": {
     "scenarios": {
       "warmUp": {
         "executor": "constant-vus",
-        "vus": 10,
+        "vus": 30,
         "duration": "5s",
         "tags": { "test_type": "warmUp" }
       },
@@ -19,7 +25,7 @@
           { "duration": "10s", "target": 60 },
           { "duration": "10s", "target": 70 },
           { "duration": "10s", "target": 80 },
-          { "duration": "20s", "target": 10 }
+          { "duration": "5s", "target": 10 }
         ],
         "tags": { "test_type": "breakpoint" }
       }
@@ -41,12 +47,12 @@
       ],
       "http_req_duration{test_type:breakpoint}": [
         {
-          "threshold": "p(90)<10",
+          "threshold": "p(90)<60",
           "abortOnFail": true,
           "delayAbortEval": "1s"
         },
         {
-          "threshold": "med<5",
+          "threshold": "avg<30",
           "abortOnFail": true,
           "delayAbortEval": "1s"
         }
