@@ -621,7 +621,7 @@
     "list": [
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": "http_req_duration",
           "value": "http_req_duration"
         },
@@ -645,7 +645,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -672,7 +672,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -696,6 +696,30 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
+      },
+      {
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": {
+          "type": "influxdb",
+          "uid": "P5697886F9CA74929"
+        },
+        "definition": "import \"influxdata/influxdb/v1\"\nv1.tagValues(\n    bucket: v.bucket,\n    tag: \"threshold_type\",\n    predicate: (r) => true,\n    start: -1d\n)",
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "threshold_type",
+        "options": [],
+        "query": "import \"influxdata/influxdb/v1\"\nv1.tagValues(\n    bucket: v.bucket,\n    tag: \"threshold_type\",\n    predicate: (r) => true,\n    start: -1d\n)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
@@ -707,6 +731,6 @@
   "timezone": "",
   "title": "Load_Test_Results",
   "uid": "Mv6GOiv4z",
-  "version": 12,
+  "version": 3,
   "weekStart": ""
 }

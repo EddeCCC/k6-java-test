@@ -57,7 +57,7 @@ public class CLRunner {
         String config = loader.loadConfig();
         parser.parse(config, scriptPath);
         this.runCommand();
-        exporter.export(outputPath, config);
+        exporter.export(outputPath, null);
     }
 
     private void startBreakpointTest() throws URISyntaxException, IOException, InterruptedException, CsvException {

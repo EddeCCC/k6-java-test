@@ -31,14 +31,14 @@
       }
     },
     "thresholds": {
-      "http_req_failed{test_type:breakpoint}": [
+      "http_req_failed": [
         {
           "threshold": "rate<0.05",
           "abortOnFail": true,
           "delayAbortEval": "1s"
         }
       ],
-      "checks{test_type:breakpoint}": [
+      "checks": [
         {
           "threshold": "rate>0.9",
           "abortOnFail": true,
@@ -47,13 +47,8 @@
       ],
       "http_req_duration{test_type:breakpoint}": [
         {
-          "threshold": "p(90)<60",
-          "abortOnFail": true,
-          "delayAbortEval": "1s"
-        },
-        {
-          "threshold": "avg<30",
-          "abortOnFail": true,
+          "threshold": "p(99.99)<28",
+          "abortOnFail": false,
           "delayAbortEval": "1s"
         }
       ]

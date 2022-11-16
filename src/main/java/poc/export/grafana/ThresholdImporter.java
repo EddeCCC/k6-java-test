@@ -31,8 +31,9 @@ public class ThresholdImporter {
             String type = threshold.getString("type");
             String unit = threshold.getString("unit");
             double value = threshold.getDouble("value");
-            Attributes attributes = Attributes.of(stringKey("type"), type);
+            Attributes attributes = Attributes.of(stringKey("threshold_type"), type);
             long epochNanos = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
+
             MetricData metricData = this.createDoubleGaugeData(unit, attributes, value, epochNanos);
             data.add(metricData);
         }
