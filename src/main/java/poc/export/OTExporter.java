@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import poc.export.csv.CSVImporter;
-import poc.export.grafana.ThresholdImporter;
+import poc.export.json.JSONImporter;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,26 +18,26 @@ public class OTExporter {
     @Autowired
     private CSVImporter csvImporter;
     @Autowired
-    private ThresholdImporter thresholdImporter;
+    private JSONImporter jsonImporter;
     @Value("${otel.host}")
     private String host;
 
     private OtlpHttpMetricExporter exporter;
 
-    public void export(String csvPath, String config) throws IOException, CsvException {
+    public void export(String outputPath) throws IOException, CsvException {
         this.buildExporter();
-        this.exportMetricData(csvPath);
-        if(config != null) this.exportThreshold(config);
+        if(outputPath.endsWith(".json")) this.exportJSONMetricData(outputPath);
+        else this.exportCSVMetricData(outputPath);
     }
 
-    private void exportMetricData(String csvPath) throws IOException, CsvException {
+    private void exportCSVMetricData(String csvPath) throws IOException, CsvException {
         List<MetricData> metrics = csvImporter.importMetricData(csvPath);
         exporter.export(metrics);
     }
 
-    private void exportThreshold(String config) {
-        List<MetricData> thresholds = thresholdImporter.importThresholds(config);
-        exporter.export(thresholds);
+    private void exportJSONMetricData(String jsonPath) throws IOException {
+        List<MetricData> metrics = jsonImporter.importMetricData(jsonPath);
+        exporter.export(metrics);
     }
 
     private void buildExporter() {

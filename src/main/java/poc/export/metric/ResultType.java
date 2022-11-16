@@ -1,6 +1,6 @@
-package poc.export.csv;
+package poc.export.metric;
 
-public enum CSVResponseType {
+public enum ResultType {
     CHECKS,
     ITERATIONS,
     ITERATION_DURATION,

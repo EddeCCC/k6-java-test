@@ -2,17 +2,20 @@ package poc.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import poc.loadtest.exception.UnknownOutputTypeException;
 
 @Component
 public class TestConfig {
 
-    @Value("${test.type}")
-    private String type;
-    @Value("${test.loop.max}")
-    private int maxLoop;
+    @Value("${test.loops}")
+    private int loops;
+    @Value("${test.output}")
+    private String outputType;
 
+    public int getMaxLoop() {
+        if(this.loops < 1) return 1;
+        else return this.loops;
+    }
 
-    public String getType() { return this.type; }
-
-    public int getMaxLoop() { return this.maxLoop; }
+    public String getOutputType() { return this.outputType; }
 }

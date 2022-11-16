@@ -1,12 +1,6 @@
 {
   "name": "Config for Grafana dashboards",
   "baseURL": "http://127.0.0.1:8080/books",
-  "grafana": {
-    "thresholds": [
-      { "type": "http_req_duration", "value": 50, "unit": "ms" },
-      { "type": "http_req_blocked", "value": 5, "unit": "ms" }
-    ]
-  },
   "options": {
     "scenarios":{
       "warmUp": {

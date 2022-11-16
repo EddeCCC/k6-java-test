@@ -1,12 +1,11 @@
 package poc.export.csv;
 
 import io.opentelemetry.api.common.Attributes;
-import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
 import io.opentelemetry.sdk.metrics.data.MetricData;
-import io.opentelemetry.sdk.metrics.internal.data.*;
-import io.opentelemetry.sdk.resources.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import poc.export.metric.DoubleGaugeCreater;
+import poc.export.metric.ResultType;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +18,8 @@ public class CSVMetricCreater {
 
     @Autowired
     private CSVMetricCreaterHelper helper;
+    @Autowired
+    private DoubleGaugeCreater gaugeCreater;
 
     public List<MetricData> createRequestMetric(List<String[]> csv, String unit) {
         List<MetricData> data = new LinkedList<>();
@@ -40,7 +41,7 @@ public class CSVMetricCreater {
                 long timestamp = Long.parseLong(row[1]);
                 long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
 
-                MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
+                MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
                 data.add(metricData);
             }
         }
@@ -56,13 +57,13 @@ public class CSVMetricCreater {
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
             long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
-            MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
+            MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
             data.add(metricData);
         }
         return data;
     }
 
-    public List<MetricData> createSingleGaugeMetric(List<String[]> csv, CSVResponseType type) {
+    public List<MetricData> createSingleGaugeMetric(List<String[]> csv, ResultType type) {
         if(csv.isEmpty()) return Collections.emptyList();
 
         long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
@@ -84,20 +85,7 @@ public class CSVMetricCreater {
             }
         }
 
-        MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
+        MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
         return Collections.singletonList(metricData);
-    }
-
-    private MetricData createDoubleGaugeData(String name, String unit, Attributes attributes, double metric, long epochNanos) {
-        return ImmutableMetricData.createDoubleGauge(
-                Resource.empty(),
-                InstrumentationScopeInfo.empty(),
-                name,
-                "DoubleGauge",
-                unit,
-                ImmutableGaugeData.create(Collections.singletonList(
-                        ImmutableDoublePointData.create(
-                                epochNanos, epochNanos, attributes, metric)))
-        );
     }
 }

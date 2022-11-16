@@ -22,8 +22,6 @@ public class CLRunner {
     @Autowired
     private ConfigLoader loader;
     @Autowired
-    private LoadIncreaser increaser;
-    @Autowired
     private PathConfig paths;
     @Autowired
     private TestConfig tests;
@@ -32,20 +30,17 @@ public class CLRunner {
     @Autowired
     private OTExporter exporter;
 
-    private String testType;
     private String scriptPath;
     private String outputPath;
     private String loggingPath;
+    private int maxLoop;
 
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
+        System.out.println("### LOAD TEST STARTED ###");
         this.getApplicationConfig();
         try {
-            switch (testType) {
-                case "load" -> this.startLoadTest();
-                case "breakpoint" -> this.startBreakpointTest();
-                default -> throw new IllegalArgumentException("### UNKNOWN TEST TYPE ###");
-            }
+            this.startLoadTest();
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
             System.out.println("### TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
@@ -53,42 +48,33 @@ public class CLRunner {
     }
 
     private void startLoadTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
-        System.out.println("### LOAD TEST STARTED ###");
-        String config = loader.loadConfig();
-        parser.parse(config, scriptPath);
-        this.runCommand();
-        exporter.export(outputPath, null);
-    }
-
-    private void startBreakpointTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
-        System.out.println("### BREAKPOINT TEST STARTED ###");
-        int maxLoop = tests.getMaxLoop();
-        String config = loader.loadConfig();
-        //Not sure, if all failed thresholds return 99, that´s their generic errorCode
-        int thresholdHaveFailedErrorCode = 99;
+        int thresholdHaveFailedErrorCode = 99; //Not sure, if all failed thresholds return 99, that´s their generic errorCode
 
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
-            if(currentLoop != 0) config = increaser.increase(config);
+            String config = loader.loadConfig();
             parser.parse(config, scriptPath);
             int exitCode = this.runCommand();
-            exporter.export(outputPath, config);
+            exporter.export(outputPath);
+
             if(exitCode == thresholdHaveFailedErrorCode) break;
         }
     }
 
     private int runCommand() throws IOException, InterruptedException {
-        Runtime runtime = Runtime.getRuntime();
-        String command = "k6 run " + scriptPath + " --out csv=" + outputPath;
-        Process process = runtime.exec(command);
+        String command = "k6 run " + "-e K6_JSON_TIME_FORMAT=unix " + scriptPath;
+        if(outputPath.endsWith(".json")) command += " --out json=" + outputPath;
+        else command += " --out csv=" + outputPath;
+        Process process = Runtime.getRuntime().exec(command);
 
         logger.log(process, loggingPath);
         return process.exitValue();
     }
 
     private void getApplicationConfig() {
-        this.testType = tests.getType();
         this.scriptPath = paths.getScript();
-        this.outputPath = paths.getOutput();
         this.loggingPath = paths.getLogging();
+        String outputType = tests.getOutputType();
+        this.outputPath = paths.getOutput(outputType);
+        this.maxLoop = tests.getMaxLoop();
     }
 }
