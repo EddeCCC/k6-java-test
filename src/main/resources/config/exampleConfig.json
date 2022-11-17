@@ -9,7 +9,7 @@
     },
     "thresholds": {
       "http_req_failed": ["rate < 0.05"],
-      "http_req_duration": ["p(90)<150", "p(95)<200"],
+      "http_req_duration": ["p(90)<150", "p(95) < 200"],
       "http_req_duration{group:home}": [{
         "threshold": "p(95)<300",
         "abortOnFail": false

@@ -19,6 +19,8 @@ public class JSONImporter {
 
     @Autowired
     private JSONMetricCreater metricCreater;
+    @Autowired
+    private ThresholdImporter thresholdImporter;
 
     public List<MetricData> importMetricData(String filePath) throws IOException {
         List<JSONObject> allResults = this.readFile(filePath);
@@ -46,9 +48,10 @@ public class JSONImporter {
         List<MetricData> iterationMetric = metricCreater.createSingleGaugeMetric(iteration_duration, ResultType.ITERATION_DURATION);
         List<MetricData> iterationsCounterMetric = metricCreater.createSingleGaugeMetric(iterations, ResultType.ITERATIONS);
         List<MetricData> requestCounterMetric = metricCreater.createSingleGaugeMetric(http_req_count, ResultType.HTTP_REQS);
+        List<MetricData> thresholds = thresholdImporter.importThreshold(allResults);
 
         return this.combineData(requestMetric, vusMetric, dataSentMetric, dataReceivedMetric,
-                checksMetric, vusMaxMetric, iterationMetric, iterationsCounterMetric, requestCounterMetric);
+                checksMetric, vusMaxMetric, iterationMetric, iterationsCounterMetric, requestCounterMetric, thresholds);
     }
 
     private List<JSONObject> readFile(String path) throws IOException {

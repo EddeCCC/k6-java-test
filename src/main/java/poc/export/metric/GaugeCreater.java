@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component
-public class DoubleGaugeCreater {
+public class GaugeCreater {
 
     public MetricData createDoubleGaugeData(String name, String unit, Attributes attributes, double metric, long epochNanos) {
         return ImmutableMetricData.createDoubleGauge(

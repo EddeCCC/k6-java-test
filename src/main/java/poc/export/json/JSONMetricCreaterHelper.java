@@ -23,6 +23,8 @@ public class JSONMetricCreaterHelper {
                 .max(Comparator.comparing(Double::valueOf))
                 .get();
 
+        System.out.println("MAXLOAD: " + maxLoad);
+
         return maxLoad;
     }
 

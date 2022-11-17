@@ -4,7 +4,7 @@ import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.export.metric.DoubleGaugeCreater;
+import poc.export.metric.GaugeCreater;
 import poc.export.metric.ResultType;
 
 import java.util.*;
@@ -19,7 +19,7 @@ public class CSVMetricCreater {
     @Autowired
     private CSVMetricCreaterHelper helper;
     @Autowired
-    private DoubleGaugeCreater gaugeCreater;
+    private GaugeCreater gaugeCreater;
 
     public List<MetricData> createRequestMetric(List<String[]> csv, String unit) {
         List<MetricData> data = new LinkedList<>();

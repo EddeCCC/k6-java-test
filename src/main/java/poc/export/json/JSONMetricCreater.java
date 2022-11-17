@@ -5,11 +5,9 @@ import io.opentelemetry.sdk.metrics.data.MetricData;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.export.metric.DoubleGaugeCreater;
+import poc.export.metric.GaugeCreater;
 import poc.export.metric.ResultType;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -23,7 +21,7 @@ public class JSONMetricCreater {
     @Autowired
     private JSONMetricCreaterHelper helper;
     @Autowired
-    private DoubleGaugeCreater gaugeCreater;
+    private GaugeCreater gaugeCreater;
 
     public List<MetricData> createRequestMetric(List<JSONObject> results, String unit) {
         List<MetricData> data = new LinkedList<>();
