@@ -75,6 +75,6 @@ public class CLRunner {
         this.loggingPath = paths.getLogging();
         String outputType = tests.getOutputType();
         this.outputPath = paths.getOutput(outputType);
-        this.maxLoop = tests.getMaxLoop();
+        this.maxLoop = tests.getMaxLoops();
     }
 }

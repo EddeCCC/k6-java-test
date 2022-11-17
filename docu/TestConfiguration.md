@@ -13,7 +13,7 @@ You can view an **example configuration** [here](../src/main/resources/config/gr
 ---
 ## baseURL
 
-The key `baseURL` requires a **JSONString** as value.
+The key `baseURL` requires a **String** as value.
 
 All requests will use the `baseURL` at the beginning for their endpoint.
 Specific path endings can be added in the particular request.
@@ -31,7 +31,6 @@ You can find detailed information for every configuration option here: https://k
 It is possible to use an empty JSONObject (`{}`) for the default options (1 vu, 10,5 min maxDuration)
 
 The `options` JSONObject can be passed directly to k6 which makes the parsing of the configuration very easy.
-It is already possible to use all configuration options of k6.
 
 ![screenshot of example options object](images/optionsExample.png)
 
@@ -56,7 +55,6 @@ Additionally, you can add the following keys to each request:
 - `params`
 - `checks`
 
----
 #### payload
 
 The key `payload` requires a **JSONObject** as value.
@@ -89,6 +87,10 @@ in `options`. You can examine the check results in the generated output.
 
 
 ![screenshot of example checks object](images/checksExample.png)
+
+#### Example for a complete request array
+
+![screenshot of example request array](images/requestExample.png)
 
 ---
 ## Additional Information

@@ -12,7 +12,7 @@ public class TestConfig {
     @Value("${test.output}")
     private String outputType;
 
-    public int getMaxLoop() {
+    public int getMaxLoops() {
         if(this.loops < 1) return 1;
         else return this.loops;
     }
