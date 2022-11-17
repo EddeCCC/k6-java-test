@@ -2,7 +2,7 @@ package poc.loadtest.mapper;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import poc.loadtest.exception.UnknownRequestTypeException;
+import poc.loadtest.exception.UnknownOutputTypeException;
 
 @Component
 class HttpMapper implements k6Mapper {
@@ -17,7 +17,7 @@ class HttpMapper implements k6Mapper {
             case "POST" -> "post";
             case "PUT" -> "put";
             case "DELETE" -> "del";
-            default -> throw new UnknownRequestTypeException(type);
+            default -> throw new UnknownOutputTypeException(type);
         };
 
         String extraParams = "";

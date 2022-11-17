@@ -1,13 +1,11 @@
-package poc.opentelemetry.metric;
+package poc.export.csv;
 
 import io.opentelemetry.api.common.Attributes;
-import io.opentelemetry.sdk.common.InstrumentationScopeInfo;
 import io.opentelemetry.sdk.metrics.data.MetricData;
-import io.opentelemetry.sdk.metrics.internal.data.*;
-import io.opentelemetry.sdk.resources.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import poc.opentelemetry.csv.CSVResponseType;
+import poc.export.metric.GaugeCreater;
+import poc.export.metric.ResultType;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,10 +14,12 @@ import java.util.stream.Collectors;
 import static io.opentelemetry.api.common.AttributeKey.stringKey;
 
 @Component
-public class OTMetricCreater {
+public class CSVMetricCreater {
 
     @Autowired
-    private OTMetricCreaterHelper helper;
+    private CSVMetricCreaterHelper helper;
+    @Autowired
+    private GaugeCreater gaugeCreater;
 
     public List<MetricData> createRequestMetric(List<String[]> csv, String unit) {
         List<MetricData> data = new LinkedList<>();
@@ -41,7 +41,7 @@ public class OTMetricCreater {
                 long timestamp = Long.parseLong(row[1]);
                 long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
 
-                MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
+                MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
                 data.add(metricData);
             }
         }
@@ -57,13 +57,15 @@ public class OTMetricCreater {
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
             long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
-            MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
+            MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
             data.add(metricData);
         }
         return data;
     }
 
-    public List<MetricData> createSingleGaugeMetric(List<String[]> csv, CSVResponseType type) {
+    public List<MetricData> createSingleGaugeMetric(List<String[]> csv, ResultType type) {
+        if(csv.isEmpty()) return Collections.emptyList();
+
         long timestamp = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
         String name = type.toString().toLowerCase();
         Attributes attributes = Attributes.empty();
@@ -71,7 +73,8 @@ public class OTMetricCreater {
         String unit = "1";
 
         switch (type) {
-            case VUS_MAX -> metric = helper.getVusMax(csv);
+            case MAX_LOAD -> metric = helper.getMaxLoad(csv);
+            case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
             case CHECKS -> {
                 metric = helper.getAverage(csv);
                 unit = "%";
@@ -80,23 +83,9 @@ public class OTMetricCreater {
                 metric = helper.getAverage(csv);
                 unit = "ms";
             }
-            case ITERATIONS, HTTP_REQS -> metric = helper.getAmount(csv);
         }
 
-        MetricData metricData = this.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
+        MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
         return Collections.singletonList(metricData);
-    }
-
-    private MetricData createDoubleGaugeData(String name, String unit, Attributes attributes, double metric, long epochNanos) {
-        return ImmutableMetricData.createDoubleGauge(
-                Resource.empty(),
-                InstrumentationScopeInfo.empty(),
-                name,
-                "DoubleGauge",
-                unit,
-                ImmutableGaugeData.create(Collections.singletonList(
-                        ImmutableDoublePointData.create(
-                                epochNanos, epochNanos, attributes, metric)))
-        );
     }
 }

@@ -1,0 +1,82 @@
+{
+  "name": "Stress test to determine the maximum capacity",
+  "baseURL": "http://127.0.0.1:8080/books",
+  "options": {
+    "scenarios": {
+      "warmUp": {
+        "executor": "constant-vus",
+        "vus": 30,
+        "duration": "5s",
+        "tags": { "test_type": "warmUp" }
+      },
+      "breakpoint": {
+        "executor": "ramping-vus",
+        "startTime": "10s",
+        "gracefulRampDown": "20s",
+        "startVUs": 40,
+        "stages": [
+          { "duration": "10s", "target": 50 },
+          { "duration": "10s", "target": 60 },
+          { "duration": "10s", "target": 70 },
+          { "duration": "10s", "target": 80 },
+          { "duration": "5s", "target": 10 }
+        ],
+        "tags": { "test_type": "breakpoint" }
+      }
+    },
+    "thresholds": {
+      "http_req_failed": [
+        {
+          "threshold": "rate<0.05",
+          "abortOnFail": true,
+          "delayAbortEval": "1s"
+        }
+      ],
+      "checks": [
+        {
+          "threshold": "rate>0.9",
+          "abortOnFail": true,
+          "delayAbortEval": "1s"
+        }
+      ],
+      "http_req_duration{test_type:breakpoint}": [
+        {
+          "threshold": "p(99.99)<28",
+          "abortOnFail": false,
+          "delayAbortEval": "1s"
+        }
+      ]
+    }
+  },
+  "requests": [
+    {
+      "type": "GET",
+      "path": "/all",
+      "params": {
+        "tags": {
+          "group": "home"
+        }
+      },
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    },
+    {
+      "type": "GET",
+      "path": "/1",
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    },
+    {
+      "type": "GET",
+      "path": "/2",
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    }
+  ]
+}

@@ -6,7 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./:/app/app
       - ./docker-output:/app/output
     ports:
       - "8080:8080"
@@ -56,8 +55,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.36.2
     container_name: "k6-prometheus"
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
+    command: [ "--config.file=/etc/prometheus/prometheus.yml" ]
     volumes:
       - ./docker-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:

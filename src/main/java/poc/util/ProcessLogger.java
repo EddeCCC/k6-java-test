@@ -19,23 +19,20 @@ public class ProcessLogger {
         System.out.println("### LOGGER FINISHED ###");
         this.waitForProcess(process);
 
-        if(process.exitValue() < 0) this.logError(process);
-        else System.out.println("Load test finished with exitValue " + process.exitValue());
+        int exitValue = process.exitValue();
+        System.out.println("Load test finished with exitValue " + exitValue);
+        if(exitValue != 0) this.logError(process);
     }
 
     private void logError(Process process) throws IOException {
-        InputStream inputStream = process.getErrorStream();
-        String errorMessage = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        System.out.println("Load test failed with exitValue " + process.exitValue());
-        System.out.println("Message: ");
+        InputStream errorStream = process.getErrorStream();
+        String errorMessage = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
         System.err.println(errorMessage);
     }
 
     private void waitForProcess(Process process) throws InterruptedException {
-        while(true) {
-            boolean isFinished = !process.isAlive();
-            if (isFinished) break;
-            Thread.sleep(3000);
+        while(process.isAlive()) {
+            Thread.sleep(2000);
             System.out.println("...");
         }
     }

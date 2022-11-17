@@ -5,24 +5,24 @@
     "scenarios":{
       "warmUp": {
         "executor": "ramping-vus",
-        "startTime": "1s",
         "gracefulStop": "5s",
         "startVUs": 10,
         "stages": [
-          { "duration": "30s", "target": 40 },
+          { "duration": "10s", "target": 30 },
           { "duration": "10s", "target": 20 },
           { "duration": "20s", "target": 50 }
         ]
       },
       "work": {
         "executor": "constant-vus",
-        "startTime": "2s",
+        "startTime": "20s",
         "gracefulStop": "5s",
-        "vus": 25,
+        "vus": 40,
         "duration": "20s"
       },
       "coolDown": {
         "executor": "per-vu-iterations",
+        "startTime": "40s",
         "vus": 5,
         "iterations": 10,
         "maxDuration": "30s"
@@ -30,9 +30,9 @@
     },
     "thresholds": {
       "http_req_failed": ["rate < 0.05"],
-      "http_req_duration": ["p(90)<150", "p(95)<200"],
+      "http_req_duration": ["p(90)<30", "p(99)<35", "max<120"],
       "http_req_duration{group:home}": [{
-        "threshold": "p(95)<300",
+        "threshold": "p(95)<150",
         "abortOnFail": false
       }]
     }

@@ -3,6 +3,7 @@ package poc.loadtest;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import poc.loadtest.exception.InvalidConfigurationException;
 import poc.loadtest.mapper.RequestMapper;
 
 import java.io.*;
@@ -16,10 +17,7 @@ public class ConfigParser {
 
     public void parse(String config, String scriptPath) throws IOException {
         JSONObject configJSON = new JSONObject(config);
-        if(!isConfigValid(configJSON)) {
-            System.out.println("### Invalid configuration file ###");
-            return;
-        }
+        if(!isConfigValid(configJSON)) throw new InvalidConfigurationException();
 
         List<String> scriptCode = mapper.createScript(configJSON);
         FileWriter writer = new FileWriter(scriptPath);
