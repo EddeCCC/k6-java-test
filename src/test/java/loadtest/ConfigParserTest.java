@@ -59,12 +59,4 @@ class ConfigParserTest {
 		String resources = new File("src/test/resources").getAbsolutePath();
 		return resources + "/loadtest/configParser/";
 	}
-
-	private String getResourcesS() {
-		return ConfigParser.class.getClassLoader()
-				.getResource("")
-				.getFile()
-				.substring(1)
-				+ "loadtest/configParser/";
-	}
 }
