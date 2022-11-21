@@ -1,0 +1,12 @@
+{
+  "baseURL": "http://test.k6.io",
+  "options": {},
+  "requests": [
+    {
+      "type": "GET",
+      "checks": {
+        "status": 200
+      }
+    }
+  ]
+}

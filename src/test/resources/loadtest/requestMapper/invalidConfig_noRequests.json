@@ -1,0 +1,5 @@
+{
+  "baseURL": "http://test.k6.io",
+  "options": {},
+  "requests": []
+}

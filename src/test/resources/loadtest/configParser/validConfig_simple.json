@@ -1,0 +1,17 @@
+{
+  "baseURL": "http://test.k6.io",
+  "options": {
+    "vus": 2,
+    "duration": "10s"
+  },
+  "requests": [
+    {
+      "type": "GET",
+      "path": "/contacts.php",
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "name": "FirstScript",
+  "baseURL": "http://test.k6.io",
+  "options": {
+    "vus": 3,
+    "duration": "10s",
+    "tags": {
+      "api_name": "MyTestAPI"
+    },
+    "thresholds": {
+      "http_req_failed": ["rate < 0.05"],
+      "http_req_duration": ["p(90)<150", "p(95) < 200"],
+      "http_req_duration{group:home}": [{
+        "threshold": "p(95)<300",
+        "abortOnFail": false
+      }]
+    }
+  },
+  "requests": [
+    {
+      "type": "GET",
+      "path": "/contacts.php",
+      "params": {
+        "headers": {},
+        "cookies": {
+          "admin": "example.admin",
+          "user": "example.user"
+        },
+        "tags": {
+          "group": "home",
+          "test": "text"
+        }
+      },
+      "checks": {
+        "status": 200,
+        "body": {
+          "min-length": 1,
+          "includes": "id"
+        },
+        "error_code": 0
+      }
+    },
+    {
+      "type": "GET",
+      "path": "/news.php",
+      "checks": {
+        "status": 200
+      }
+    }
+  ]
+}

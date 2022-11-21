@@ -1,0 +1,12 @@
+{
+  "baseURL": "http://test.k6.io",
+  "options": {},
+  "requests": [
+    {
+      "path": "/contacts.php",
+      "checks": {
+        "status": 200
+      }
+    }
+  ]
+}

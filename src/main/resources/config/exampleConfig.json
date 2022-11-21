@@ -50,7 +50,7 @@
       },
       "params": {
         "headers": {
-          "content_type": "application/json"
+          "content-type": "application/json"
         }
       },
       "checks": {
@@ -67,7 +67,7 @@
       },
       "params": {
         "headers": {
-          "content_type": "application/json"
+          "content-type": "application/json"
         },
         "timeout": "10s"
       },
@@ -86,7 +86,7 @@
       },
       "params": {
         "headers": {
-          "content_type": "application/json"
+          "content-type": "application/json"
         }
       },
       "checks": {
