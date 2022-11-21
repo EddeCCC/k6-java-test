@@ -1,0 +1,15 @@
+{
+  "baseURL": "http://test.k6.io",
+  "options": {},
+  "requests": [
+    {
+      "description": "GET Request on k6 test webpage",
+      "userID": 1,
+      "type": "GET",
+      "path": "/contacts.php",
+      "checks": {
+        "status": 200
+      }
+    }
+  ]
+}

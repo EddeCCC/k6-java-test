@@ -1,4 +1,4 @@
-package api;
+package loadtest;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -22,14 +22,14 @@ import static org.mockito.Mockito.*;
 class ConfigParserTest {
 
 	@InjectMocks
-	ConfigParser parser;
+	private ConfigParser parser;
 	@Mock
-	RequestMapper mapper;
+	private RequestMapper mapper;
 
 	private final String scriptPath = getResources() + "configParser/script.js";
 
 	@ParameterizedTest
-	@ValueSource(strings = {"validConfig_simple.json", "validConfig_additionalKeys.json"})
+	@ValueSource(strings = {"validConfig_simple.json.json", "validConfig_additionalKeys.json"})
 	void configIsValid(String configPath) throws IOException {
 		String configText = loadConfig(configPath);
 
@@ -50,7 +50,7 @@ class ConfigParserTest {
 
 	private String loadConfig(String configPath) throws IOException {
 		String resources = this.getResources();
-		String absolutePath = resources + "configParser/" + configPath;
+		String absolutePath = resources + configPath;
 		return Files.readString(Paths.get(absolutePath));
 	}
 
@@ -58,6 +58,7 @@ class ConfigParserTest {
 		return this.getClass().getClassLoader()
 				.getResource("")
 				.getFile()
-				.substring(1);
+				.substring(1)
+				+ "loadtest/configParser/";
 	}
 }

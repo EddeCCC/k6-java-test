@@ -88,6 +88,7 @@ If you use JSON for the test results, there will also be a visualized threshold.
 | CSV Output                   | &#9745;     |
 | JSON Output                  | &#9745;     |
 | Custom metrics               | &#9744;     |
+| Groups                       | &#9744;     |
 | k6 Cloud                     | &#9744;     |
 | ######                       | ######      |
 | Http GET                     | &#9745;     |

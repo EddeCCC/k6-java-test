@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-class ParamsMapper implements k6Mapper {
+public class ParamsMapper implements k6Mapper {
 
     @Autowired
     private HeadersMapper headersMapper;
