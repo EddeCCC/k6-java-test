@@ -9,8 +9,6 @@ RUN mvn install -DskipTests && mkdir -p target/dependency && (cd target/dependen
 
 FROM openjdk:17-jdk-slim
 
-VOLUME /tmp
-
 ARG DEPENDENCY=target/dependency
 
 COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib

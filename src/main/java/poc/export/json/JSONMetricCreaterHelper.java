@@ -3,8 +3,10 @@ package poc.export.json;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class JSONMetricCreaterHelper {
@@ -23,8 +25,6 @@ public class JSONMetricCreaterHelper {
                 .max(Comparator.comparing(Double::valueOf))
                 .get();
 
-        System.out.println("MAXLOAD: " + maxLoad);
-
         return maxLoad;
     }
 
@@ -33,5 +33,13 @@ public class JSONMetricCreaterHelper {
                 .map(result -> result.getJSONObject("data").getDouble("value"))
                 .reduce(0.0, Double::sum);
         return sum;
+    }
+
+    public long getEpochNanos(String time) {
+        OffsetDateTime odt = OffsetDateTime.parse(time);
+        long timestamp = odt.toEpochSecond();
+        long epochNanos =  TimeUnit.SECONDS.toNanos(timestamp);
+
+        return epochNanos;
     }
 }

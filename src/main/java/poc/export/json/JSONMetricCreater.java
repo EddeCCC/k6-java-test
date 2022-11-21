@@ -42,7 +42,7 @@ public class JSONMetricCreater {
 
                 double metric = result.getJSONObject("data").getDouble("value");
                 String time = result.getJSONObject("data").getString("time");
-                long epochNanos = this.getEpochNanos(time);
+                long epochNanos = helper.getEpochNanos(time);
 
                 MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
                 data.add(metricData);
@@ -59,7 +59,7 @@ public class JSONMetricCreater {
 
             double metric = result.getJSONObject("data").getDouble("value");
             String time = result.getJSONObject("data").getString("time");
-            long epochNanos = this.getEpochNanos(time);
+            long epochNanos = helper.getEpochNanos(time);
 
             MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
             data.add(metricData);
@@ -91,13 +91,5 @@ public class JSONMetricCreater {
 
         MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, timestamp);
         return Collections.singletonList(metricData);
-    }
-
-    private long getEpochNanos(String time) {
-        OffsetDateTime odt = OffsetDateTime.parse(time);
-        long timestamp = odt.toEpochSecond();
-        long epochNanos =  TimeUnit.SECONDS.toNanos(timestamp);
-
-        return epochNanos;
     }
 }

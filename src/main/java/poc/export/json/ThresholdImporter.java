@@ -20,6 +20,8 @@ import static io.opentelemetry.api.common.AttributeKey.stringKey;
 public class ThresholdImporter {
 
     @Autowired
+    private JSONMetricCreaterHelper helper;
+    @Autowired
     private GaugeCreater gaugeCreater;
 
     public List<MetricData> importThreshold(List<JSONObject> allResults) {
@@ -77,11 +79,7 @@ public class ThresholdImporter {
                 .getJSONObject("data")
                 .getString("time");
 
-        OffsetDateTime odt = OffsetDateTime.parse(time);
-        long timestamp = odt.toEpochSecond();
-        long epochNanos =  TimeUnit.SECONDS.toNanos(timestamp);
-
-        return epochNanos;
+        return helper.getEpochNanos(time);
     }
 
     private String getUnit(String type) {

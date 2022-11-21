@@ -24,7 +24,6 @@ public class ConfigParser {
 
         for(String line: scriptCode) writer.write(line);
         writer.close();
-        System.out.println("### CONFIG WAS PARSED INTO SCRIPT ###");
     }
 
     private Boolean isConfigValid(JSONObject config) {

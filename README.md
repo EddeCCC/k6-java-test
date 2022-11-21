@@ -12,6 +12,14 @@ file, which will be executed by k6. The `k6 run` command will be executed
 **automatically** after Spring is initialized and the API has started.
 By default, the API runs at `localhost:8080/books`.
 
+### Breakpoint Test
+
+If the property `test.breakpoint` is set true, the load test will rerun with increased load after it´s finished. 
+This will continue until a threshold is not met or the max loops are reached.
+
+**Be aware** that the test configuration needs to follow a specific pattern to make breakpoint testing possible.
+[See here for more information.](docu/BreakpointConfiguration.md)
+
 ---
 ## SetUp
 
@@ -28,6 +36,7 @@ You can also use the default values.
 
 - `otel.host`: Host to run the OpenTelemetry collector on _(default: localhost)_
 - `test.output`: What file format should be used for the results _(default: json)_
+- `test.breakpoint`: Should Breakpoint Testing be enabled _(default: false)_
 - `test.loops`: How often should the test be repeated (The loops will stop, if a [threshold](https://k6.io/docs/using-k6/thresholds/) is not met) _(default: 1)_
 - `path.config`: Location of the test configuration (relative to [resources](src/main/resources)) _(default: config/exampleConfig.json)_
 
@@ -77,59 +86,47 @@ If you use JSON for the test results, there will also be a visualized threshold.
 - k6 in general: https://k6.io/docs/
 - k6 options: https://k6.io/docs/using-k6/k6-options/reference/
 - k6 metrics: https://k6.io/docs/using-k6/metrics/
+- k6 params: https://k6.io/docs/javascript-api/k6-http/params/
+- k6 responses: https://k6.io/docs/javascript-api/k6-http/response/
 
 ---
 ## Implemented Features
 
-| k6 Features                  | Implemented |
-|------------------------------|-------------|
-| Configuration (options)      | &#9745;     |
-| Payload                      | &#9745;     |
-| CSV Output                   | &#9745;     |
-| JSON Output                  | &#9745;     |
-| Custom metrics               | &#9744;     |
-| Groups                       | &#9744;     |
-| k6 Cloud                     | &#9744;     |
-| ######                       | ######      |
-| Http GET                     | &#9745;     |
-| Http POST                    | &#9745;     |
-| Http PUT                     | &#9745;     |
-| Http DELETE                  | &#9745;     |
-| Http PATCH                   | &#9744;     |
-| Http HEAD                    | &#9744;     |
-| Http OPTIONS                 | &#9744;     |
-| Http BATCH                   | &#9744;     |
-| ######                       | ######      |
-| Params headers               | &#9745;     |
-| Params tags                  | &#9745;     |
-| Params cookies               | &#9745;     |
-| Params timeout               | &#9745;     |
-| Params authorization         | &#9744;     |
-| Params jar                   | &#9744;     |
-| Params redirects             | &#9744;     |
-| Params compression           | &#9744;     |
-| Params responseType          | &#9744;     |
-| Params responseCallback      | &#9744;     |
-| ######                       | ######      |
-| Header content-type          | &#9745;     |
-| Header content-length        | &#9744;     |
-| Header user-agent            | &#9744;     |
-| More common header responses | &#9744;     |
-| ######                       | ######      |
-| Check response status        | &#9745;     |
-| Check alternative status     | &#9745;     |
-| Check body min length        | &#9745;     |
-| Check body includes          | &#9745;     |
-| Check error code             | &#9745;     |
-| Check error text             | &#9744;     |
-| Check cookies                | &#9744;     |
-| Check headers                | &#9744;     |
-| Check status text            | &#9744;     |
-| Check timings                | &#9744;     |
-| Check tls_version            | &#9744;     |
-| Check tls_cipher_suite       | &#9744;     |
-| Check remote_ip              | &#9744;     |
-| Check remote_port            | &#9744;     |
-| Check ocsp                   | &#9744;     |
-| ######                       | ######      |
-| ... more?                    | &#9744;     |
+| k6 Features                | Implemented |
+|----------------------------|-------------|
+| Configuration (options)    | &#9745;     |
+| Payload                    | &#9745;     |
+| Params                     | &#9745;     |
+| CSV Output                 | &#9745;     |
+| JSON Output                | &#9745;     |
+| Custom metrics             | &#9744;     |
+| Groups                     | &#9744;     |
+| k6 Cloud                   | &#9744;     |
+| ######                     | ######      |
+| Http GET                   | &#9745;     |
+| Http POST                  | &#9745;     |
+| Http PUT                   | &#9745;     |
+| Http DELETE                | &#9745;     |
+| Http PATCH                 | &#9744;     |
+| Http HEAD                  | &#9744;     |
+| Http OPTIONS               | &#9744;     |
+| Http BATCH                 | &#9744;     |
+| ######                     | ######      |
+| Check response status      | &#9745;     |
+| Check alternative status   | &#9745;     |
+| Check body min length      | &#9745;     |
+| Check body includes        | &#9745;     |
+| Check error_code           | &#9745;     |
+| Check more body attributes | &#9744;     |
+| Check error_text           | &#9744;     |
+| Check cookies              | &#9744;     |
+| Check headers              | &#9744;     |
+| Check status_text          | &#9744;     |
+| Check timings              | &#9744;     |
+| Check tls_version          | &#9744;     |
+| Check tls_cipher_suite     | &#9744;     |
+| Check remote_ip            | &#9744;     |
+| Check remote_port          | &#9744;     |
+| Check ocsp                 | &#9744;     |
+| ######                     | ######      |
+| ... more?                  | &#9744;     |
