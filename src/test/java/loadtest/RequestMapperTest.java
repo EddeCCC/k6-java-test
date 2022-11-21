@@ -51,8 +51,6 @@ public class RequestMapperTest {
         verify(requestMapper, never()).map(any(JSONObject.class), anyInt());
     }
 
-
-
     private JSONObject loadConfig(String configPath) throws IOException, JSONException {
         String resources = this.getResources();
         String absolutePath = resources + configPath;
@@ -61,7 +59,7 @@ public class RequestMapperTest {
     }
 
     private String getResources() {
-        return this.getClass().getClassLoader()
+        return RequestMapper.class.getClassLoader()
                 .getResource("")
                 .getFile()
                 .substring(1)

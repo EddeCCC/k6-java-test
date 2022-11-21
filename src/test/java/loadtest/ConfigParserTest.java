@@ -26,10 +26,10 @@ class ConfigParserTest {
 	@Mock
 	private RequestMapper mapper;
 
-	private final String scriptPath = getResources() + "configParser/script.js";
+	private final String scriptPath = getResources() + "testScript.js";
 
 	@ParameterizedTest
-	@ValueSource(strings = {"validConfig_simple.json.json", "validConfig_additionalKeys.json"})
+	@ValueSource(strings = {"validConfig_simple.json", "validConfig_additionalKeys.json"})
 	void configIsValid(String configPath) throws IOException {
 		String configText = loadConfig(configPath);
 
@@ -55,7 +55,7 @@ class ConfigParserTest {
 	}
 
 	private String getResources() {
-		return this.getClass().getClassLoader()
+		return ConfigParser.class.getClassLoader()
 				.getResource("")
 				.getFile()
 				.substring(1)

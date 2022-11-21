@@ -50,7 +50,7 @@ public class HttpMapperTest {
     }
 
     private String getResources() {
-        return this.getClass().getClassLoader()
+        return HttpMapper.class.getClassLoader()
                 .getResource("")
                 .getFile()
                 .substring(1)
