@@ -7,9 +7,9 @@ import poc.loadtest.exception.UnknownOutputTypeException;
 @Component
 public class TestConfig {
 
-    @Value("${test.loops}")
+    @Value("${test.loops:1}")
     private int loops;
-    @Value("${test.output}")
+    @Value("${test.output:json}")
     private String outputType;
 
     public int getMaxLoops() {

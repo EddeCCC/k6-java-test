@@ -22,9 +22,7 @@ public class ConfigParser {
         List<String> scriptCode = mapper.createScript(configJSON);
         FileWriter writer = new FileWriter(scriptPath);
 
-        for(String line: scriptCode) {
-            writer.write(line);
-        }
+        for(String line: scriptCode) writer.write(line);
         writer.close();
         System.out.println("### CONFIG WAS PARSED INTO SCRIPT ###");
     }

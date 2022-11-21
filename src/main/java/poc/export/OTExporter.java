@@ -19,7 +19,7 @@ public class OTExporter {
     private CSVImporter csvImporter;
     @Autowired
     private JSONImporter jsonImporter;
-    @Value("${otel.host}")
+    @Value("${otel.host:localhost}")
     private String host;
 
     private OtlpHttpMetricExporter exporter;

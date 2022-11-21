@@ -1,0 +1,26 @@
+{
+  "name": "Valid Configuraiton",
+  "description": "This is a valid configuration with lots of additional information that will not be parsed inside the load testing script",
+  "version": 2,
+  "author": "Me",
+  "baseURL": "",
+  "options": {},
+  "requests": [
+    {
+      "type": "GET",
+      "path": "http://test.k6.io/news.php",
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    },
+    {
+      "type": "GET",
+      "path": "http://test.k6.io/browser.php",
+      "checks": {
+        "status": 200,
+        "error_code": 0
+      }
+    }
+  ]
+}

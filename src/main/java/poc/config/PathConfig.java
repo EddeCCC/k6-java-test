@@ -7,7 +7,7 @@ import poc.loadtest.exception.UnknownOutputTypeException;
 @Component
 public class PathConfig {
 
-    @Value("${path.config}")
+    @Value("${path.config:config/exampleConfig.json}")
     private String config;
     private final String script = "scripts/createdScript.js";
     private final String outputCSV = "output/output.csv";
