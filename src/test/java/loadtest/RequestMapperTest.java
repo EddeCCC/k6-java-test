@@ -9,6 +9,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import poc.loadtest.mapper.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -59,10 +60,7 @@ public class RequestMapperTest {
     }
 
     private String getResources() {
-        return RequestMapper.class.getClassLoader()
-                .getResource("")
-                .getFile()
-                .substring(1)
-                + "loadtest/requestMapper/";
+        String resources = new File("src/test/resources").getAbsolutePath();
+        return resources + "/loadtest/requestMapper/";
     }
 }

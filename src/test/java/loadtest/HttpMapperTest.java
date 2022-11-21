@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import poc.loadtest.exception.UnknownRequestTypeException;
 import poc.loadtest.mapper.HttpMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -50,10 +51,7 @@ public class HttpMapperTest {
     }
 
     private String getResources() {
-        return HttpMapper.class.getClassLoader()
-                .getResource("")
-                .getFile()
-                .substring(1)
-                + "loadtest/httpMapper/";
+        String resources = new File("src/test/resources").getAbsolutePath();
+        return resources + "/loadtest/httpMapper/";
     }
 }

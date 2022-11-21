@@ -12,6 +12,7 @@ import poc.loadtest.ConfigParser;
 import poc.loadtest.exception.InvalidConfigurationException;
 import poc.loadtest.mapper.RequestMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -55,6 +56,11 @@ class ConfigParserTest {
 	}
 
 	private String getResources() {
+		String resources = new File("src/test/resources").getAbsolutePath();
+		return resources + "/loadtest/configParser/";
+	}
+
+	private String getResourcesS() {
 		return ConfigParser.class.getClassLoader()
 				.getResource("")
 				.getFile()
