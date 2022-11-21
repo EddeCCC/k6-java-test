@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LoadIncreaser {
 
-    public String increase(String config) {
+    public String increaseLoad(String config) {
         JSONObject configJSON = new JSONObject(config);
         JSONObject options = configJSON.getJSONObject("options");
         JSONObject scenarios = options.getJSONObject("scenarios");

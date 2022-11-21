@@ -5,9 +5,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Logger;
 
 @Component
 public class ProcessLogger {
+
+    private final Logger logger = Logger.getGlobal();
 
     public void log(Process process, String file) throws IOException, InterruptedException {
         InputStream inputStream = process.getInputStream();
@@ -15,19 +18,17 @@ public class ProcessLogger {
         File logFile = new File(file);
         OutputStream outputStream = new FileOutputStream(logFile);
         IOUtils.copy(inputStream, outputStream);
-
-        System.out.println("### LOGGER FINISHED ###");
         this.waitForProcess(process);
 
         int exitValue = process.exitValue();
-        System.out.println("Load test finished with exitValue " + exitValue);
+        logger.info("LOAD TEST FINISHED WITH EXIT VALUE " + exitValue);
         if(exitValue != 0) this.logError(process);
     }
 
     private void logError(Process process) throws IOException {
         InputStream errorStream = process.getErrorStream();
         String errorMessage = new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
-        System.err.println(errorMessage);
+        logger.warning(errorMessage);
     }
 
     private void waitForProcess(Process process) throws InterruptedException {

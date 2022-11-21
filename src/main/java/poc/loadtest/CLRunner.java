@@ -13,36 +13,41 @@ import poc.util.ProcessLogger;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.util.logging.Logger;
 
 @Component
 public class CLRunner {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
     @Autowired
     private ConfigParser parser;
     @Autowired
     private ConfigLoader loader;
     @Autowired
+    private LoadIncreaser increaser;
+    @Autowired
     private PathConfig paths;
     @Autowired
     private TestConfig tests;
     @Autowired
-    private ProcessLogger logger;
+    private ProcessLogger processLogger;
     @Autowired
     private OTExporter exporter;
 
     private String scriptPath;
     private String outputPath;
     private String loggingPath;
+    private boolean isBreakpointEnabled;
     private int maxLoop;
 
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
-        System.out.println("### LOAD TEST STARTED ###");
+        logger.info("### LOAD TEST STARTED ###");
         this.getApplicationConfig();
         try {
             this.startLoadTest();
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
-            System.out.println("### TEST FAILED ###");
+            logger.warning("### TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
     }
@@ -50,23 +55,25 @@ public class CLRunner {
     private void startLoadTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
         int thresholdHaveFailedErrorCode = 99; //Not sure, if all failed thresholds return 99, that´s their generic errorCode
 
+        String config = loader.loadConfig();
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {
-            String config = loader.loadConfig();
             parser.parse(config, scriptPath);
+            logger.info("### CONFIG WAS PARSED INTO SCRIPT ###");
             int exitCode = this.runCommand();
             exporter.export(outputPath);
 
+            if(isBreakpointEnabled) config = increaser.increaseLoad(config);
             if(exitCode == thresholdHaveFailedErrorCode) break;
         }
     }
 
     private int runCommand() throws IOException, InterruptedException {
-        String command = "k6 run " + "-e K6_JSON_TIME_FORMAT=unix " + scriptPath;
+        String command = "k6 run " + scriptPath;
         if(outputPath.endsWith(".json")) command += " --out json=" + outputPath;
         else command += " --out csv=" + outputPath;
         Process process = Runtime.getRuntime().exec(command);
 
-        logger.log(process, loggingPath);
+        processLogger.log(process, loggingPath);
         return process.exitValue();
     }
 
@@ -75,6 +82,7 @@ public class CLRunner {
         this.loggingPath = paths.getLogging();
         String outputType = tests.getOutputType();
         this.outputPath = paths.getOutput(outputType);
+        this.isBreakpointEnabled = tests.getBreakpointConfig();
         this.maxLoop = tests.getMaxLoops();
     }
 }

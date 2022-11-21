@@ -12,6 +12,7 @@ import poc.loadtest.ConfigParser;
 import poc.loadtest.exception.InvalidConfigurationException;
 import poc.loadtest.mapper.RequestMapper;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -26,10 +27,10 @@ class ConfigParserTest {
 	@Mock
 	private RequestMapper mapper;
 
-	private final String scriptPath = getResources() + "configParser/script.js";
+	private final String scriptPath = getResources() + "testScript.js";
 
 	@ParameterizedTest
-	@ValueSource(strings = {"validConfig_simple.json.json", "validConfig_additionalKeys.json"})
+	@ValueSource(strings = {"validConfig_simple.json", "validConfig_additionalKeys.json"})
 	void configIsValid(String configPath) throws IOException {
 		String configText = loadConfig(configPath);
 
@@ -55,10 +56,7 @@ class ConfigParserTest {
 	}
 
 	private String getResources() {
-		return this.getClass().getClassLoader()
-				.getResource("")
-				.getFile()
-				.substring(1)
-				+ "loadtest/configParser/";
+		String resources = new File("src/test/resources").getAbsolutePath();
+		return resources + "/loadtest/configParser/";
 	}
 }

@@ -9,6 +9,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import poc.loadtest.mapper.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -51,8 +52,6 @@ public class RequestMapperTest {
         verify(requestMapper, never()).map(any(JSONObject.class), anyInt());
     }
 
-
-
     private JSONObject loadConfig(String configPath) throws IOException, JSONException {
         String resources = this.getResources();
         String absolutePath = resources + configPath;
@@ -61,10 +60,7 @@ public class RequestMapperTest {
     }
 
     private String getResources() {
-        return this.getClass().getClassLoader()
-                .getResource("")
-                .getFile()
-                .substring(1)
-                + "loadtest/requestMapper/";
+        String resources = new File("src/test/resources").getAbsolutePath();
+        return resources + "/loadtest/requestMapper/";
     }
 }
