@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class CSVMetricCreaterHelper {
@@ -13,16 +14,18 @@ public class CSVMetricCreaterHelper {
                 .map(row -> Double.parseDouble(row[2]))
                 .reduce(0.0, Double::sum);
         int count = csv.size();
-        return sum / count;
+        double average = sum/count;
+
+        if(Double.isNaN(average)) throw new IllegalArgumentException("Average value is not a number (NaN)");
+        else return average;
     }
 
     public double getMaxLoad(List<String[]> csv) {
-        double maxLoad = csv.stream()
+        Optional<Double> maybeMaxLoad = csv.stream()
                 .map(row -> Double.parseDouble(row[2]))
-                .max(Comparator.comparing(Double::valueOf))
-                .get();
+                .max(Comparator.comparing(Double::valueOf));
 
-        return maxLoad;
+        return maybeMaxLoad.orElse(0.0);
     }
 
     public double getAmount(List<String[]> csv) {

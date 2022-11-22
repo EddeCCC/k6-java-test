@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import java.time.OffsetDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -16,16 +17,18 @@ public class JSONMetricCreaterHelper {
                 .map(result -> result.getJSONObject("data").getDouble("value"))
                 .reduce(0.0, Double::sum);
         int count = results.size();
-        return sum/count;
+        double average = sum/count;
+
+        if(Double.isNaN(average)) throw new IllegalArgumentException("Average value is not a number (NaN)");
+        else return average;
     }
 
     public double getMaxLoad(List<JSONObject> results){
-        double maxLoad = results.stream()
+        Optional<Double> maybeMaxLoad = results.stream()
                 .map(result -> result.getJSONObject("data").getDouble("value"))
-                .max(Comparator.comparing(Double::valueOf))
-                .get();
+                .max(Comparator.comparing(Double::valueOf));
 
-        return maxLoad;
+        return maybeMaxLoad.orElse(0.0);
     }
 
     public double getAmount(List<JSONObject> results) {

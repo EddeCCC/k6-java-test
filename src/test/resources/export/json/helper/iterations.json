@@ -1,0 +1,4 @@
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9193716+01:00","value":1,"tags":{"group":"","scenario":"default"}},"metric":"iterations"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9193716+01:00","value":1,"tags":{"scenario":"default","group":""}},"metric":"iterations"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:28.9445724+01:00","value":1,"tags":{"group":"","scenario":"default"}},"metric":"iterations"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:28.9445724+01:00","value":1,"tags":{"scenario":"default","group":""}},"metric":"iterations"}

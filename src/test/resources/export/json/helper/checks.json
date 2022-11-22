@@ -1,0 +1,12 @@
+{"type":"Point","data":{"time":"2022-11-22T08:34:16.9032205+01:00","value":1,"tags":{"scenario":"default","group":"","check":"GET status was 200"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:16.9032205+01:00","value":1,"tags":{"group":"","scenario":"default","check":"error_code was 0"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:16.9032205+01:00","value":1,"tags":{"group":"","scenario":"default","check":"GET status was 200"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:16.9032205+01:00","value":1,"tags":{"group":"","scenario":"default","check":"error_code was 0"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:18.9180439+01:00","value":1,"tags":{"group":"","scenario":"default","check":"GET status was 200"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:18.9180439+01:00","value":1,"tags":{"check":"GET status was 200","group":"","scenario":"default"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9251432+01:00","value":1,"tags":{"check":"GET status was 200","scenario":"default","group":""}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9251432+01:00","value":1,"tags":{"group":"","scenario":"default","check":"error_code was 0"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9251432+01:00","value":1,"tags":{"check":"GET status was 200","group":"","scenario":"default"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.9251432+01:00","value":0,"tags":{"group":"","scenario":"default","check":"error_code was 0"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:24.9375812+01:00","value":0,"tags":{"group":"","scenario":"default","check":"GET status was 200"}},"metric":"checks"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:24.9375812+01:00","value":0,"tags":{"group":"","scenario":"default","check":"GET status was 200"}},"metric":"checks"}
