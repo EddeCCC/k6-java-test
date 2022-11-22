@@ -15,7 +15,7 @@ By default, the API runs at `localhost:8080/books`.
 ### Breakpoint Test
 
 If the property `test.breakpoint` is set true, the load test will rerun with increased load after it´s finished. 
-This will continue until a threshold is not met or the max loops are reached.
+This will continue until a threshold is not met or the maximum amount of loops are reached.
 
 **Be aware** that the test configuration needs to follow a specific pattern to make breakpoint testing possible.
 [See here for more information.](docu/BreakpointConfiguration.md)
@@ -35,7 +35,7 @@ Furthermore, all values in [application.properties](src/main/resources/applicati
 You can also use the default values.
 
 - `otel.host`: Host to run the OpenTelemetry collector on _(default: localhost)_
-- `test.output`: What file format should be used for the results _(default: json)_
+- `test.output`: What file format should be used for the results (json or csv) _(default: json)_
 - `test.breakpoint`: Should Breakpoint Testing be enabled _(default: false)_
 - `test.loops`: How often should the test be repeated (The loops will stop, if a [threshold](https://k6.io/docs/using-k6/thresholds/) is not met) _(default: 1)_
 - `path.config`: Location of the test configuration (relative to [resources](src/main/resources)) _(default: config/exampleConfig.json)_
@@ -55,7 +55,7 @@ You can configure all the docker containers in [docker-config](docker-config) an
 ---
 ### OpenTelemetry
 
-The result of the k6 test will be saved in a local file. Those metrics will be exported via OTLP
+The result of the test will be saved in a local file. Those metrics will be exported via OTLP
 to an OpenTelemetry Collector after the test has finished. 
 The Collector further exports those metrics to InfluxDB.
 
@@ -63,7 +63,6 @@ The Collector further exports those metrics to InfluxDB.
 ### InfluxDB (v2)
 
 URL: `localhost:8086`
-
 Default login: username > k6,  password > telegraf
 
 You can change it in the [.env](env/.env) file.
@@ -73,7 +72,6 @@ The organization, bucket and token are configured here, too.
 ### Grafana
 
 URL: `localhost:3030`
-
 Default login: username > admin, password > admin
 
 You can view the test results in the dashboard: [Load_Test_Results](docker-config/grafana/my-dashboards/home.json)
