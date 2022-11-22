@@ -57,6 +57,9 @@ public class ThresholdImporter {
             String threshold = thresholds.getString(i);
             String aggregation = threshold.replaceAll("(?=<=|<|>|>=|!=|==)([^=].*)", "").trim();
             String valueString = threshold.replaceAll("(.*)(?<=<=|<|>|>=|!=|==)", "").trim();
+
+            if(aggregation.isEmpty() || valueString.isEmpty()) continue;
+
             double value = Double.parseDouble(valueString);
             Attributes attributes = Attributes.builder()
                     .put(stringKey("threshold_type"), thresholdType)
