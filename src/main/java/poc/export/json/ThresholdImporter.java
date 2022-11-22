@@ -48,14 +48,14 @@ public class ThresholdImporter {
         String unit = this.getUnit(type);
         String thresholdType = data.getString("name");
         JSONArray thresholds = data.getJSONArray("thresholds");
-
         long epochNanosEnd = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
-
         List<MetricData> metrics = new LinkedList<>();
 
         for(int i = 0; i < thresholds.length(); i++) {
             String threshold = thresholds.getString(i);
+            //remove logical operator and everything after
             String aggregation = threshold.replaceAll("(?=<=|<|>|>=|!=|==)([^=].*)", "").trim();
+            //remove logical operator and everything before
             String valueString = threshold.replaceAll("(.*)(?<=<=|<|>|>=|!=|==)", "").trim();
 
             if(aggregation.isEmpty() || valueString.isEmpty()) continue;
@@ -71,10 +71,12 @@ public class ThresholdImporter {
             metrics.add(metricStart);
             metrics.add(metricEnd);
         }
-
         return metrics;
     }
 
+    /**
+     * Get first timestamp in JSON list
+     */
     private long getStartEpochNanos(List<JSONObject> allResults) {
         String time = allResults.stream()
                 .filter(result -> result.getString("type").equals("Point"))

@@ -7,6 +7,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
+/**
+ * ProcessLogger writes the console output of a process into a text file
+ * If an error occurs, the error message will be written into the console
+ */
 @Component
 public class ProcessLogger {
 

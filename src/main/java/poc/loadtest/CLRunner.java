@@ -53,7 +53,8 @@ public class CLRunner {
     }
 
     private void startLoadTest() throws URISyntaxException, IOException, InterruptedException, CsvException {
-        int thresholdHaveFailedErrorCode = 99; //Not sure, if all failed thresholds return 99, that´s their generic errorCode
+        //Not sure, if all failed thresholds return 99, that´s their generic errorCode
+        int thresholdHaveFailedErrorCode = 99;
 
         String config = loader.loadConfig();
         for(int currentLoop = 0; currentLoop < maxLoop; currentLoop++) {

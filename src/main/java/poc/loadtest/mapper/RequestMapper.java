@@ -24,7 +24,7 @@ public class RequestMapper implements k6Mapper {
     public List<String> createScript(JSONObject config) {
         JSONArray requests = config.getJSONArray("requests");
         List<String> createdScript = new LinkedList<>();
-        createdScript.add( startScript(config) );
+        createdScript.add(startScript(config));
 
         for(int i = 0; i < requests.length(); i++) {
             JSONObject currentRequest = requests.getJSONObject(i);
