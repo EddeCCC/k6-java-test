@@ -1,0 +1,12 @@
+{"type":"Point","data":{"time":"2022-11-22T08:34:17.8643495+01:00","value":2,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:18.8624815+01:00","value":5,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:19.8639439+01:00","value":8,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:20.8613416+01:00","value":10,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:21.8587651+01:00","value":10,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:22.8572652+01:00","value":14,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:23.8532661+01:00","value":18,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:24.8672566+01:00","value":20,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:25.8664298+01:00","value":20,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:26.8630217+01:00","value":10,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:27.8669372+01:00","value":4,"tags":null},"metric":"vus"}
+{"type":"Point","data":{"time":"2022-11-22T08:34:28.86628+01:00","value":2,"tags":null},"metric":"vus"}

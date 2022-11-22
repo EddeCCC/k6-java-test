@@ -1,0 +1,8 @@
+http_req_duration,1669105924,51.362400,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_blocked,1669105924,0.996100,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_connecting,1669105924,0.996100,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_tls_handshaking,1669105924,0.000000,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_sending,1669105924,0.000000,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_waiting,1669105924,50.700500,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_receiving,1669105924,0.661900,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
+http_req_failed,1669105924,0.000000,,,,true,,GET,http://127.0.0.1:8080/books/all,HTTP/1.1,default,,200,,,http://127.0.0.1:8080/books/all,
