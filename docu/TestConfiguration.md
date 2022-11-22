@@ -77,7 +77,7 @@ You can find more information about k6 params: https://k6.io/docs/javascript-api
 
 The key `checks` requires a **JSONObject** as value.
 
-Here you can evaluate your request after it´s finished for specific properties like
+Here you can evaluate your request after it´s finished for specific properties like 
 the response `status`, `body` or `error code`.
 You can find all implemented k6 checks [here](../README.md#implemented-features).
 
@@ -95,7 +95,7 @@ in `options`. You can examine the check results in the generated output.
 ---
 ## Additional Information
 
-It is recommended to use a `name` or `description` key at the top of the file to provide quick information
+It is recommended to use a `name` or `description` key at the top of the file to provide quick information 
 about the configuration.
 
 With k6 you can also create other types of tests than load tests.

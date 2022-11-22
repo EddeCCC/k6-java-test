@@ -1,10 +1,10 @@
 # Breakpoint Configuration Pattern
 
-The aim of breakpoint testing (also known as capacity testing) is to determine the maximum possible load before
+The aim of breakpoint testing (also known as capacity testing) is to determine the maximum possible load before 
 some criterias (thresholds) can not be met.
 
 You can run a breakpoint test by setting the property `test.breakpoint` to true.
-The load test will then rerun with increased load after it´s finished.
+The load test will then rerun with increased load after it´s finished. 
 This will continue until a threshold is not met or the max loops are reached.
 
 Breakpoint tests should be configured like a stress test.
@@ -20,9 +20,9 @@ Please follow this pattern when using breakpoint testing.
 
 Inside `options` there has to be a `scenarios` key.
 
-Inside `scenarios` there has to be a `breakpoint` key, which includes the breakpoint scenario.
+Inside `scenarios` there has to be a `breakpoint` key, which includes the breakpoint scenario. 
 You can also add other scenarios.
 
-Inside `breakpoint` there has to be a `stages` key.
+Inside `breakpoint` there has to be a `stages` key. 
 Here you can add as many stages as you want inside the array.
 One stage always consists of a `duration` and a `target`.

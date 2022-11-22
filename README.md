@@ -1,20 +1,20 @@
 # k6 Load Testing - Java Example
 
-The repository provides
+The repository provides 
 - Local API for load testing
 - k6 Mappers
 - OTLP Exporter
 - InfluxDB
 - Grafana
 
-The application will parse a JSON configuration into a javascript
+The application will parse a JSON configuration into a javascript 
 file, which will be executed by k6. The `k6 run` command will be executed
 **automatically** after Spring is initialized and the API has started.
 By default, the API runs at `localhost:8080/books`.
 
 ### Breakpoint Test
 
-If the property `test.breakpoint` is set true, the load test will rerun with increased load after it´s finished.
+If the property `test.breakpoint` is set true, the load test will rerun with increased load after it´s finished. 
 This will continue until a threshold is not met or the max loops are reached.
 
 **Be aware** that the test configuration needs to follow a specific pattern to make breakpoint testing possible.
@@ -31,7 +31,7 @@ The configuration will be loaded from a fake server (by default: `localhost:8080
 
 > Please take a look at the [documentation](docu/TestConfiguration.md) for the configuration
 
-Furthermore, all values in [application.properties](src/main/resources/application.properties) have to be defined.
+Furthermore, all values in [application.properties](src/main/resources/application.properties) have to be defined. 
 You can also use the default values.
 
 - `otel.host`: Host to run the OpenTelemetry collector on _(default: localhost)_
@@ -49,14 +49,14 @@ You can run the whole application with: `docker-compose up --build`
 
 You can run all containers except the API with: `docker-compose -f docker-compose-no-api.yml up`
 
-Generated **output** will be stored in `./docker-output`.
+Generated **output** will be stored in `./docker-output`. 
 You can configure all the docker containers in [docker-config](docker-config) and [env](env).
 
 ---
 ### OpenTelemetry
 
 The result of the k6 test will be saved in a local file. Those metrics will be exported via OTLP
-to an OpenTelemetry Collector after the test has finished.
+to an OpenTelemetry Collector after the test has finished. 
 The Collector further exports those metrics to InfluxDB.
 
 ---

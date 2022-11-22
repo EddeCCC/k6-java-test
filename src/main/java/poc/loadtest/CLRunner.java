@@ -47,7 +47,7 @@ public class CLRunner {
         try {
             this.startLoadTest();
         } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
-            logger.severe("### TEST FAILED ###");
+            logger.warning("### TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
     }
