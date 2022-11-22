@@ -1,0 +1,13 @@
+{"type":"Point","data":{"time":"2022-11-22T11:52:43.8072966+01:00","value":1,"tags":{"name":"http://127.0.0.1:8080/books/all","method":"GET","status":"200","proto":"HTTP/1.1","expected_response":"true","group":"","scenario":"default","url":"http://127.0.0.1:8080/books/all"}},"metric":"http_reqs"}
+{"type":"Metric","data":{"name":"http_reqs","type":"counter","contains":"default","thresholds":[],"submetrics":null},"metric":"http_reqs"}
+{"type":"Metric","data":{"name":"http_req_duration","type":"trend","contains":"time","thresholds":["p(90) less 150","p(95) smaller 200"],"submetrics":[{"name":"http_req_duration{group:home}","suffix":"group:home","tags":{"group":"home"}},{"name":"http_req_duration{expected_response:true}","suffix":"expected_response:true","tags":{"expected_response":"true"}}]},"metric":"http_req_duration"}
+{"type":"Metric","data":{"name":"http_req_blocked","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_blocked"}
+{"type":"Metric","data":{"name":"http_req_connecting","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_connecting"}
+{"type":"Metric","data":{"name":"http_req_tls_handshaking","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_tls_handshaking"}
+{"type":"Metric","data":{"name":"http_req_sending","type":"trend","contains":"time","thresholds":["min = 10"],"submetrics":null},"metric":"http_req_sending"}
+{"type":"Metric","data":{"name":"http_req_waiting","type":"trend","contains":"time","thresholds":[],"submetrics":null},"metric":"http_req_waiting"}
+{"type":"Metric","data":{"name":"http_req_receiving","type":"trend","contains":"time","thresholds":["p(50) bigger 10"],"submetrics":null},"metric":"http_req_receiving"}
+{"type":"Metric","data":{"name":"http_req_failed","type":"rate","contains":"default","thresholds":["rate === 0.05"],"submetrics":null},"metric":"http_req_failed"}
+{"type":"Metric","data":{"name":"vus_max","type":"gauge","contains":"default","thresholds":[],"submetrics":null},"metric":"vus_max"}
+{"type":"Metric","data":{"name":"data_sent","type":"counter","contains":"data","thresholds":[],"submetrics":null},"metric":"data_sent"}
+{"type":"Metric","data":{"name":"data_received","type":"counter","contains":"data","thresholds":[],"submetrics":null},"metric":"data_received"}
