@@ -7,6 +7,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import poc.config.PathConfig;
 import poc.config.TestConfig;
+import poc.grafana.GrafanaClient;
 import poc.loadtest.exception.RunnerFailedException;
 import poc.export.OTExporter;
 import poc.util.ProcessLogger;
@@ -40,13 +41,17 @@ public class CLRunner {
     private boolean isBreakpointEnabled;
     private int maxLoop;
 
+    @Autowired
+    private GrafanaClient client;
+
     @EventListener(ApplicationReadyEvent.class)
     public void start() {
         logger.info("### LOAD TEST STARTED ###");
         this.getApplicationConfig();
         try {
+            client.sendDashboard();
             this.startLoadTest();
-        } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
+        } catch (Exception e) {
             logger.severe("### TEST FAILED ###");
             throw new RunnerFailedException(e.getMessage());
         }
