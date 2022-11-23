@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 public class GrafanaClient {
 
     private final String tokenBasedAuthURI = "http://127.0.0.1:3030/api/dashboards/db";
-    private final String APIKey = "eyJrIjoiclpJc05iSzJ4UUU0dkx2Z2xnc3k1SUZKbEpWM3l4MHIiLCJuIjoia2V5IiwiaWQiOjF9";
+    private final String APIKey = "INSERT_TOKEN_HERE";
 
     public String sendDashboard(String file) throws URISyntaxException, IOException, InterruptedException {
         URI uri = new URI(tokenBasedAuthURI);
