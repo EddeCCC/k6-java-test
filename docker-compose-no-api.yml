@@ -24,7 +24,7 @@ services:
     container_name: "k6-grafana"
     volumes:
       - ./docker-config/grafana/provisioning:/usr/share/grafana/custom/
-#      - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
+      - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
     ports:
       - "3030:3000"
     env_file:

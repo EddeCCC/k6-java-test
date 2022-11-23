@@ -15,15 +15,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * Send Dashboards to the Grafana API via Token Based Authentication
+ */
 @Component
 public class GrafanaClient {
 
     private final String tokenBasedAuthURI = "http://127.0.0.1:3030/api/dashboards/db";
-    private final String APIKey = "eyJrIjoiNkpqRnppSUpKdUN0YTR5TmY5MENJd0hIUkx6blFyMWciLCJuIjoiamF2YSIsImlkIjoxfQ==";
+    private final String APIKey = "eyJrIjoiclpJc05iSzJ4UUU0dkx2Z2xnc3k1SUZKbEpWM3l4MHIiLCJuIjoia2V5IiwiaWQiOjF9";
 
-    public String sendDashboard() throws URISyntaxException, IOException, InterruptedException {
+    public String sendDashboard(String file) throws URISyntaxException, IOException, InterruptedException {
         URI uri = new URI(tokenBasedAuthURI);
-        String dashboard = this.getDashboard("home.json");
+        String dashboard = this.getDashboard(file);
         BodyPublisher bodyPublisher = BodyPublishers.ofString(dashboard);
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -39,12 +42,11 @@ public class GrafanaClient {
 
         int statusCode = response.statusCode();
         if(statusCode != 200) throw new RuntimeException("Sending Dashboard failed - Status not 200, but " + statusCode);
-        String config = response.body();
-        return config;
+        return response.body();
     }
 
-    private String getDashboard(String filename) throws IOException {
-        String text = this.getFileText(filename);
+    private String getDashboard(String file) throws IOException {
+        String text = this.getFileText(file);
         JSONObject json = new JSONObject(text);
 
         JSONObject dashboard = new JSONObject();
