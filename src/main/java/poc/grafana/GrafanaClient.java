@@ -1,6 +1,7 @@
 package poc.grafana;
 
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,16 +17,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Send Dashboards to the Grafana API via Token Based Authentication
+ * Send Dashboards to the Grafana API via Basic Authentication
+ * The Authorization header has to be Base64 encoded
  */
 @Component
 public class GrafanaClient {
 
-    private final String tokenBasedAuthURI = "http://127.0.0.1:3030/api/dashboards/db";
-    private final String APIKey = "INSERT_TOKEN_HERE";
+    private final String postDashboardURI = "http://localhost:3030/api/dashboards/db";
+    private final String encodedBasicAuthorization = "YWRtaW46YWRtaW4=";
 
     public String sendDashboard(String file) throws URISyntaxException, IOException, InterruptedException {
-        URI uri = new URI(tokenBasedAuthURI);
+
+        URI uri = new URI(postDashboardURI);
         String dashboard = this.getDashboard(file);
         BodyPublisher bodyPublisher = BodyPublishers.ofString(dashboard);
 
@@ -33,7 +36,7 @@ public class GrafanaClient {
                 .uri(uri)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .header("Authorization", "Bearer " + APIKey)
+                .header("Authorization", "Basic " + encodedBasicAuthorization)
                 .POST(bodyPublisher)
                 .build();
 
