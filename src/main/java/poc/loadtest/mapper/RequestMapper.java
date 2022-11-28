@@ -8,9 +8,12 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 @Component
 public class RequestMapper implements k6Mapper {
+
+    private final Logger logger = Logger.getGlobal();
 
     @Autowired
     private ParamsMapper paramsMapper;
@@ -30,7 +33,7 @@ public class RequestMapper implements k6Mapper {
             JSONObject currentRequest = requests.getJSONObject(i);
 
             if(!isRequestValid(currentRequest)) {
-                System.out.println("Invalid request: " + i);
+                logger.warning("INVALID REQUEST: " + i);
                 continue;
             }
             String requestScript = this.map(currentRequest, i);

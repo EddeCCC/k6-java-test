@@ -53,10 +53,10 @@ public class CSVMetricCreater {
 
         for(String[] row : csv) {
             Attributes attributes = Attributes.empty();
-
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
             long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
+
             MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
             data.add(metricData);
         }

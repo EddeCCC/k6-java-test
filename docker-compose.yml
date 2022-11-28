@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   api:
-    container_name: "k6-api"
+    container_name: "k6-java-api"
     build:
       context: .
       dockerfile: Dockerfile
@@ -17,7 +17,7 @@ services:
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib
-    container_name: "k6-otel-collector"
+    container_name: "k6-java-otel-collector"
     command: [ "--config=/etc/opentelemetry/otel-config.yml" ]
     volumes:
       - ./docker-config/opentelemetry/otel-config.yml:/etc/opentelemetry/otel-config.yml
@@ -28,7 +28,7 @@ services:
 
   influxdb:
     image: influxdb:latest
-    container_name: "k6-influx"
+    container_name: "k6-java-influx"
     ports:
       - "8086:8086"
     env_file:
@@ -36,7 +36,7 @@ services:
 
   grafana:
     image: grafana/grafana:9.1.8
-    container_name: "k6-grafana"
+    container_name: "k6-java-grafana"
     volumes:
       - ./docker-config/grafana/provisioning:/usr/share/grafana/custom/
       - ./docker-config/grafana/my-dashboards:/usr/share/grafana/public/dashboards
@@ -55,7 +55,7 @@ services:
   # Not in use
   prometheus:
     image: prom/prometheus:v2.36.2
-    container_name: "k6-prometheus"
+    container_name: "k6-java-prometheus"
     command: [ "--config.file=/etc/prometheus/prometheus.yml" ]
     volumes:
       - ./docker-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml

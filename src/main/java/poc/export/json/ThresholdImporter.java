@@ -48,7 +48,7 @@ public class ThresholdImporter {
         String unit = this.getUnit(type);
         String thresholdType = data.getString("name");
         JSONArray thresholds = data.getJSONArray("thresholds");
-        long epochNanosEnd = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
+        long endEpochNanos = TimeUnit.MILLISECONDS.toNanos(System.currentTimeMillis());
         List<MetricData> metrics = new LinkedList<>();
 
         for(int i = 0; i < thresholds.length(); i++) {
@@ -66,8 +66,9 @@ public class ThresholdImporter {
                     .put(stringKey("aggregation"), aggregation)
                     .build();
 
+            //Create two DataPoints so a line can be drawn in visualization
             MetricData metricStart = gaugeCreater.createDoubleGaugeData(name, unit, attributes, value, startEpochNanos);
-            MetricData metricEnd = gaugeCreater.createDoubleGaugeData(name, unit, attributes, value, epochNanosEnd);
+            MetricData metricEnd = gaugeCreater.createDoubleGaugeData(name, unit, attributes, value, endEpochNanos);
             metrics.add(metricStart);
             metrics.add(metricEnd);
         }

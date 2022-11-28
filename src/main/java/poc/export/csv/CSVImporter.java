@@ -59,7 +59,10 @@ public class CSVImporter {
                 .withFieldAsNull(CSVReaderNullFieldIndicator.EMPTY_QUOTES)
                 .withIgnoreLeadingWhiteSpace(true)
                 .build();
-        CSVReader reader = new CSVReaderBuilder(streamReader).withSkipLines(1).withCSVParser(parser).build();
+        CSVReader reader = new CSVReaderBuilder(streamReader)
+                .withSkipLines(1)
+                .withCSVParser(parser)
+                .build();
         List<String[]> csv = reader.readAll();
         reader.close();
         return csv;
