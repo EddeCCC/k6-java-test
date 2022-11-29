@@ -4,32 +4,36 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
+/**
+ * LoadIncreaser copies the first stage and inserts it at the start of the JSONArray
+ * Then all stages (except the copied one) will be multiplied by a specific factor
+ * The copying ensures that the load will not increase too drastically
+ */
 @Component
 public class LoadIncreaser {
 
     public String increaseLoad(String config) {
         JSONObject configJSON = new JSONObject(config);
-        JSONObject options = configJSON.getJSONObject("options");
-        JSONObject scenarios = options.getJSONObject("scenarios");
-        JSONObject scenario = scenarios.getJSONObject("breakpoint");
-        JSONArray stages = scenario.getJSONArray("stages");
+        JSONArray stages = configJSON
+                .getJSONObject("options")
+                .getJSONObject("scenarios")
+                .getJSONObject("breakpoint")
+                .getJSONArray("stages");
 
-        JSONArray newStages = this.multiplyTargets(stages, 2);
-        JSONObject newScenario = scenario.put("stages", newStages);
-        JSONObject newScenarios = scenarios.put("breakpoint", newScenario);
-        JSONObject newOptions = options.put("scenarios", newScenarios);
-        JSONObject newConfig = configJSON.put("options", newOptions);
+        this.multiplyTargets(stages, 2);
 
-        return newConfig.toString();
+        return configJSON.toString();
     }
 
     private JSONArray multiplyTargets(JSONArray array, int factor) {
-        for(int i = 0; i < array.length(); i++) {
-            JSONObject stage = array.getJSONObject(i);
+        //Iterate from end to the start
+        for(int i = array.length(); i > 0; i--) {
+            JSONObject stage = array.getJSONObject(i-1);
             int currentLoad = stage.getInt("target");
             int newLoad = currentLoad * factor;
 
-            JSONObject newStage = stage.put("target", newLoad);
+            JSONObject newStage = new JSONObject(stage.toMap());
+            newStage.put("target", newLoad);
             array.put(i, newStage);
         }
         return array;

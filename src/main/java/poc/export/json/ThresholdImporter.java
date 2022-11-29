@@ -52,7 +52,12 @@ public class ThresholdImporter {
         List<MetricData> metrics = new LinkedList<>();
 
         for(int i = 0; i < thresholds.length(); i++) {
-            String threshold = thresholds.getString(i);
+            Object thresholdObject = thresholds.get(i);
+
+            String threshold = "";
+            if(thresholdObject instanceof JSONObject) threshold = ((JSONObject) thresholdObject).getString("threshold");
+            else if(thresholdObject instanceof String) threshold = thresholdObject.toString();
+
             //remove logical operator and everything after
             String aggregation = threshold.replaceAll("(?=<=|<|>|>=|!=|==)([^=].*)", "").trim();
             //remove logical operator and everything before
