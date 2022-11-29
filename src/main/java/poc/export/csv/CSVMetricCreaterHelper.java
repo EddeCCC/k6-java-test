@@ -10,9 +10,7 @@ import java.util.Optional;
 public class CSVMetricCreaterHelper {
 
     public double getAverage(List<String[]> csv) {
-        double sum = csv.stream()
-                .map(row -> Double.parseDouble(row[2]))
-                .reduce(0.0, Double::sum);
+        double sum = this.getAmount(csv);
         int count = csv.size();
         double average = sum/count;
 

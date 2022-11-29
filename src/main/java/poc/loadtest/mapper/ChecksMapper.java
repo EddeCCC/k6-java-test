@@ -13,10 +13,10 @@ public class ChecksMapper implements k6Mapper {
         StringBuilder checkBuilder = new StringBuilder();
 
         if(checks.has("status")) {
-            Integer status = checks.getInt("status");
+            int status = checks.getInt("status");
             String statusScript;
             if(checks.has("OR-status")) {
-                Integer orStatus = checks.getInt("OR-status");
+                int orStatus = checks.getInt("OR-status");
                 statusScript = String.format("\t'%s status was %s/%s': x => x.status && (x.status == %s || x.status == %s),%s",
                         type, status, orStatus, status, orStatus, newLine);
             }
@@ -24,15 +24,14 @@ public class ChecksMapper implements k6Mapper {
                 statusScript = String.format("\t'%s status was %s': x => x.status && x.status == %s,%s",
                         type, status, status, newLine);
             }
-
             checkBuilder.append(statusScript);
         }
         if(checks.has("body")) {
             JSONObject body = checks.getJSONObject("body");
 
             if(body.has("min-length")) {
-                Integer minLength = body.getInt("min-length") - 1;
-                String minLengthScript = String.format("\t'%s body size > %d': x => x.body && x.body.length > %d,%s",
+                int minLength = body.getInt("min-length");
+                String minLengthScript = String.format("\t'%s body size >= %d': x => x.body && x.body.length >= %d,%s",
                         type, minLength, minLength, newLine);
                 checkBuilder.append(minLengthScript);
             }
@@ -44,7 +43,7 @@ public class ChecksMapper implements k6Mapper {
             }
         }
         if(checks.has("error_code")) {
-            Integer errorCode= checks.getInt("error_code");
+            int errorCode= checks.getInt("error_code");
             String errorCodeScript = String.format("\t'error_code was %d': x => x.error_code == %d,%s",
                     errorCode, errorCode, newLine);
             checkBuilder.append(errorCodeScript);

@@ -20,19 +20,19 @@ public class CLRunner {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
     @Autowired
-    private ConfigParser parser;
-    @Autowired
-    private ConfigLoader loader;
-    @Autowired
-    private LoadIncreaser increaser;
-    @Autowired
     private PathConfig paths;
     @Autowired
     private TestConfig tests;
     @Autowired
+    private ConfigLoader loader;
+    @Autowired
+    private ConfigParser parser;
+    @Autowired
     private ProcessLogger processLogger;
     @Autowired
     private OTExporter exporter;
+    @Autowired
+    private LoadIncreaser increaser;
 
     private String scriptPath;
     private String outputPath;
@@ -46,8 +46,9 @@ public class CLRunner {
         this.getApplicationConfig();
         try {
             this.startLoadTest();
-        } catch (IOException | InterruptedException | URISyntaxException | CsvException e) {
+        } catch (Exception e) {
             logger.severe("### TEST FAILED ###");
+            e.printStackTrace();
             throw new RunnerFailedException(e.getMessage());
         }
     }

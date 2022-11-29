@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import poc.export.metric.GaugeCreater;
 import poc.export.metric.ResultType;
 
-import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,15 +32,16 @@ public class JSONMetricCreater {
 
             for(JSONObject result : resultGroup) {
                 String name = result.getString("metric");
-                String url = result.getJSONObject("data").getJSONObject("tags").getString("url");
-                String method = result.getJSONObject("data").getJSONObject("tags").getString("method");
+                JSONObject dataObject = result.getJSONObject("data");
+                String url = dataObject.getJSONObject("tags").getString("url");
+                String method = dataObject.getJSONObject("tags").getString("method");
                 Attributes attributes = Attributes.builder()
                         .put(stringKey("endpoint"), url)
                         .put(stringKey("http_method"), method)
                         .build();
 
-                double metric = result.getJSONObject("data").getDouble("value");
-                String time = result.getJSONObject("data").getString("time");
+                double metric = dataObject.getDouble("value");
+                String time = dataObject.getString("time");
                 long epochNanos = helper.getEpochNanos(time);
 
                 MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);
@@ -56,7 +56,7 @@ public class JSONMetricCreater {
 
         for(JSONObject result : results) {
             Attributes attributes = Attributes.empty();
-
+            JSONObject dataObject = result.getJSONObject("data");
             double metric = result.getJSONObject("data").getDouble("value");
             String time = result.getJSONObject("data").getString("time");
             long epochNanos = helper.getEpochNanos(time);

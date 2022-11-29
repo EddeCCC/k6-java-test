@@ -13,9 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class JSONMetricCreaterHelper {
 
     public double getAverage(List<JSONObject> results) {
-        double sum = results.stream()
-                .map(result -> result.getJSONObject("data").getDouble("value"))
-                .reduce(0.0, Double::sum);
+        double sum = this.getAmount(results);
         int count = results.size();
         double average = sum/count;
 
@@ -23,7 +21,7 @@ public class JSONMetricCreaterHelper {
         else return average;
     }
 
-    public double getMaxLoad(List<JSONObject> results){
+    public double getMaxLoad(List<JSONObject> results) {
         Optional<Double> maybeMaxLoad = results.stream()
                 .map(result -> result.getJSONObject("data").getDouble("value"))
                 .max(Comparator.comparing(Double::valueOf));
@@ -39,10 +37,8 @@ public class JSONMetricCreaterHelper {
     }
 
     public long getEpochNanos(String time) {
-        OffsetDateTime odt = OffsetDateTime.parse(time);
-        long timestamp = odt.toEpochSecond();
+        long timestamp = OffsetDateTime.parse(time).toEpochSecond();
         long epochNanos =  TimeUnit.SECONDS.toNanos(timestamp);
-
         return epochNanos;
     }
 }

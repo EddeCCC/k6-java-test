@@ -27,12 +27,11 @@ public class HttpMapper implements k6Mapper {
                 extraParams = String.format(", JSON.stringify(payload%d), params%d",
                         requestIndex, requestIndex);
             }
-            else if (request.has("payload")) {
+            else if(request.has("payload"))
                 extraParams = String.format(", JSON.stringify(payload%d)", requestIndex);
-            }
-            else {
+
+            else
                 extraParams = String.format(", params%d", requestIndex);
-            }
         }
 
         return String.format("%slet response%d = http.%s(baseURL + '%s'%s);%s",
