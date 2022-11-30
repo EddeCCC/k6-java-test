@@ -25,7 +25,7 @@ This will continue until a threshold is not met or the maximum amount of loops a
 ---
 ## SetUp
 
-If you can´t use the `k6.exe`, you can run the application in Docker or install k6 manually.
+You can run the application in Docker or install k6 manually.
 You can find the installation instructions here: https://k6.io/docs/get-started/installation/
 
 The application needs a JSON configuration to create a k6 script.
