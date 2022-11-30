@@ -112,6 +112,10 @@ If you use JSON for the test results, there will also be a visualized threshold.
 | Http OPTIONS               | &#9744;     |
 | Http BATCH                 | &#9744;     |
 | ######                     | ######      |
+| GraphQL                    | &#9744;     |
+| WebSocket                  | &#9744;     |
+| gRPC                       | &#9744;     |
+| ######                     | ######      |
 | Check response status      | &#9745;     |
 | Check alternative status   | &#9745;     |
 | Check body min length      | &#9745;     |
