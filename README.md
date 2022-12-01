@@ -12,7 +12,7 @@ file, which will be executed by k6. The `k6 run` command will be executed
 **automatically** after Spring is initialized and the API has started.
 By default, the API runs at `localhost:8080/books`.
 
-[The repository is also available in **Kotlin**.](https://github.com/EddeCCC/k6-kotlin-test)
+[The repository is also available in **Kotlin**.](https://github.com/dqualizer/dqualizer-automated-load-testing-spike)
 
 ### Breakpoint Test
 
