@@ -77,6 +77,24 @@
         "status": 200,
         "error_code": 0
       }
+    },
+    {
+      "type": "POST",
+      "path": "/new",
+      "payload": {
+        "name": "Breakpoint Stories",
+        "author": "Brent",
+        "releaseDate": "2005-10-10"
+      },
+      "params": {
+        "headers": {
+          "content-type": "application/json"
+        },
+        "timeout": "10s"
+      },
+      "checks": {
+        "status": 201
+      }
     }
   ]
 }
