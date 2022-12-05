@@ -29,6 +29,8 @@ public class CSVImporter {
         List<String[]> vus = this.filterMetric(csv, "vus");
         List<String[]> data_sent = this.filterMetric(csv, "data_sent");
         List<String[]> data_received = this.filterMetric(csv, "data_received");
+        List<String[]> data_sent_endpoint = this.filterMetric(csv,"data_sent_endpoint");
+        List<String[]> data_received_endpoint = this.filterMetric(csv, "data_received_endpoint");
 
         List<String[]> checks = this.filterMetric(csv, "checks");
         List<String[]> iteration_duration = this.filterMetric(csv, "iteration_duration");
@@ -39,6 +41,8 @@ public class CSVImporter {
         List<MetricData> vusMetric = metricCreater.createGaugeMetricList(vus, "vus", "1");
         List<MetricData> dataSentMetric = metricCreater.createGaugeMetricList(data_sent, "data_sent", "B");
         List<MetricData> dataReceivedMetric = metricCreater.createGaugeMetricList(data_received, "data_received", "B");
+        List<MetricData> dataSentEndpointMetric = metricCreater.createGaugeMetricList(data_sent_endpoint, "data_sent_endpoint", "B");
+        List<MetricData> dataReceivedEndpointMetric = metricCreater.createGaugeMetricList(data_received_endpoint, "data_received_endpoint", "B");
 
         List<MetricData> checksMetric = metricCreater.createSingleGaugeMetric(checks, ResultType.CHECKS);
         List<MetricData> vusMaxMetric = metricCreater.createSingleGaugeMetric(vus, ResultType.MAX_LOAD);
@@ -46,7 +50,7 @@ public class CSVImporter {
         List<MetricData> iterationsCounterMetric = metricCreater.createSingleGaugeMetric(iterations, ResultType.ITERATIONS);
         List<MetricData> requestCounterMetric = metricCreater.createSingleGaugeMetric(http_req_count, ResultType.HTTP_REQS);
 
-        return this.combineData(requestMetric, vusMetric, dataSentMetric, dataReceivedMetric,
+        return this.combineData(requestMetric, vusMetric, dataSentMetric, dataReceivedMetric, dataSentEndpointMetric, dataReceivedEndpointMetric,
                 checksMetric, vusMaxMetric, iterationMetric, iterationsCounterMetric, requestCounterMetric);
     }
 

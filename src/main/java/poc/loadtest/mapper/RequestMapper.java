@@ -58,6 +58,7 @@ public class RequestMapper implements k6Mapper {
 
         String httpScript = httpMapper.map(request, requestIndex);
         requestBuilder.append(httpScript);
+        requestBuilder.append(trackDataPerURLScript(requestIndex));
 
         if(request.has("checks")) {
             String checksScript = checksMapper.map(request, requestIndex);
@@ -71,16 +72,40 @@ public class RequestMapper implements k6Mapper {
     private String startScript(JSONObject config) {
         String baseURL = config.getString("baseURL");
         String options = config.getJSONObject("options").toString();
+        String trackDataPerURL = this.trackDataPerURLInitScript();
         return """
                 import http from 'k6/http';
                 import {check, sleep} from 'k6';
+                %s
 
                 let baseURL = '%s';
 
                 export let options = %s;
                                 
                 export default function() {
-                """.formatted(baseURL, options);
+                """.formatted(trackDataPerURL, baseURL, options);
+    }
+
+    private String trackDataPerURLInitScript() {
+        return """
+                import {Counter} from 'k6/metrics';
+                                
+                export const epDataSent = new Counter('data_sent_endpoint');
+                export const epDataRecv = new Counter('data_received_endpoint');
+                                
+                function sizeOfHeaders(headers) {
+                    return Object.keys(headers).reduce((sum, key) => sum + key.length + headers[key].length, 0);
+                }
+                
+                function trackDataMetricsPerURL(res) {
+                    epDataSent.add(sizeOfHeaders(res.request.headers) + res.request.body.length, { url: res.url });
+                    epDataRecv.add(sizeOfHeaders(res.headers) + res.body.length, { url: res.url });
+                }
+                """;
+    }
+
+    private String trackDataPerURLScript(int requestIndex) {
+        return String.format("trackDataMetricsPerURL(response%d);%s", requestIndex, newLine);
     }
 
     private String sleepScript() {
