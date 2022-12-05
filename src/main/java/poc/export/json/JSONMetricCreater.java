@@ -55,10 +55,15 @@ public class JSONMetricCreater {
         List<MetricData> data = new LinkedList<>();
 
         for(JSONObject result : results) {
-            Attributes attributes = Attributes.empty();
             JSONObject dataObject = result.getJSONObject("data");
-            double metric = result.getJSONObject("data").getDouble("value");
-            String time = result.getJSONObject("data").getString("time");
+            Attributes attributes = Attributes.empty();
+            if(!dataObject.isNull("tags") && dataObject.getJSONObject("tags").has("url")) {
+                String url = dataObject.getJSONObject("tags").getString("url");
+                attributes = Attributes.of(stringKey("endpoint"), url);
+            }
+
+            double metric = dataObject.getDouble("value");
+            String time = dataObject.getString("time");
             long epochNanos = helper.getEpochNanos(time);
 
             MetricData metricData = gaugeCreater.createDoubleGaugeData(name, unit, attributes, metric, epochNanos);

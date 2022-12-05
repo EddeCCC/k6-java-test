@@ -52,7 +52,10 @@ public class CSVMetricCreater {
         List<MetricData> data = new LinkedList<>();
 
         for(String[] row : csv) {
+            String url = row[16];
             Attributes attributes = Attributes.empty();
+            if(!url.isEmpty()) attributes = Attributes.of(stringKey("endpoint"), url);
+
             double metric = Double.parseDouble(row[2]);
             long timestamp = Long.parseLong(row[1]);
             long epochNanos = TimeUnit.SECONDS.toNanos(timestamp);
