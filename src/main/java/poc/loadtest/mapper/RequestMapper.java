@@ -11,7 +11,7 @@ import java.util.Random;
 import java.util.logging.Logger;
 
 @Component
-public class RequestMapper implements k6Mapper {
+public class RequestMapper implements K6Mapper {
 
     private final Logger logger = Logger.getGlobal();
 
@@ -58,7 +58,7 @@ public class RequestMapper implements k6Mapper {
 
         String httpScript = httpMapper.map(request, requestIndex);
         requestBuilder.append(httpScript);
-        requestBuilder.append(trackDataPerURLScript(requestIndex));
+        requestBuilder.append(this.trackDataPerURLScript(requestIndex));
 
         if(request.has("checks")) {
             String checksScript = checksMapper.map(request, requestIndex);

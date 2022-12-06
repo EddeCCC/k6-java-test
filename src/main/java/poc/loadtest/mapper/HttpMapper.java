@@ -2,11 +2,10 @@ package poc.loadtest.mapper;
 
 import org.json.JSONObject;
 import org.springframework.stereotype.Component;
-import poc.loadtest.exception.UnknownOutputTypeException;
 import poc.loadtest.exception.UnknownRequestTypeException;
 
 @Component
-public class HttpMapper implements k6Mapper {
+public class HttpMapper implements K6Mapper {
 
     @Override
     public String map(JSONObject request, int requestIndex) {

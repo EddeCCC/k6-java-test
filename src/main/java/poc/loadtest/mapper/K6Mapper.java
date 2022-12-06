@@ -2,7 +2,7 @@ package poc.loadtest.mapper;
 
 import org.json.JSONObject;
 
-interface k6Mapper {
+interface K6Mapper {
 
     String newLine = System.lineSeparator();
 

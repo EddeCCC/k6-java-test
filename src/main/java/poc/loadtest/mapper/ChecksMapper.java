@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ChecksMapper implements k6Mapper {
+public class ChecksMapper implements K6Mapper {
 
     @Override
     public String map(JSONObject request, int requestIndex) {
