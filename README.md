@@ -70,6 +70,9 @@ Default login: username > k6,  password > telegraf
 You can change it in the [.env](env/.env) file.
 The organization, bucket and token are configured here, too.
 
+> It is possible to export k6 results directly to influxDB-v2. For that, you need to install the 
+> **xk6-output-influxdb**  extension. [See here for more information.](docu/k6Extensions.md#influxdb-v2-exporter)
+
 ---
 ### Grafana
 
